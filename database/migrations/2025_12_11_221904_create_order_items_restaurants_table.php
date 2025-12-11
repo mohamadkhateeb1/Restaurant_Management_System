@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('order_items_restaurants', function (Blueprint $table) {
             $table->id()->primary();
-            $table->foreignId('dine_in_order_id')->nullable()->constrained('dine_in_orders')
+            $table->foreignId('dine_in_order_id')->nullable()->constrained('dine_in_order_restaurants')
             ->onDelete('set null');//ربطه بين طلب تناول الطعام داخل المطعم والعناصر
-            $table->foreignId('take_away_order_id')->nullable()->constrained('take_away_orders')
+            $table->foreignId('take_away_order_id')->nullable()->constrained('take_aways_restaurants')
             ->onDelete('set null');//ربطه بين الطلبات الخارجية والعناصر ال 
             //ondelete :(null)يعني اذا تم حذف الطلب يتم تعيين القيمة الى 
             $table->foreignId('item_id')->constrained('items_restaurants')->cascadeOnDelete();//ربطه بين الصنف والطلب
