@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id()->primary();
             $table->string('role_name')->unique();
-            $table->guard_name('role_guard')->default('web');
+            // $table->guard_name('role_guard')->default('web');
             // $table->timestamps();
         });
     }

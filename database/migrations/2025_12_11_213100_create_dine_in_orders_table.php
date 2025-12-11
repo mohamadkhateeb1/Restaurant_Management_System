@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('dine_in_orders', function (Blueprint $table) {
             $table->id()->primary();
             $table->integer('table_id');
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('user_restaurants')->cascadeOnDelete();
             $table->string('order_number')->unique();
             $table->enum('status', ['pending', 'preparing', 'ready', 'paid'])->default('pending');
             $table->decimal('total_amount', 10, 2);

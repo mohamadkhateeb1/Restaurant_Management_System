@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('permissions', function (Blueprint $table) {
             $table->id()->primary();
             $table->string('permission_name')->unique();
-            $table->guard_name('permission_guard')->default('web');
+            // $table->guard_name('permission_guard')->default('web');
             // $table->timestamps();
         });
     }

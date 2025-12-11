@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id()->primary();
-            $table->foreignId('category_id')->primary()->constrained('categories')->cascadeOnDelete()->primary();
+            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete()->primary();
             $table->string('item_name');
             $table->text('description')->nullable();
             $table->string('image')->nullable();
