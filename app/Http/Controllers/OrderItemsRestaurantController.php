@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Permissions;
+use App\Models\OrderItemsRestaurant;
 use Illuminate\Http\Request;
 
-class PermissionsController extends Controller
+class OrderItemsRestaurantController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class PermissionsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Permissions $permissions)
+    public function show(OrderItemsRestaurant $orderItemsRestaurant)
     {
         //
     }
@@ -42,7 +42,7 @@ class PermissionsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Permissions $permissions)
+    public function edit(OrderItemsRestaurant $orderItemsRestaurant)
     {
         //
     }
@@ -50,7 +50,7 @@ class PermissionsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Permissions $permissions)
+    public function update(Request $request, OrderItemsRestaurant $orderItemsRestaurant)
     {
         //
     }
@@ -58,7 +58,7 @@ class PermissionsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Permissions $permissions)
+    public function destroy(OrderItemsRestaurant $orderItemsRestaurant)
     {
         //
     }

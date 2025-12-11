@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Invoices;
+use App\Models\DineInOrderRestaurant;
 use Illuminate\Http\Request;
 
-class InvoicesController extends Controller
+class DineInOrderRestaurantController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class InvoicesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Invoices $invoices)
+    public function show(DineInOrderRestaurant $dineInOrderRestaurant)
     {
         //
     }
@@ -42,7 +42,7 @@ class InvoicesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Invoices $invoices)
+    public function edit(DineInOrderRestaurant $dineInOrderRestaurant)
     {
         //
     }
@@ -50,7 +50,7 @@ class InvoicesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Invoices $invoices)
+    public function update(Request $request, DineInOrderRestaurant $dineInOrderRestaurant)
     {
         //
     }
@@ -58,7 +58,7 @@ class InvoicesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Invoices $invoices)
+    public function destroy(DineInOrderRestaurant $dineInOrderRestaurant)
     {
         //
     }

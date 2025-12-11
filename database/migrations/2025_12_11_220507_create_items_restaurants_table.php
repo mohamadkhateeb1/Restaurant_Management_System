@@ -10,16 +10,17 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('items', function (Blueprint $table) {
+    {//إنشاء جدول الأصناف في المطعم
+        Schema::create('items_restaurants', function (Blueprint $table) {
             $table->id()->primary();
-            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete()->primary();
+            $table->foreignId('category_id')->constrained('categories_restaurants')->cascadeOnDelete()->primary();
             $table->string('item_name');
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->decimal('price', 8, 2);
             $table->enum('status', ['available', 'unavailable'])->default('available');
             $table->integer('prepare_time')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('items');
+        Schema::dropIfExists('items_restaurants');
     }
 };

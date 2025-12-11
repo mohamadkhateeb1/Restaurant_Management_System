@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tables;
+use App\Models\CategoriesRestaurant;
 use Illuminate\Http\Request;
 
-class TablesController extends Controller
+class CategoriesRestaurantController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class TablesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Tables $tables)
+    public function show(CategoriesRestaurant $categoriesRestaurant)
     {
         //
     }
@@ -42,7 +42,7 @@ class TablesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Tables $tables)
+    public function edit(CategoriesRestaurant $categoriesRestaurant)
     {
         //
     }
@@ -50,7 +50,7 @@ class TablesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Tables $tables)
+    public function update(Request $request, CategoriesRestaurant $categoriesRestaurant)
     {
         //
     }
@@ -58,7 +58,7 @@ class TablesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Tables $tables)
+    public function destroy(CategoriesRestaurant $categoriesRestaurant)
     {
         //
     }

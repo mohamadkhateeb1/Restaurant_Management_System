@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Tables extends Model
+class PremissionRestaurant extends Model
 {
     //
 }

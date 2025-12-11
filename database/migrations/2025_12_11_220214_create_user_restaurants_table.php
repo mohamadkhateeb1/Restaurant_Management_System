@@ -10,7 +10,7 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
+    {//إنشاء جدول المستخدمين في المطعم
         Schema::create('user_restaurants', function (Blueprint $table) {
             $table->id()->primary();
             $table->string('name');

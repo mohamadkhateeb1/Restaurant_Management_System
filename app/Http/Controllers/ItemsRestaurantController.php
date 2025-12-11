@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TakeawayOrder;
+use App\Models\ItemsRestaurant;
 use Illuminate\Http\Request;
 
-class TakeawayOrderController extends Controller
+class ItemsRestaurantController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class TakeawayOrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(TakeawayOrder $takeawayOrder)
+    public function show(ItemsRestaurant $itemsRestaurant)
     {
         //
     }
@@ -42,7 +42,7 @@ class TakeawayOrderController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(TakeawayOrder $takeawayOrder)
+    public function edit(ItemsRestaurant $itemsRestaurant)
     {
         //
     }
@@ -50,7 +50,7 @@ class TakeawayOrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, TakeawayOrder $takeawayOrder)
+    public function update(Request $request, ItemsRestaurant $itemsRestaurant)
     {
         //
     }
@@ -58,7 +58,7 @@ class TakeawayOrderController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(TakeawayOrder $takeawayOrder)
+    public function destroy(ItemsRestaurant $itemsRestaurant)
     {
         //
     }

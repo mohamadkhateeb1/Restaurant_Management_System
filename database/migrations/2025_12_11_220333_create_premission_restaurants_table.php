@@ -10,9 +10,9 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('permissions', function (Blueprint $table) {
-            $table->id()->primary();
+    {//إنشاء جدول الأذونات في المطعم
+        Schema::create('premission_restaurants', function (Blueprint $table) {
+                $table->id()->primary();
             $table->string('permission_name')->unique();
             // $table->guard_name('permission_guard')->default('web');
             // $table->timestamps();
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('permissions');
+        Schema::dropIfExists('premission_restaurants');
     }
 };

@@ -10,9 +10,9 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('roles', function (Blueprint $table) {
-            $table->id()->primary();
+    {//إنشاء جدول الأدوار في المطعم
+        Schema::create('roles_restaurants', function (Blueprint $table) {
+                $table->id()->primary();
             $table->string('role_name')->unique();
             // $table->guard_name('role_guard')->default('web');
             // $table->timestamps();
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('roles_restaurants');
     }
 };
