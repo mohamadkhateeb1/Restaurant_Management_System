@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('invoices', function (Blueprint $table) {
-    $table->id()->primary();
+    $table->id();
     $table->string('invoice_number')->unique(); // رقم الفاتورة الفريد
     // 1. المفتاح الخارجي للطلب الداخلي (Dine-In Order)
     // يجب أن يكون NULLABLE لأنه قد تكون الفاتورة لطلب سفري.
@@ -24,6 +24,7 @@ return new class extends Migration
           ->onDelete('set null'); // يحافظ على سجل الفاتورة إذا حُذف الطلب
     $table->decimal('amount_paid', 10, 2); // المبلغ المدفوع الفعلي
     $table->enum('payment_status', ['paid', 'unpaid']); // طريقة الدفع
+    
     $table->timestamps();
   
 });

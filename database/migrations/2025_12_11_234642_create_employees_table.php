@@ -12,8 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('employees', function (Blueprint $table) {
-            $table->id()->primary();
-            $table->foreignId('user_restaurant_id')->nullable()->constrained('user_restaurants')->cascadeOnDelete();// ربط الموظف بالمستخدم في المطعم ان وجد
+            $table->id();
+            $table->foreignId('user_restaurant_id')
+            ->nullable()
+            ->unique()
+            ->constrained('user_restaurants')
+            ->cascadeOnDelete(); // ربط الموظف بالمستخدم في المطعم ان وجد
             $table->string('name'); // اسم الموظف
             $table->string('email')->unique(); // بريد الموظف الإلكتروني
             $table->string('phone'); // رقم هاتف الموظف

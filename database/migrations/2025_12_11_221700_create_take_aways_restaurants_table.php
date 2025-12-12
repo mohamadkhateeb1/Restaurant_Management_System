@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {//إنشاء جدول الطلبات الخارجية
         Schema::create('take_aways_restaurants', function (Blueprint $table) {
-            $table->id()->primary();
+            $table->id();
             $table->foreignId('user_id')->constrained('user_restaurants')->cascadeOnDelete();//ربطه بين الطلب والمستخدم
             $table->string('order_number')->unique();//رقم الطلب
             $table->string('customer_name')->nullable();//اسم الزبون

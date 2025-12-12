@@ -12,11 +12,13 @@ return new class extends Migration
     public function up(): void
     {//إنشاء جدول فئات الأصناف في المطعم
         Schema::create('categories_restaurants', function (Blueprint $table) {
-           $table->id()->primary();
-            $table->string('category_name');
+           $table->id();
+           
+            $table->string('category_name')->unique();
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->timestamps();
             
         });
     }

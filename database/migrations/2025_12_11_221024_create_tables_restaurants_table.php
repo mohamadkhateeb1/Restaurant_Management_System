@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {//إنشاء جدول الطاولات في المطعم
         Schema::create('tables_restaurants', function (Blueprint $table) {
-            $table->id()->primary();
-            $table->integer('table_number')->unique();
+            $table->id();
+            $table->string('table_number')->unique();
             $table->integer('seating_capacity');
             $table->enum('status', ['available', 'occupied', 'reserved'])->default('available');
             $table->string('location')->nullable();

@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('invetories', function (Blueprint $table) {
-            $table->id()->primary();
-            $table->string('item_name'); // اسم الصنف
+            $table->id();
+            $table->string('item_name')->unique(); // اسم الصنف
             $table->decimal('quantity', 10, 2); // الكمية المتوفرة
             $table->decimal('min_quantity', 10, 2); // الحد الأدنى للكمية
             $table->string('unit'); // وحدة القياس (مثل: kg, liters, pieces)

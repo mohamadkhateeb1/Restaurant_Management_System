@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {//إنشاء جدول الأدوار في المطعم
         Schema::create('roles_restaurants', function (Blueprint $table) {
-                $table->id()->primary();
+            $table->id();
             $table->string('role_name')->unique();
             // $table->guard_name('role_guard')->default('web');
-            // $table->timestamps();
+            $table->timestamps();
         });
     }
 

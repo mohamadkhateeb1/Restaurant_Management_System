@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {//إنشاء جدول طلبات تناول الطعام داخل المطعم
         Schema::create('dine_in_order_restaurants', function (Blueprint $table) {
-            $table->id()->primary();
+            $table->id();
             $table->foreignId('user_id')->constrained('user_restaurants')->cascadeOnDelete();//ربطه بين الطلب والمستخدم
             $table->foreignId('table_id')->constrained('tables_restaurants')->cascadeOnDelete();//ربطه بين الطلب والطاوله
             $table->string('order_number')->unique();//رقم الطلب

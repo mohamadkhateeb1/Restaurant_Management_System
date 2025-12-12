@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {//إنشاء جدول المستخدمين في المطعم
         Schema::create('user_restaurants', function (Blueprint $table) {
-            $table->id()->primary();
+            $table->id();
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');

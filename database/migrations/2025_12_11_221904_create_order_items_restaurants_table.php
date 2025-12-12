@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('order_items_restaurants', function (Blueprint $table) {
-            $table->id()->primary();
+            $table->id();
             $table->foreignId('dine_in_order_id')->nullable()->constrained('dine_in_order_restaurants')
             ->onDelete('set null');//ربطه بين طلب تناول الطعام داخل المطعم والعناصر
             $table->foreignId('take_away_order_id')->nullable()->constrained('take_aways_restaurants')

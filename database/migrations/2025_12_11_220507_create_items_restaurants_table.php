@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {//إنشاء جدول الأصناف في المطعم
         Schema::create('items_restaurants', function (Blueprint $table) {
-            $table->id()->primary();
-            $table->foreignId('category_id')->constrained('categories_restaurants')->cascadeOnDelete()->primary();
-            $table->string('item_name');
+            $table->id();
+            $table->foreignId('category_id')->constrained('categories_restaurants')->cascadeOnDelete();
+            $table->string('item_name')->unique();
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->decimal('price', 8, 2);
