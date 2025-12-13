@@ -20,11 +20,10 @@ class UserSeeder extends Seeder
             'email' => 'admin@app.com',
             'role' => 'admin',
             'password' => Hash::make('password'),
-            'phone' => '0555111222', // ❌ تصحيح: إضافة رقم الهاتف
-            'status' => 'active',    // ❌ تصحيح: إضافة الحالة
+            'phone' => '0555111222', 
+            'status' => 'active', 
         ]);
 
-        // 2. مستخدم المدير (Manager) - لربطه بدور المدير والموظفين
         UserRestaurant::create([
             'name' => 'Restaurant Manager',
             'role' => 'admin',
@@ -34,7 +33,6 @@ class UserSeeder extends Seeder
             'status' => 'active',
         ]);
         
-        // 3. مستخدم الكاشير (Cashier) - لربطه بدور الكاشير وتصدير الفواتير
         UserRestaurant::create([
             'name' => 'Cashier Fatima',
             'email' => 'cashier@app.com',
