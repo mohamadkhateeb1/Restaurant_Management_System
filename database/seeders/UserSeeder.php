@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
         UserRestaurant::create([
             'name' => 'Super Admin',
             'email' => 'admin@app.com',
+            'role' => 'admin',
             'password' => Hash::make('password'),
             'phone' => '0555111222', // ❌ تصحيح: إضافة رقم الهاتف
             'status' => 'active',    // ❌ تصحيح: إضافة الحالة
@@ -26,6 +27,7 @@ class UserSeeder extends Seeder
         // 2. مستخدم المدير (Manager) - لربطه بدور المدير والموظفين
         UserRestaurant::create([
             'name' => 'Restaurant Manager',
+            'role' => 'admin',
             'email' => 'manager@app.com',
             'password' => Hash::make('password'),
             'phone' => '0555333444',
@@ -36,6 +38,7 @@ class UserSeeder extends Seeder
         UserRestaurant::create([
             'name' => 'Cashier Fatima',
             'email' => 'cashier@app.com',
+            'role' => 'staff',
             'password' => Hash::make('password'),
             'phone' => '0555555666',
             'status' => 'active',
@@ -45,6 +48,7 @@ class UserSeeder extends Seeder
         UserRestaurant::create([
             'name' => 'Chef Khaled',
             'email' => 'chef@app.com',
+            'role' => 'staff',
             'password' => Hash::make('password'),
             'phone' => '0555777888',
             'status' => 'active',
@@ -53,6 +57,7 @@ class UserSeeder extends Seeder
         // 5. مستخدم النادل (Waiter)
         UserRestaurant::create([
             'name' => 'Waiter Ali',
+            'role' => 'staff',
             'email' => 'waiter@app.com', // ❌ تصحيح: تغيير الإيميل ليكون فريداً
             'password' => Hash::make('password'),
             'phone' => '0555999000',

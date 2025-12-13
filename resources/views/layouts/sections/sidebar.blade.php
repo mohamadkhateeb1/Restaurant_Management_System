@@ -27,9 +27,12 @@
 
     {{-- قسم تسجيل الخروج في الأسفل --}}
     <div class="mt-auto border-t border-gray-700 pt-4">
-        <a href="#"
-            class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 text-gray-400">
-            <i class="fas fa-sign-out-alt ml-3"></i>تسجيل الخروج
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit"
+                class="w-full flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 text-red-500">
+                <i class="fas fa-sign-out-alt ml-3"></i>تسجيل الخروج
+            </button>
         </a>
     </div>
 </div>

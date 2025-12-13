@@ -1,13 +1,15 @@
 @extends('layouts.app')
 
-{{-- تحديد عنوان الصفحة --}}
 @section('title', 'إدارة الموظفين')
 
+{{-- تم وضع المحتوى والتباعد هنا لضبطه بشكل أفضل --}}
 @section('restaurant_dashboard_content')
 
     <div class="p-4 md:p-8">
 
+        {{-- قسم الإحصائيات (KPIs) --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            {{-- ... بطاقات الإحصائيات ... --}}
             {{-- ---------------- بطاقة 1: المبيعات اليومية ---------- --}}
             <div class="bg-gray-800 p-6 rounded-xl shadow-lg border-t-4 border-green-500">
                 <div class="flex justify-between items-center mb-2">
@@ -48,7 +50,7 @@
 
         </div>
 
-        {{-- ----------------------------- 2. قسم جدول الموظفين ----------------------------- --}}
+        {{-- قسم جدول الموظفين --}}
 
         <div class="grid grid-cols-1 lg:grid-cols-1 gap-6">
             <div class="bg-gray-800 p-6 rounded-xl shadow-lg mt-6">
