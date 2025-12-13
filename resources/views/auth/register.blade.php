@@ -15,7 +15,7 @@
                 <x-input-label for="name" value="الاسم الكامل" class="text-white" />
                 <x-text-input id="name"
                     class="block w-full bg-gray-600 border-gray-500 text-gray-100 placeholder-gray-400 focus:border-sky-400 focus:ring-sky-400 shadow-inner p-3"
-                    type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+                    type="text" name="name" :value="old('name')"  autofocus autocomplete="name" />
                 <x-input-error :messages="$errors->get('name')"
                     class="mt-2 text-red-400 bg-red-900/30 border-r-4 border-red-500 p-2 rounded-sm mb-4" />
             </div>
@@ -25,7 +25,7 @@
                 <x-input-label for="email" value="البريد الإلكتروني" class="text-white" />
                 <x-text-input id="email"
                     class="block w-full bg-gray-600 border-gray-500 text-gray-100 placeholder-gray-400 focus:border-sky-400 focus:ring-sky-400 shadow-inner p-3"
-                    type="email" name="email" :value="old('email')" required autocomplete="username" />
+                    type="email" name="email" :value="old('email')"  autocomplete="username" />
                 <x-input-error :messages="$errors->get('email')"
                     class="mt-2 text-red-400 bg-red-900/30 border-r-4 border-red-500 p-2 rounded-sm mb-4" />
             </div>
@@ -35,7 +35,7 @@
                 <x-input-label for="password" value="كلمة المرور" class="text-white" />
                 <x-text-input id="password"
                     class="block w-full bg-gray-600 border-gray-500 text-gray-100 placeholder-gray-400 focus:border-sky-400 focus:ring-sky-400 shadow-inner p-3"
-                    type="password" name="password" required autocomplete="new-password" />
+                    type="password" name="password"  autocomplete="new-password" />
 
                 <x-input-error :messages="$errors->get('password')"
                     class="mt-2 text-red-400 bg-red-900/30 border-r-4 border-red-500 p-2 rounded-sm mb-4" />
@@ -46,7 +46,7 @@
                 <x-input-label for="password_confirmation" value="تأكيد كلمة المرور" class="text-white" />
                 <x-text-input id="password_confirmation"
                     class="block w-full bg-gray-600 border-gray-500 text-gray-100 placeholder-gray-400 focus:border-sky-400 focus:ring-sky-400 shadow-inner p-3"
-                    type="password" name="password_confirmation" required autocomplete="new-password" />
+                    type="password" name="password_confirmation" autocomplete="new-password" />
 
                 <x-input-error :messages="$errors->get('password_confirmation')"
                     class="mt-2 text-red-400 bg-red-900/30 border-r-4 border-red-500 p-2 rounded-sm mb-4" />
