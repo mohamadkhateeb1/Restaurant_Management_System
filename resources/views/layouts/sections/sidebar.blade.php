@@ -3,7 +3,7 @@
         SRMS
     </h1>
     <aside class="flex-1 space-y-1">
-        <a href="#"
+        <a href="{{route('Admin.dashboard')}}"
             class="flex items-center py-2.5 px-4 rounded transition duration-200 bg-gray-700 text-yellow-500">
             <i class="fas fa-home ml-3"></i>الرئيسية
         </a>

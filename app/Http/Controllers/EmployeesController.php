@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employees;
 use Illuminate\Http\Request;
+use App\Models\UserRestaurant;
 
 class EmployeesController extends Controller
 {
@@ -12,7 +13,8 @@ class EmployeesController extends Controller
      */
     public function index()
     {
-        //
+        $employees = Employees::all();
+        return view('Admin.Employees.index', ['employees'=>$employees]);
     }
 
     /**
@@ -20,7 +22,7 @@ class EmployeesController extends Controller
      */
     public function create()
     {
-        //
+        return view('Admin.Employees.create');
     }
 
     /**
