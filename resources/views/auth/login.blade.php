@@ -1,5 +1,4 @@
 <x-guest-layout>
-
     <div class="relative bg-gray-700 px-6 sm:px-10 pb-10">
 
         <div

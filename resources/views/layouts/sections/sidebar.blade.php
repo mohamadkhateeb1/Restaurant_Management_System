@@ -1,38 +1,86 @@
-<div class="w-64 bg-gray-800 p-5 h-full flex flex-col shadow-2xl">
-    <h1 class="text-3xl font-extrabold text-yellow-500 mb-10 text-center border-b border-gray-700 pb-4">
-        SRMS
-    </h1>
-    <aside class="flex-1 space-y-1">
-        <a href="{{route('Admin.dashboard')}}"
-            class="flex items-center py-2.5 px-4 rounded transition duration-200 bg-gray-700 text-yellow-500">
-            <i class="fas fa-home ml-3"></i>الرئيسية
-        </a>
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    
+    {{-- شعار الـ SRMS --}}
+    <a href="{{ route('Admin.dashboard') }}" class="brand-link text-center">
+        <span class="brand-text font-weight-bold">
+            <i class="fas fa-utensils"></i> SRMS
+        </span>
+    </a>
 
-        <a href="#" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">
-            <i class="fas fa-utensils ml-3"></i>إدارة قائمة الطعام
-        </a>
-        <a href="#" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">
-            <i class="fas fa-users ml-3"></i>إدارة الموظفين
-        </a>
-        <a href="#" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">
-            <i class="fas fa-chair ml-3"></i>إدارة الطاولات
-        </a>
-        <a href="#" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">
-            <i class="fas fa-chart-bar ml-3"></i>التقارير والتحليلات
-        </a>
-        <a href="#" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">
-            <i class="fas fa-boxes ml-3"></i>إدارة المخزون
-        </a>
-    </aside>
+    <div class="sidebar">
+        
+        {{-- قائمة التنقل --}}
+        <nav class="mt-3">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-    {{-- قسم تسجيل الخروج في الأسفل --}}
-    <div class="mt-auto border-t border-gray-700 pt-4">
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit"
-                class="w-full flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 text-red-500">
-                <i class="fas fa-sign-out-alt ml-3"></i>تسجيل الخروج
-            </button>
-        </a>
+                {{-- الرئيسية --}}
+                <li class="nav-item">
+                    <a href="{{ route('Admin.dashboard') }}" class="nav-link {{ request()->routeIs('Admin.dashboard') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-home mr-2"></i> <p>الرئيسية</p>
+                    </a>
+                </li>
+
+                {{-- قائمة الطعام --}}
+                <li class="nav-item">
+                    <a href="{{ url('/menu') }}" class="nav-link {{ request()->is('menu*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-utensils mr-2"></i> <p>قائمة الطعام</p>
+                    </a>
+                </li>
+
+                {{-- الموظفين --}}
+                <li class="nav-item">
+                    <a href="{{ url('/employees') }}" class="nav-link {{ request()->is('employees*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-users mr-2"></i> <p>الموظفين</p>
+                    </a>
+                </li>
+                
+                {{-- الطاولات --}}
+                <li class="nav-item">
+                    <a href="{{ url('/tables') }}" class="nav-link {{ request()->is('tables*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-chair mr-2"></i> <p>الطاولات</p>
+                    </a>
+                </li>
+
+                {{-- الطلبات --}}
+                <li class="nav-item">
+                    <a href="{{ url('/orders') }}" class="nav-link {{ request()->is('orders*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-shopping-cart mr-2"></i> <p>الطلبات</p>
+                    </a>
+                </li>
+                
+                {{-- التقارير --}}
+                <li class="nav-item">
+                    <a href="{{ url('/reports') }}" class="nav-link {{ request()->is('reports*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-chart-bar mr-2"></i> <p>التقارير</p>
+                    </a>
+                </li>
+                
+                {{-- المخزون --}}
+                <li class="nav-item">
+                    <a href="{{ url('/inventory') }}" class="nav-link {{ request()->is('inventory*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-boxes mr-2"></i> <p>المخزون</p>
+                    </a>
+                </li>
+
+                {{-- الإعدادات --}}
+                <li class="nav-item">
+                    <a href="{{ url('/settings') }}" class="nav-link {{ request()->is('settings*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-cog mr-2"></i> <p>الإعدادات</p>
+                    </a>
+                </li>
+
+                {{-- خط فاصل --}}
+                <li class="nav-item mt-3 pt-3" style="border-top: 1px solid rgba(255,255,255,0.1);">
+                    <form method="POST" action="{{ route('logout') }}" class="m-0">
+                        @csrf
+                        {{-- تم تعديل المحاذاة الداخلية لضمان محاذاة النص والأيقونة لليمين --}}
+                        <button type="submit" class="nav-link btn btn-link text-danger w-100 text-right p-0 d-flex align-items-center justify-content-start">
+                             <i class="nav-icon fas fa-sign-out-alt mr-2"></i> <p class="m-0">تسجيل الخروج</p>
+                        </button>
+                    </form>
+                </li>
+
+            </ul>
+        </nav>
     </div>
-</div>
+</aside>

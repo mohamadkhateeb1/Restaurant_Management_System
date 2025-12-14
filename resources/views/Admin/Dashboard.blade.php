@@ -1,101 +1,276 @@
 @extends('layouts.app') 
 
-@section('title', 'لوحة تحكم المدير')
+@section('title', 'Restaurant Admin Dashboard')
 @section('content')
 
-<div class="p-4 md:p-8">
+<div class="container-fluid">
 
     {{-- قسم الإحصائيات (KPIs) --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    <div class="row mb-4">
         
-        {{-- ---------------- بطاقة 1: المبيعات اليومية ---------- --}}
-        <div class="bg-gray-800 p-6 rounded-xl shadow-lg border-t-4 border-green-500">
-            <div class="flex justify-between items-center mb-2">
-                <h3 class="text-gray-400 text-sm font-medium">المبيعات اليومية</h3>
-                <i class="fas fa-dollar-sign text-green-500 text-2xl"></i>
+        {{-- بطاقة 1: المبيعات اليومية --}}
+        <div class="col-lg-3 col-md-6 col-12 mb-3">
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3>$2,450</h3>
+                    <p>المبيعات اليومية</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <a href="#" class="small-box-footer">
+                    <i class="fas fa-arrow-up"></i> 15% من أمس
+                </a>
             </div>
-            <p class="text-3xl font-extrabold mt-1">2,450 $</p>
-            <p class="text-green-400 text-sm mt-2">↑ 15% من أمس</p>
         </div>
-        {{-- ---------------- بطاقة 2: الطلبات المكتملة ---------- --}}
-        <div class="bg-gray-800 p-6 rounded-xl shadow-lg border-t-4 border-blue-500">
-            <div class="flex justify-between items-center mb-2">
-                <h3 class="text-gray-400 text-sm font-medium">الطلبات المكتملة (شهر)</h3>
-                <i class="fas fa-receipt text-blue-500 text-2xl"></i>
-            </div>
 
-            <p class="text-3xl font-extrabold mt-1">450 طلب</p>
-            <p class="text-blue-400 text-sm mt-2">معدل الإنجاز 98%</p>
-        </div>
-        {{-- ---------------- بطاقة 3: الموظفون النشطون ---------- --}}
-        <div class="bg-gray-800 p-6 rounded-xl shadow-lg border-t-4 border-yellow-500">
-            <div class="flex justify-between items-center mb-2">
-                <h3 class="text-gray-400 text-sm font-medium">الموظفون النشطون</h3>
-                <i class="fas fa-users text-yellow-500 text-2xl"></i>
+        {{-- بطاقة 2: الطلبات المكتملة --}}
+        <div class="col-lg-3 col-md-6 col-12 mb-3">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>450</h3>
+                    <p>الطلبات المكتملة (شهر)</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-receipt"></i>
+                </div>
+                <a href="#" class="small-box-footer">
+                    معدل الإنجاز 98%
+                </a>
             </div>
-            <p class="text-3xl font-extrabold mt-1">15 موظف</p>
-            <p class="text-yellow-400 text-sm mt-2">12 نادل، 3 مطبخ</p>
         </div>
-        {{-- ---------------- بطاقة 4: متوسط التقييم ---------- --}}
-        <div class="bg-gray-800 p-6 rounded-xl shadow-lg border-t-4 border-red-500">
-            <div class="flex justify-between items-center mb-2">
-                <h3 class="text-gray-400 text-sm font-medium">متوسط التقييم</h3>
-                <i class="fas fa-star text-red-500 text-2xl"></i>
+
+        {{-- بطاقة 3: الموظفون النشطون --}}
+        <div class="col-lg-3 col-md-6 col-12 mb-3">
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <h3>15</h3>
+                    <p>الموظفون النشطون</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <a href="#" class="small-box-footer">
+                    12 نادل، 3 مطبخ
+                </a>
             </div>
-            <p class="text-3xl font-extrabold mt-1">4.7 / 5.0</p>
-            <p class="text-red-400 text-sm mt-2">بناءً على 50 تقييماً</p>
+        </div>
+
+        {{-- بطاقة 4: متوسط التقييم --}}
+        <div class="col-lg-3 col-md-6 col-12 mb-3">
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3>4.7 / 5.0</h3>
+                    <p>متوسط التقييم</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <a href="#" class="small-box-footer">
+                    بناءً على 50 تقييماً
+                </a>
+            </div>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-1 gap-6">
-        <div class="bg-gray-800 p-6 rounded-xl shadow-lg mt-6">
-            <h1 class="text-xl font-bold mb-6 border-b border-gray-700 pb-3">جدول المستخدمين (بيانات ثابتة)</h1>
-            <div class="overflow-x-auto">
-                <table class="w-full text-right table-auto">
-                    <thead>
-                        <tr class="text-gray-400 uppercase text-sm font-semibold border-b border-gray-700">
-                            <th class="py-3 px-4">اسم المستخدم</th>
-                            <th class="py-3 px-4">البريد الإلكتروني</th>
-                            <th class="py-3 px-4">الدور</th>
-                            <th class="py-3 px-4">رقم الهاتف</th>
-                            <th class="py-3 px-4">الحالة</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{-- بيانات ثابتة 1 --}}
-                        <tr class="border-b border-gray-700 hover:bg-gray-700 transition duration-150">
-                            <td class="py-3 px-4">أحمد الشريف</td>
-                            <td class="py-3 px-4">ahmad@example.com</td>
-                            <td class="py-3 px-4">مدير</td>
-                            <td class="py-3 px-4 text-sm text-gray-400">501234567</td>
-                            <td class="py-3 px-4">
-                                <span class="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-medium">نشط</span>
-                            </td>
-                        </tr>
-                        {{-- بيانات ثابتة 2 --}}
-                        <tr class="border-b border-gray-700 hover:bg-gray-700 transition duration-150">
-                            <td class="py-3 px-4">فاطمة محمد</td>
-                            <td class="py-3 px-4">fatima@example.com</td>
-                            <td class="py-3 px-4">نادل</td>
-                            <td class="py-3 px-4 text-sm text-gray-400">559876543</td>
-                            <td class="py-3 px-4">
-                                <span class="bg-yellow-600 text-white px-3 py-1 rounded-full text-xs font-medium">إجازة</span>
-                            </td>
-                        </tr>
-                        {{-- بيانات ثابتة 3 --}}
-                        <tr class="border-b border-gray-700 hover:bg-gray-700 transition duration-150">
-                            <td class="py-3 px-4">خالد العلي</td>
-                            <td class="py-3 px-4">khalid@example.com</td>
-                            <td class="py-3 px-4">طباخ</td>
-                            <td class="py-3 px-4 text-sm text-gray-400">530001112</td>
-                            <td class="py-3 px-4">
-                                <span class="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-medium">نشط</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+    {{-- جدول المستخدمين --}}
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-dark">
+                
+                {{-- Header الكارت --}}
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-users ml-2"></i>
+                        جدول المستخدمين (بيانات ثابتة)
+                    </h3>
+                    <div class="card-tools">
+                        <span class="badge badge-info">3 مستخدمين</span>
+                    </div>
+                </div>
+
+                {{-- Body الكارت --}}
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-hover table-dark text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>اسم المستخدم</th>
+                                <th>البريد الإلكتروني</th>
+                                <th>الدور</th>
+                                <th>رقم الهاتف</th>
+                                <th class="text-center">الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            {{-- صف 1: أحمد --}}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-panel d-flex">
+                                            <div class="image">
+                                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center" 
+                                                     style="width: 40px; height: 40px;">
+                                                    <span class="text-white font-weight-bold">أ</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="mr-2 font-weight-bold">أحمد الشريف</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <i class="fas fa-envelope text-info ml-2"></i>
+                                    ahmad@example.com
+                                </td>
+                                <td>
+                                    <span class="badge badge-purple">
+                                        <i class="fas fa-user-shield ml-1"></i>
+                                        مدير
+                                    </span>
+                                </td>
+                                <td>
+                                    <i class="fas fa-phone ml-2"></i>
+                                    501234567
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge badge-success">
+                                        <i class="fas fa-check-circle ml-1"></i>
+                                        نشط
+                                    </span>
+                                </td>
+                            </tr>
+
+                            {{-- صف 2: فاطمة --}}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-panel d-flex">
+                                            <div class="image">
+                                                <div class="bg-pink rounded-circle d-flex align-items-center justify-content-center" 
+                                                     style="width: 40px; height: 40px;">
+                                                    <span class="text-white font-weight-bold">ف</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="mr-2 font-weight-bold">فاطمة محمد</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <i class="fas fa-envelope text-info ml-2"></i>
+                                    fatima@example.com
+                                </td>
+                                <td>
+                                    <span class="badge badge-info">
+                                        <i class="fas fa-concierge-bell ml-1"></i>
+                                        نادل
+                                    </span>
+                                </td>
+                                <td>
+                                    <i class="fas fa-phone ml-2"></i>
+                                    559876543
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge badge-warning">
+                                        <i class="fas fa-clock ml-1"></i>
+                                        إجازة
+                                    </span>
+                                </td>
+                            </tr>
+
+                            {{-- صف 3: خالد --}}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-panel d-flex">
+                                            <div class="image">
+                                                <div class="bg-success rounded-circle d-flex align-items-center justify-content-center" 
+                                                     style="width: 40px; height: 40px;">
+                                                    <span class="text-white font-weight-bold">خ</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="mr-2 font-weight-bold">خالد العلي</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <i class="fas fa-envelope text-info ml-2"></i>
+                                    khalid@example.com
+                                </td>
+                                <td>
+                                    <span class="badge badge-warning">
+                                        <i class="fas fa-fire ml-1"></i>
+                                        طباخ
+                                    </span>
+                                </td>
+                                <td>
+                                    <i class="fas fa-phone ml-2"></i>
+                                    530001112
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge badge-success">
+                                        <i class="fas fa-check-circle ml-1"></i>
+                                        نشط
+                                    </span>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                {{-- Footer الكارت --}}
+                <div class="card-footer clearfix">
+                    <div class="float-right">
+                        <small class="text-muted">
+                            عرض <strong>3</strong> من <strong>3</strong> مستخدمين
+                        </small>
+                    </div>
+                    <ul class="pagination pagination-sm m-0 float-left">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        <li class="page-item active">
+                            <a class="page-link" href="#">1</a>
+                        </li>
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
             </div>
         </div>
     </div>
+
 </div>
+
+@push('styles')
+<style>
+    /* ألوان إضافية للـ badges */
+    .badge-purple {
+        background-color: #6f42c1;
+        color: white;
+    }
+    
+    .bg-pink {
+        background-color: #e83e8c !important;
+    }
+    
+    /* تحسين small-box للـ RTL */
+    .small-box .icon {
+        left: 10px;
+        right: auto;
+    }
+    
+    /* تحسين table hover */
+    .table-hover tbody tr:hover {
+        background-color: rgba(255,255,255,0.05);
+    }
+</style>
+@endpush
+
 @endsection
