@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\UserRestaurant;
 use Illuminate\Support\Facades\Hash;
-
+use App\Models\User;
 class UserSeeder extends Seeder
 {
     /**
@@ -23,43 +23,11 @@ class UserSeeder extends Seeder
             'phone' => '0555111222', 
             'status' => 'active', 
         ]);
-
-        UserRestaurant::create([
-            'name' => 'Restaurant Manager',
-            'role' => 'admin',
-            'email' => 'manager@app.com',
+        //حساب ال admin لللمشروع 
+        User::create([
+            'name' => 'John Doe',
+            'email' => 'john@example.com',
             'password' => Hash::make('password'),
-            'phone' => '0555333444',
-            'status' => 'active',
-        ]);
-        
-        UserRestaurant::create([
-            'name' => 'Cashier Fatima',
-            'email' => 'cashier@app.com',
-            'role' => 'staff',
-            'password' => Hash::make('password'),
-            'phone' => '0555555666',
-            'status' => 'active',
-        ]);
-        
-        // 4. مستخدم الطاهي (Chef) - لربطه بدور الطاهي ومعاملات المخزون
-        UserRestaurant::create([
-            'name' => 'Chef Khaled',
-            'email' => 'chef@app.com',
-            'role' => 'staff',
-            'password' => Hash::make('password'),
-            'phone' => '0555777888',
-            'status' => 'active',
-        ]);
-        
-        // 5. مستخدم النادل (Waiter)
-        UserRestaurant::create([
-            'name' => 'Waiter Ali',
-            'role' => 'staff',
-            'email' => 'waiter@app.com', // ❌ تصحيح: تغيير الإيميل ليكون فريداً
-            'password' => Hash::make('password'),
-            'phone' => '0555999000',
-            'status' => 'active',
         ]);
     }
 }

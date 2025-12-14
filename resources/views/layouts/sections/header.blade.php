@@ -11,7 +11,6 @@
         <h2>Restaurant Admin Dashboard</h2>
     </div>
     
-    {{-- إضافة قائمة عناصر على اليمين إذا لزم الأمر، أو تركها فارغة --}}
     <ul class="navbar-nav ml-auto"> 
         <li class="nav-item">
          

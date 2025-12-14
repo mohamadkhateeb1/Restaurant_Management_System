@@ -22,27 +22,6 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
-        // 1. الجداول الرئيسية أولاً (إنشاء السجلات الأساسية)
-        $this->call([
-            UserSeeder::class,
-            RoleSeeder::class,
-            PermissionSeeder::class,
-
-            // ✅ تفعيل Seeders أساسية لقائمة الطعام
-            CategorySeeder::class,
-            ItemSeeder::class,
-            // ✅ تفعيل Seeders أساسية للتشغيل
-            TableSeeder::class,
-            InventorySeeder::class, // ✅ يجب أن يكون جدول المخزون موجوداً قبل transactions
-            EmployeeSeeder::class,
-        ]);
-
-        // 2. جداول الربط والعلاقات ثانياً (الربط بين السجلات)
-        $this->call([
-            RoleUserSeeder::class,
-            RolePermissionSeeder::class,
-            OrderSeeder::class,
-            InvoiceSeeder::class,
-        ]);
+        $this->call([UserSeeder::class]);
     }
 }

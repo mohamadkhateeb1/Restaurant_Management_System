@@ -41,6 +41,7 @@
         </div>
 
         {{-- بطاقة 3: الموظفون النشطون --}}
+
         <div class="col-lg-3 col-md-6 col-12 mb-3">
             <div class="small-box bg-warning">
                 <div class="inner">
@@ -73,7 +74,7 @@
         </div>
     </div>
 
-    {{-- جدول المستخدمين --}}
+{{-- ---------------------------Table Users ---------------- --}}
     <div class="row">
         <div class="col-12">
             <div class="card card-dark">
@@ -103,7 +104,7 @@
                         </thead>
                         <tbody>
                             
-                            {{-- صف 1: أحمد --}}
+                         
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center">
@@ -140,7 +141,6 @@
                                 </td>
                             </tr>
 
-                            {{-- صف 2: فاطمة --}}
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center">
@@ -177,7 +177,6 @@
                                 </td>
                             </tr>
 
-                            {{-- صف 3: خالد --}}
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center">
@@ -218,7 +217,6 @@
                     </table>
                 </div>
 
-                {{-- Footer الكارت --}}
                 <div class="card-footer clearfix">
                     <div class="float-right">
                         <small class="text-muted">
@@ -250,7 +248,6 @@
 
 @push('styles')
 <style>
-    /* ألوان إضافية للـ badges */
     .badge-purple {
         background-color: #6f42c1;
         color: white;
@@ -260,17 +257,14 @@
         background-color: #e83e8c !important;
     }
     
-    /* تحسين small-box للـ RTL */
     .small-box .icon {
         left: 10px;
         right: auto;
     }
     
-    /* تحسين table hover */
     .table-hover tbody tr:hover {
         background-color: rgba(255,255,255,0.05);
     }
 </style>
 @endpush
-
 @endsection

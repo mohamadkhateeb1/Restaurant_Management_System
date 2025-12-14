@@ -8,7 +8,6 @@
 
     <title>@yield('title') - SRMS</title>
 
-    {{-- خط Cairo العربي --}}
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -28,13 +27,11 @@
             text-align: right;
         }
 
-        /* تعديل موضع الـ Sidebar لليمين */
         .main-sidebar {
             right: 0 !important;
             left: auto !important;
         }
 
-        /* تعديل محتوى الصفحة ليبدأ بعد الـ Sidebar */
         .content-wrapper,
         .main-header,
         .main-footer {
@@ -42,25 +39,21 @@
             margin-left: 0 !important;
         }
 
-        /* عند إغلاق الـ Sidebar */
         .sidebar-collapse .content-wrapper,
         .sidebar-collapse .main-header,
         .sidebar-collapse .main-footer {
             margin-right: 0 !important;
         }
 
-        /* تعديل اتجاه الأيقونات */
         .nav-icon {
             margin-left: 10px !important;
             margin-right: 0
         }
 
-        /* تعديل brand-link */
         .brand-link {
             text-align: center !important;
         }
 
-        /* تعديل nav items */
         .nav-sidebar .nav-item .nav-link {
             text-align: right !important;
         }
@@ -68,8 +61,31 @@
         .nav-sidebar .nav-link p {
             display: inline-block;
         }
-    </style>
 
+    .form-control, 
+    .form-select,
+    .form-control::placeholder, 
+    .form-select::placeholder {
+        text-align: right !important; 
+        direction: rtl !important; 
+    }
+    
+    input::placeholder,
+    textarea::placeholder {
+        text-align: right !important;
+        direction: rtl !important;
+    }
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus, 
+    input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0px 1000px #495057 inset !important; 
+        -webkit-text-fill-color: #ffffff !important;
+        border-color: #495057 !important;
+    }
+    </style>
+    @stack('styles')
     @yield('styles')
 </head>
 
@@ -77,10 +93,10 @@
 
     <div class="wrapper">
 
-        {{-- 1. Header (Navbar) --}}
+        {{-- 1. Header  --}}
         @include('layouts.sections.header')
 
-        {{-- 2. Sidebar (القائمة الجانبية على اليمين) --}}
+        {{-- 2. Sidebar  --}}
         @include('layouts.sections.sidebar')
 
         {{-- 3. Content Wrapper --}}
@@ -111,7 +127,7 @@
     <script src="{{ asset('assets/dashboard/plugins/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/dashboard/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/dashboard/dist/js/adminlte.js') }}"></script>
-
+    
     @yield('scripts')
 </body>
 
