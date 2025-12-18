@@ -1,6 +1,6 @@
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="main-sidebar elevation-4">
 
-    <a href="{{ route('Admin.dashboard') }}" class="brand-link text-center">
+    <a href="{{ route('Pages.dashboard') }}" class="brand-link text-center">
         <span class="brand-text font-weight-bold">
             <i class="fas fa-utensils"></i> SRMS
         </span>
@@ -14,12 +14,19 @@
 
                 {{-- الرئيسية --}}
                 <li class="nav-item">
-                    <a href="{{ route('Admin.dashboard') }}"
-                        class="nav-link {{ request()->routeIs('Admin.dashboard') ? 'active' : '' }}">
+                    <a href="{{ route('Pages.dashboard') }}"
+                        class="nav-link {{ request()->routeIs('Pages.dashboard') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-home mr-2"></i>
                         <p>الرئيسية</p>
                     </a>
                 </li>
+                   {{-- <li class="nav-item">
+                    <a href="{{ route('Pages.role.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-users mr-2"></i>
+                        <p>الأدوار</p>
+                    </a>
+                </li> --}}
+
 
                 {{-- قائمة الطعام --}}
                 <li class="nav-item">
@@ -31,7 +38,7 @@
 
                 {{-- الموظفين --}}
                 <li class="nav-item">
-                    <a href="{{ route('Admin.employee.index') }}" class="nav-link">
+                    <a href="{{ route('Pages.employee.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-users mr-2"></i>
                         <p>الموظفين</p>
                     </a>

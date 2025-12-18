@@ -28,7 +28,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->route('Admin.dashboard');
+        return redirect()->route('Pages.dashboard');
     }
 
     /**

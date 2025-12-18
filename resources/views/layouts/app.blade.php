@@ -62,52 +62,55 @@
             display: inline-block;
         }
 
-    .form-control, 
-    .form-select,
-    .form-control::placeholder, 
-    .form-select::placeholder {
-        text-align: right !important; 
-        direction: rtl !important; 
-    }
-    
-    input::placeholder,
-    textarea::placeholder {
-        text-align: right !important;
-        direction: rtl !important;
-    }
+        .form-control,
+        .form-select,
+        .form-control::placeholder,
+        .form-select::placeholder {
+            text-align: right !important;
+            direction: rtl !important;
+        }
 
-    input:-webkit-autofill,
-    input:-webkit-autofill:hover, 
-    input:-webkit-autofill:focus, 
-    input:-webkit-autofill:active {
-        -webkit-box-shadow: 0 0 0px 1000px #495057 inset !important; 
-        -webkit-text-fill-color: #ffffff !important;
-        border-color: #495057 !important;
-    }
+        input::placeholder,
+        textarea::placeholder {
+            text-align: right !important;
+            direction: rtl !important;
+        }
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0px 1000px #495057 inset !important;
+            -webkit-text-fill-color: #ffffff !important;
+            border-color: #495057 !important;
+        }
     </style>
     @stack('styles')
     @yield('styles')
 </head>
 
-<body class="hold-transition  layout-fixed dark-mode text-sm sidebar-right">
+{{-- تم إزالة dark-mode الثابت --}}
+
+<body class="hold-transition layout-fixed text-sm sidebar-right">
 
     <div class="wrapper">
 
-        {{-- 1. Header  --}}
+        {{-- 1. Header  --}}
         @include('layouts.sections.header')
 
-        {{-- 2. Sidebar  --}}
+        {{-- 2. Sidebar  --}}
         @include('layouts.sections.sidebar')
 
         {{-- 3. Content Wrapper --}}
-        <div class="content-wrapper bg-dark">
+        {{-- تم إزالة bg-dark الثابت --}}
+        <div class="content-wrapper">
 
             {{-- Content Header --}}
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-12">
-                            
+
                         </div>
                     </div>
                 </div>
@@ -127,8 +130,52 @@
     <script src="{{ asset('assets/dashboard/plugins/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/dashboard/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/dashboard/dist/js/adminlte.js') }}"></script>
-    
+
     @yield('scripts')
+
+    {{-- كود JavaScript لتبديل السمة (Dark/Light Mode) --}}
+    <script>
+        $(document).ready(function() {
+            // 1. تحديد العناصر الأساسية
+            const body = $('body');
+            const toggleButton = $('#theme-toggle');
+            const themeIcon = $('#theme-icon');
+            const darkModeClass = 'dark-mode';
+
+            // 2. تطبيق الوضع المحفوظ عند تحميل الصفحة
+            const currentTheme = localStorage.getItem('theme');
+
+            function applyTheme(theme) {
+                if (theme === 'light') {
+                    body.removeClass(darkModeClass);
+                    themeIcon.removeClass('fa-sun').addClass('fa-moon');
+                } else {
+                    body.addClass(darkModeClass);
+                    themeIcon.removeClass('fa-moon').addClass('fa-sun');
+                }
+
+                if (typeof AdminLTE !== 'undefined' && AdminLTE.layout) {
+                    AdminLTE.layout.fixIframeHeight();
+                }
+            }
+
+            // تطبيق الوضع المحفوظ، الافتراضي هو 'dark'
+            applyTheme(currentTheme || 'dark');
+
+            // 3. وظيفة تبديل الوضع عند النقر على الزر
+            toggleButton.on('click', function(e) {
+                e.preventDefault();
+
+                if (body.hasClass(darkModeClass)) {
+                    applyTheme('light');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    applyTheme('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

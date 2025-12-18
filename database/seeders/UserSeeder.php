@@ -15,14 +15,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // 1. المستخدم الإداري (Super Admin)
-        UserRestaurant::create([
-            'name' => 'Super Admin',
-            'email' => 'admin@app.com',
-            'role' => 'admin',
-            'password' => Hash::make('password'),
-            'phone' => '0555111222', 
-            'status' => 'active', 
-        ]);
+    
         //حساب ال admin لللمشروع 
         User::create([
             'name' => 'John Doe',

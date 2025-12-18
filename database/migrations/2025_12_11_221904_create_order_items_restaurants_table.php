@@ -11,18 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('order_items_restaurants', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('dine_in_order_id')->nullable()->constrained('dine_in_order_restaurants')
-            ->onDelete('set null');//ربطه بين طلب تناول الطعام داخل المطعم والعناصر
-            $table->foreignId('take_away_order_id')->nullable()->constrained('take_aways_restaurants')
-            ->onDelete('set null');//ربطه بين الطلبات الخارجية والعناصر ال 
-            //ondelete :(null)يعني اذا تم حذف الطلب يتم تعيين القيمة الى 
-            $table->foreignId('item_id')->constrained('items_restaurants')->cascadeOnDelete();//ربطه بين الصنف والطلب
-            $table->integer('quantity');//كمية الصنف في الطلب
-            $table->decimal('price', 8, 2);//سعر الصنف في الطلب
-            $table->timestamps();
-        });
+       Schema::create('order_items_restaurants', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('dine_in_order_id')->nullable()->constrained('dine_in_order_restaurants')->onDelete('set null');
+    $table->foreignId('take_away_order_id')->nullable()->constrained('take_aways_restaurants')->onDelete('set null'); // تصحيح الاسم
+    $table->foreignId('item_id')->constrained('items_restaurants')->cascadeOnDelete();
+    $table->integer('quantity');
+    $table->decimal('price', 8, 2);
+    $table->timestamps();
+});
     }
 
     /**

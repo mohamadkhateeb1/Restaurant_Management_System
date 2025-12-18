@@ -2,104 +2,103 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Employees;
+use App\Models\Employee;
 use Illuminate\Http\Request;
-use App\Models\UserRestaurant;
-use App\Http\Requests\EmoloyeeRequest;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
+use App\Http\Requests\EmoloyeeRequest; // تأكد من تصحيح الاسم إذا كان هناك خطأ إملائي في الملف نفسه
 
 class EmployeesController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * عرض قائمة الموظفين
      */
     public function index()
     {
-        $employees = Employees::all();
-        return view('Admin.Employees.index', ['employees'=>$employees]);
+        $employees = Employee::all(); // جلب الأحدث أولاً
+        return view('Pages.Employees.index', ['employees' => $employees]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * عرض صفحة إنشاء موظف جديد
      */
     public function create()
     {
-        return view('Admin.Employees.create');
+        return view('Pages.Employees.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * تخزين موظف جديد في قاعدة البيانات
      */
     public function store(Request $request)
     {
-        // حفظ موظف جديد
-        $employee= new Employees();
-        $request->validate(EmoloyeeRequest::rules());// (clean code) نتحقق من صحة البيانات عن طريق كلاس نقوم بإنشائه 
-        $employee->name = $request->name;
-        $employee->email = $request->email;
-        $employee->phone = $request->phone;
-        $employee->position = $request->position;
-        $employee->salary = $request->salary;
-        $employee->hire_date = $request->hire_date;
-        $employee->notes = $request->notes;
-        $employee->status = $request->status;
-        $employee->save();
-        return redirect()->route('Admin.employee.index')->with('success', 'Employee created successfully.');
+        // التحقق من البيانات باستخدام الـ Request Class الخاص بك
+        // تأكد أن EmoloyeeRequest يحتوي على 'password' => 'required|min:8'
+        $validatedData = $request->validate(EmoloyeeRequest::rules());
+
+        // تشفير كلمة المرور قبل الحفظ
+        $validatedData['password'] = Hash::make($request->password);
+
+        // استخدام Mass Assignment للحفظ السريع (تأكد من وجود الحقول في $fillable داخل الموديل)
+        Employee::create($validatedData);
+
+        return redirect()->route('Pages.employee.index')
+            ->with('success', 'تم إضافة الموظف بنجاح.');
     }
 
     /**
-     * Display the specified resource.
+     * عرض بيانات موظف محدد
      */
     public function show($id)
     {
-        $employee = Employees::findOrFail($id);
-        return view('Admin.Employees.show', ['employee' => $employee]);
+        $employee = Employee::findOrFail($id);
+        return view('Pages.Employees.show', compact('employee'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * عرض صفحة تعديل موظف
      */
-        public function edit($id)
-        {
-            $employees = Employees::findOrFail($id);
-            return view('Admin.Employees.edit', ['employee' => $employees]);
-        }
+    public function edit($id)
+    {
+        $employee = Employee::findOrFail($id);
+        return view('Pages.Employees.edit', compact('employee'));
+    }
 
     /**
-     * Update the specified resource in storage.
+     * تحديث بيانات الموظف
      */
     public function update(Request $request, $id)
     {
-        $employee = Employees::findOrFail($id);
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email',
-            'phone' => 'required|string|max:20',
-            'position' => 'required|string|max:100',
-            'salary' => 'required|numeric|min:0',
-            'hire_date' => 'required|date',
-            'notes' => 'nullable|string',
-            'status' => 'required|in:active,inactive',
-        ]);
-       
-        $employee->name = $request->name;
-        $employee->email = $request->email;
-        $employee->phone = $request->phone;
-        $employee->position = $request->position;
-        $employee->salary = $request->salary;
-        $employee->hire_date = $request->hire_date;
-        $employee->notes = $request->notes;
-        $employee->status = $request->status;
-        $employee->save();
-        return redirect()->route('Admin.employee.index')->with('warning', 'Employee updated successfully.');
+        $employee = Employee::findOrFail($id);
+
+        // قواعد التحقق المخصصة للتحديث لضمان عدم تكرار الإيميل والهاتف مع الآخرين
+        $request->validate(
+            EmoloyeeRequest::rules($id)
+        );
+
+        // تحديث البيانات الأساسية
+        $data = $request->except('password');
+
+        // تحديث كلمة المرور فقط إذا تم إدخالها
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        $employee->update($data);
+
+        return redirect()->route('Pages.employee.index')
+            ->with('warning', 'تم تحديث بيانات الموظف بنجاح.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * حذف موظف
      */
     public function destroy($id)
     {
-        $employees = Employees::findOrFail($id);
-        $employees->delete();
-        return redirect()->route('Admin.employee.index')->with('danger', 'Employee deleted successfully.');
+        $employee = Employee::findOrFail($id);
+        $employee->delete();
+
+        return redirect()->route('Pages.employee.index')
+            ->with('danger', 'تم حذف الموظف من النظام.');
     }
 }

@@ -12,7 +12,7 @@
                 ملف الموظف: <span class="text-info">{{ $employee->name }}</span>
             </h2>
             {{-- زر العودة للداش بورد  --}}
-            <a href="{{ route('Admin.employee.index') }}" class="btn btn-secondary btn-sm">
+            <a href="{{ route('Pages.employee.index') }}" class="btn btn-secondary btn-sm">
                 <i class="fas fa-arrow-right me-2"></i>
                 العودة للقائمة
             </a>
@@ -20,7 +20,7 @@
         
         {{-- بحال كنت بدي شوف بيانات موظف وحبيت عدل--}}
         <div class="d-flex justify-content-end mb-4">
-            <a href="{{ route('Admin.employee.edit', $employee->id) }}" class="btn btn-warning shadow-sm">
+            <a href="{{ route('Pages.employee.edit', $employee->id) }}" class="btn btn-warning shadow-sm">
                 <i class="fas fa-edit me-2"></i>
                 تعديل بيانات الموظف
             </a>

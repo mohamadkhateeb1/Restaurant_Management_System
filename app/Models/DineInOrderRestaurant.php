@@ -6,24 +6,29 @@ use Illuminate\Database\Eloquent\Model;
 
 class DineInOrderRestaurant extends Model
 {
-    public $fillable = [
-        'user_id',
-        'table_id',
-        'order_number',
-        'status',
-        'total_amount',
+    protected $table = 'dine_in_order_restaurants';
+
+    protected $fillable = [
+        'table_id', 'employee_id', 'order_number', 'status', 'total_amount'
     ];
-    public function user(){
-        return $this->belongsTo(UserRestaurant::class);//(UserRestaurant) علاقة متعدد إلى واحد مع نموذج 
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'employee_id');
     }
-    // تعريف العلاقة مع نموذج TablesRestaurant
-    public function table(){
-        return $this->belongsTo(TablesRestaurant::class);//(TablesRestaurant) علاقة متعدد إلى واحد مع نموذج 
+
+    public function table()
+    {
+        return $this->belongsTo(TablesRestaurant::class, 'table_id');
     }
-    public function orderItemsRestaurants(){
-        return $this->hasMany(OrderItemsRestaurant::class, 'dine_in_order_id');//(OrderItemsRestaurant) علاقة واحد إلى متعدد مع نموذج
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItemsRestaurant::class, 'dine_in_order_id');
     }
-    public function invoices(){
-        return $this->hasOne(Invoice::class,'dine_in_order_id');//(InvoiceRestaurant) علاقة واحد إلى واحد مع نموذج
+
+    public function invoice()
+    {
+        return $this->hasOne(Invoice::class, 'dine_in_order_id');
     }
 }

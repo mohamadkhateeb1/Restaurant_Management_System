@@ -3,24 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Invetory extends Model 
+class Inventory extends Model 
 {
+    // تحديد اسم الجدول يدوياً لأننا صححنا الإملاء
     protected $table = 'inventories'; 
 
-    public $fillable = [
-        'item_name',
-        'quantity',
-        'min_quantity',
-        'unit',
-        'cost_per_unit',
-        'supplier_name', 
+    protected $fillable = [
+        'item_name', 'quantity', 'min_quantity', 'unit', 'cost_per_unit', 'supplier_name'
     ];
-    
-    // ❌ تصحيح: تغيير اسم التابع وتصحيح اسم النموذج المرجعي
-    public function transactions(): HasMany
+
+    public function transactions()
     {
-        return $this->hasMany(InvetoryTransactions::class); 
+        return $this->hasMany(InventoryTransaction::class, 'inventory_id');
     }
 }

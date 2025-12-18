@@ -6,8 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class CategoriesRestaurant extends Model
 {
-    public $fillable = ['category_name', 'description', 'image', 'status'];//الحقول القابلة للتعبئة في النموذج
-    public function items(){
-        return $this->hasMany(ItemsRestaurant::class);//(ItemsRestaurant) علاقة واحد إلى متعدد مع نموذج
+    protected $table = 'categories_restaurants';
+
+    protected $fillable = ['category_name', 'description', 'image', 'status'];
+
+    public function items()
+    {
+        return $this->hasMany(ItemsRestaurant::class, 'category_id');
     }
 }

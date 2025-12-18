@@ -1,37 +1,35 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Model;
+
 class Invoice extends Model
 {
-    public $fillable = [
-        'invoice_number',
-        'dine_in_order_id',
-        'takeaway_order_id',
-        'amount_paid',
-        'payment_status',
+    protected $table = 'invoices';
+
+    protected $fillable = [
+        'invoice_number', 'dine_in_order_id', 'takeaway_order_id', 'employee_id', 'amount_paid', 'payment_status'
     ];
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'employee_id');
+    }
+
     public function dineInOrder()
     {
-        return $this->belongsTo(DineInOrderRestaurant::class);
+        return $this->belongsTo(DineInOrderRestaurant::class, 'dine_in_order_id');
     }
 
-    // العلاقة مع الطلب السفري
-    public function takeawayOrder()
+    public function takeAwayOrder()
     {
-        return $this->belongsTo(TakeAwaysRestaurant::class);
-    }
-    
-    // العلاقة مع المستخدم (الموظف الذي أصدر الفاتورة)
-    public function user()
-    {
-        return $this->belongsTo(UserRestaurant::class);
-    }
-    
-    // تابع مُساعد لجلب الطلب المرتبط (سواء داخلي أو سفري)
-    public function order()
-    {
-        return $this->dineInOrder ?? $this->takeawayOrder;
+        return $this->belongsTo(TakeAwaysRestaurant::class, 'takeaway_order_id');
     }
 
+    // دالة مساعدة للحصول على الطلب المرتبط بالفاتورة بغض النظر عن نوعه
+    public function getRelatedOrderAttribute()
+    {
+        return $this->dineInOrder ?? $this->takeAwayOrder;
+    }
 }

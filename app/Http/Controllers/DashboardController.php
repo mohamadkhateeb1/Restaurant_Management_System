@@ -12,7 +12,7 @@ class DashboardController extends Controller
         // تم إرسال جميع المتغيرات التي تستخدم في القوالب (مثل $employees و $item) كـ مصفوفة فارغة مؤقتاً
         $emptyData = []; 
 
-        return view('Admin.dashboard', [
+        return view('Pages.dashboard', [
             'employees' => $emptyData, // لإرضاء القوالب التي تستخدم $employees
             'item' => $emptyData,       // لإرضاء القوالب التي تستخدم $item
             // يمكنك إضافة أي متغير آخر يُحتمل استخدامه في الـ View

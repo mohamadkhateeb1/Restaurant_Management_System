@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('roles_restaurants', function (Blueprint $table) {
             $table->id();
             $table->string('role_name')->unique();
-            // $table->guard_name('role_guard')->default('web');
             $table->timestamps();
         });
     }
