@@ -10,10 +10,12 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {//إنشاء جدول الأدوار في المطعم
-        Schema::create('roles_restaurants', function (Blueprint $table) {
+    {
+        Schema::create('roles_users', function (Blueprint $table) {
             $table->id();
-            $table->string('role_name')->unique();
+            $table->morphs('authenticatable');
+            $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
+            $table->unique(['authenticatable_type', 'authenticatable_id', 'role_id'], 'roles_users_unique');
             $table->timestamps();
         });
     }
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles_restaurants');
+        Schema::dropIfExists('roles_users');
     }
 };
