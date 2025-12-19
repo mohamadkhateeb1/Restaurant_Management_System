@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Gate;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -15,6 +15,7 @@ class EmployeesController extends Controller
      */
     public function index()
     {
+        Gate::authorize('employee.view'); // مثال على استخدام السياسات
         $employees = Employee::all(); // جلب الأحدث أولاً
         return view('Pages.Employees.index', ['employees' => $employees]);
     }
@@ -24,6 +25,7 @@ class EmployeesController extends Controller
      */
     public function create()
     {
+        Gate::authorize('employee.create'); //صلاحية إنشاء موظف
         return view('Pages.Employees.create');
     }
 
@@ -51,6 +53,7 @@ class EmployeesController extends Controller
      */
     public function show($id)
     {
+        Gate::authorize('employee.show'); //صلاحية عرض موظف
         $employee = Employee::findOrFail($id);
         return view('Pages.Employees.show', compact('employee'));
     }
@@ -60,6 +63,7 @@ class EmployeesController extends Controller
      */
     public function edit($id)
     {
+        Gate::authorize('employee.update'); //صلاحية تعديل موظف
         $employee = Employee::findOrFail($id);
         return view('Pages.Employees.edit', compact('employee'));
     }
@@ -95,6 +99,7 @@ class EmployeesController extends Controller
      */
     public function destroy($id)
     {
+        Gate::authorize('employee.delete'); //صلاحية حذف موظف
         $employee = Employee::findOrFail($id);
         $employee->delete();
 

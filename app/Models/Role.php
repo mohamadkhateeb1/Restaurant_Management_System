@@ -30,10 +30,12 @@ class Role extends Model
     {
         $this->update(['name' => $request->name]); // تحديث اسم الدور
         foreach ($request->abilities as $ability => $value) {
-            Ability::createOrUpdate(
+            Ability::updateOrCreate(
                 [
                     'role_id' => $this->id,
                     'ability' => $ability,
+                ],
+                [
                     'type' => $value
                 ]
             );

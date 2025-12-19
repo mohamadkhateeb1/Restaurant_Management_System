@@ -6,9 +6,9 @@ use App\Models\Role;
 
 trait HasRoles
 {
-    public function roles()
-    { // تعريف علاقة متعدد الأشكال بين المستخدمين والأدوار
-        return $this->morphToMany(Role::class, 'authorizable', 'role_user');
+     public function roles()
+    {
+        return $this->morphToMany(Role::class, 'authorizable', 'role_user'); // هون بدي احدد انو اليوزر عندو عدة رولات
     }
     public function hasAbility($ability)
     { // فحص ما إذا كان للمستخدم دور يمنحه صلاحية معينة

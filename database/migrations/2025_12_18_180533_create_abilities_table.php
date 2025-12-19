@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('abilities', function (Blueprint $table) {
             $table->id();
             $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
-            $table->string('ability')->unique();
+            $table->string('ability');
             $table->enum('type', ['allow', 'deny', 'inherit']);
             $table->unique(['role_id', 'ability']);
             $table->timestamps();

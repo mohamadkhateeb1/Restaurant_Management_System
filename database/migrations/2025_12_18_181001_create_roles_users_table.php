@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles_users', function (Blueprint $table) {
-            $table->id();
-            $table->morphs('authenticatable');
-            $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
-            $table->unique(['authenticatable_type', 'authenticatable_id', 'role_id'], 'roles_users_unique');
+        Schema::create('role_user', function (Blueprint $table) {
+           // authorizable_id
+           // authorizable_type is the type of [admin user ]
+             $table->morphs('authorizable');
+            $table->foreignId('role_id')->constrained('roles')->cascadeOnDelete();
+            $table->unique(['authorizable_id', 'role_id','authorizable_type']); // لضمان عدم تكرار نفس الدور لنفس المستخدم
             $table->timestamps();
         });
     }

@@ -20,12 +20,19 @@
                         <p>الرئيسية</p>
                     </a>
                 </li>
-                   {{-- <li class="nav-item">
-                    <a href="{{ route('Pages.role.index') }}" class="nav-link">
+                   <li class="nav-item">
+                    <a href="{{ route('Pages.roles.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-users mr-2"></i>
+                        <p>الصلاحيات</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('Pages.admin.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-users mr-2"></i>
                         <p>الأدوار</p>
                     </a>
-                </li> --}}
+                </li>
+
 
 
                 {{-- قائمة الطعام --}}

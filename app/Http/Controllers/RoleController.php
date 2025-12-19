@@ -13,7 +13,7 @@ class RoleController extends Controller
     public function index()
     {
         $roles = Role::paginate(10);
-        return view('Pages.roles.index', ['roles' => $roles]);
+        return view('Pages.Roles.index', ['roles' => $roles]);
     }
 
     /**
@@ -21,8 +21,8 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $role = Role::all();
-        return view('Pages.roles.create', ['role' => $role]);
+        $role = new Role();
+        return view('Pages.Roles.create', ['role' => $role]);
     }
 
     /**
@@ -33,10 +33,10 @@ class RoleController extends Controller
         $request->validate([
             'name' => 'required|unique:roles,name',
             'abilities' => 'required|array',
-            'type' => 'required|in:allow,deny,inherit',
+            
         ]);
         $role = Role::createwithAbilities($request);
-        return redirect()->route('roles.index')->with('success', 'Role created successfully.');
+        return redirect()->route('Pages.roles.index')->with('success', 'Role created successfully.');
     }
 
     /**
@@ -52,8 +52,9 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
+        $role_abilities = $role->abilities()->pluck('type','ability')->toArray();
         $role = Role::with('abilities')->findOrFail($role->id);
-        return view('Pages.roles.edit', ['role' => $role]);
+        return view('Pages.Roles.edit', ['role' => $role , 'role_abilities' => $role_abilities]);
     }
 
     /**
@@ -64,10 +65,9 @@ class RoleController extends Controller
         $request->validate([
             'name' => 'required|unique:roles,name,'.$role->id,
             'abilities' => 'required|array',
-            'type' => 'required|in:allow,deny,inherit',
         ]);
         $role->updateWithAbilities($request);
-        return redirect()->route('roles.index')->with('success', 'Role updated successfully.');
+        return redirect()->route('Pages.roles.index')->with('success', 'Role updated successfully.');
     }
 
     /**
@@ -76,6 +76,6 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         Role::destroy($role->id);
-        return redirect()->route('roles.index')->with('success', 'Role deleted successfully.');
+        return redirect()->route('Pages.roles.index')->with('success', 'Role deleted successfully.');
     }
 }

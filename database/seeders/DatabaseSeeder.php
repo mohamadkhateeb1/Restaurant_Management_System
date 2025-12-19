@@ -7,11 +7,7 @@ class DatabaseSeeder extends Seeder {
         // الترتيب ضروري جداً لتجنب أخطاء المفاتيح الخارجية
         $this->call([
             UserSeeder::class,
-            EmployeeSeeder::class,
-            CategorySeeder::class,
-            ItemSeeder::class,
-            TableSeeder::class,
-            InvoiceSeeder::class,
+            AdminSeeder::class,
         ]);
     }
 }
