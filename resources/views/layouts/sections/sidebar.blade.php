@@ -20,28 +20,14 @@
                         <p>الرئيسية</p>
                     </a>
                 </li>
-                   <li class="nav-item">
+                <li class="nav-item">
                     <a href="{{ route('Pages.roles.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-users mr-2"></i>
                         <p>الصلاحيات</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('Pages.admin.index') }}" class="nav-link">
-                        <i class="nav-icon fas fa-users mr-2"></i>
-                        <p>الأدوار</p>
-                    </a>
-                </li>
 
 
-
-                {{-- قائمة الطعام --}}
-                <li class="nav-item">
-                    <a href="{{ url('/menu') }}" class="nav-link {{ request()->is('menu*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-utensils mr-2"></i>
-                        <p>قائمة الطعام</p>
-                    </a>
-                </li>
 
                 {{-- الموظفين --}}
                 <li class="nav-item">
@@ -50,10 +36,19 @@
                         <p>الموظفين</p>
                     </a>
                 </li>
+                {{-- قائمة الطعام --}}
+                <li class="nav-item">
+                    <a href="{{ route('Pages.categories.index') }}"
+                        class="nav-link {{ request()->is('categories*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-utensils mr-2"></i>
+                        <p> أصناف الطعام</p>
+                    </a>
+                </li>
+
 
                 {{-- الطاولات --}}
                 <li class="nav-item">
-                    <a href="{{ url('/tables') }}" class="nav-link {{ request()->is('tables*') ? 'active' : '' }}">
+                    <a href="{{ route('Pages.Tables.index') }}" class="nav-link {{ request()->is('tables*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-chair mr-2"></i>
                         <p>الطاولات</p>
                     </a>

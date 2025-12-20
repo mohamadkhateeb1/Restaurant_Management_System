@@ -11,9 +11,12 @@
                 <i class="fas fa-users-cog me-2 text-primary"></i> قائمة الموظفين
             </h2>
 
+            {{-- تفعيل صلاحية الإضافة --}}
+            {{-- @can('employees.create') --}}
             <a href="{{ route('Pages.employee.create') }}" class="btn btn-primary shadow-sm">
                 <i class="fas fa-user-plus me-2"></i> إضافة موظف جديد
             </a>
+            {{-- @endcan --}}
         </div>
 
         <div class="mb-4">
@@ -28,7 +31,7 @@
 
                         <thead>
                             <tr class="text-secondary text-uppercase small border-bottom border-secondary">
-                                <th class="ps-4">الاسم</th>
+                                <th class="ps-4">الاسم والأدوار</th> {{-- عدلنا العنوان هنا --}}
                                 <th>الوظيفة</th>
                                 <th>رقم الهاتف</th>
                                 <th>الراتب</th>
@@ -44,18 +47,10 @@
                                     <td class="ps-4">
                                         <div class="d-flex flex-column">
                                             <span class="fw-bold text-white">{{ $employee->name }}</span>
-                                            <small class="text-muted">{{ $employee->email }}</small>
+                                          
                                         </div>
                                     </td>
                                     <td>
-                                        @php
-                                            $positions = [
-                                                'Manager' => 'مدير',
-                                                'Chef' => 'طاهي',
-                                                'Waiter' => 'نادل',
-                                                'Cashier' => 'محاسب',
-                                            ];
-                                        @endphp
                                         <span class="badge bg-secondary opacity-75">
                                             {{ $positions[$employee->position] ?? $employee->position }}
                                         </span>
@@ -74,20 +69,18 @@
                                     </td>
 
                                     <td class="pe-4">
-                                        <div class="d-flex justify-content-center gap-3">
-                                            {{-- زر العرض --}}
+                                        <div class="d-flex justify-content-center gap-2">
+
                                             <a href="{{ route('Pages.employee.show', $employee->id) }}"
                                                 class="btn btn-sm btn-outline-light border-0" title="عرض التفاصيل">
                                                 <i class="fas fa-eye text-info"></i>
                                             </a>
 
-                                            {{-- زر التعديل --}}
                                             <a href="{{ route('Pages.employee.edit', $employee->id) }}"
                                                 class="btn btn-sm btn-outline-light border-0" title="تعديل">
                                                 <i class="fas fa-edit text-warning"></i>
                                             </a>
 
-                                            {{-- زر الحذف --}}
                                             <form method="POST"
                                                 action="{{ route('Pages.employee.destroy', $employee->id) }}"
                                                 onsubmit="return confirm('هل أنت متأكد من حذف الموظف ({{ $employee->name }}) نهائياً؟');"
@@ -99,6 +92,7 @@
                                                     <i class="fas fa-trash text-danger"></i>
                                                 </button>
                                             </form>
+                                            {{-- @endcan --}}
                                         </div>
                                     </td>
                                 </tr>
@@ -119,18 +113,3 @@
     </div>
 
 @endsection
-
-<style>
-    .bg-success-soft {
-        background-color: rgba(25, 135, 84, 0.1);
-    }
-
-    .bg-danger-soft {
-        background-color: rgba(220, 53, 69, 0.1);
-    }
-
-    .table-hover tbody tr:hover {
-        background-color: rgba(255, 255, 255, 0.05) !important;
-        transition: 0.3s;
-    }
-</style>

@@ -1,17 +1,23 @@
 <?php
 
 namespace App\Models;
-
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use App\Concems\HasRoles;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Employee extends Model
+class Employee extends Authenticatable
 {
-    use HasFactory;
+    use HasRoles,Notifiable;
 
     protected $fillable = [
         'name', 'email', 'phone', 'position', 'salary', 'password', 'status', 'hire_date', 'notes'
     ];
+   public function roles(): MorphToMany
+    {
+        return $this->morphToMany(Role::class, 'authorizable', 'role_user');
+    }
 
     public function dineInOrders()
     {

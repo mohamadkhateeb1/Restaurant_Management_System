@@ -1,109 +1,113 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Gate;
+
 use App\Models\Employee;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
-use App\Http\Requests\EmoloyeeRequest; // تأكد من تصحيح الاسم إذا كان هناك خطأ إملائي في الملف نفسه
+use App\Http\Requests\EmoloyeeRequest;
 
 class EmployeesController extends Controller
 {
-    /**
-     * عرض قائمة الموظفين
-     */
     public function index()
     {
-        Gate::authorize('employee.view'); // مثال على استخدام السياسات
-        $employees = Employee::all(); // جلب الأحدث أولاً
+        $employees = Employee::with('roles')->get();
         return view('Pages.Employees.index', ['employees' => $employees]);
     }
 
-    /**
-     * عرض صفحة إنشاء موظف جديد
-     */
     public function create()
     {
-        Gate::authorize('employee.create'); //صلاحية إنشاء موظف
-        return view('Pages.Employees.create');
+        return view('Pages.Employees.create', [
+            'roles' => Role::all(),
+            'employee' => new Employee()
+        ]);
     }
 
-    /**
-     * تخزين موظف جديد في قاعدة البيانات
-     */
-    public function store(Request $request)
+    public function store(EmoloyeeRequest $request)
     {
-        // التحقق من البيانات باستخدام الـ Request Class الخاص بك
-        // تأكد أن EmoloyeeRequest يحتوي على 'password' => 'required|min:8'
-        $validatedData = $request->validate(EmoloyeeRequest::rules());
+        $data = $request->validate(EmoloyeeRequest::rules() + [
+            'roles' => 'required|array',
+        ]);
 
-        // تشفير كلمة المرور قبل الحفظ
-        $validatedData['password'] = Hash::make($request->password);
+        $employee = Employee::create([
+            'name'      => $data['name'],
+            'email'     => $data['email'],
+            'phone'     => $data['phone'],
+            'position'  => $data['position'],
+            'salary'    => $data['salary'],
+            'hire_date' => $data['hire_date'],
+            'status'    => $data['status'], // أضفنا الستاتوس لأنها موجودة في الـ Request
+            'notes'     => $data['notes'] ?? null,
+            'password'  => Hash::make($data['password']),
+        ]);
 
-        // استخدام Mass Assignment للحفظ السريع (تأكد من وجود الحقول في $fillable داخل الموديل)
-        Employee::create($validatedData);
+        // الربط بنفس طريقة الأدمن
+        $employee->roles()->attach($data['roles']);
 
-        return redirect()->route('Pages.employee.index')
-            ->with('success', 'تم إضافة الموظف بنجاح.');
+        return redirect()->route('Pages.employee.index')->with('success', 'Employee created successfully.');
     }
 
-    /**
-     * عرض بيانات موظف محدد
-     */
     public function show($id)
     {
-        Gate::authorize('employee.show'); //صلاحية عرض موظف
-        $employee = Employee::findOrFail($id);
-        return view('Pages.Employees.show', compact('employee'));
+        $employee = Employee::with('roles')->findOrFail($id);
+        return view('Pages.Employees.show', ['employee' => $employee]);
     }
 
-    /**
-     * عرض صفحة تعديل موظف
-     */
     public function edit($id)
     {
-        Gate::authorize('employee.update'); //صلاحية تعديل موظف
         $employee = Employee::findOrFail($id);
-        return view('Pages.Employees.edit', compact('employee'));
+        return view('Pages.Employees.edit', [
+            'employee' => $employee,
+            'roles' => Role::all(),
+            'employeeRoles' => $employee->roles->pluck('id')->toArray(),
+        ]);
     }
 
-    /**
-     * تحديث بيانات الموظف
-     */
     public function update(Request $request, $id)
     {
         $employee = Employee::findOrFail($id);
 
-        // قواعد التحقق المخصصة للتحديث لضمان عدم تكرار الإيميل والهاتف مع الآخرين
-        $request->validate(
-            EmoloyeeRequest::rules($id)
-        );
+        $data = $request->validate([
+            'name'      => 'required|string|max:255',
+            'email'     => 'required|email',
+            'phone'     => 'required|string|max:20',
+            'position'  => 'required|string|max:100',
+            'salary'    => 'required|numeric|min:0',
+            'hire_date' => 'required|date',
+            'status'    => 'required|in:active,inactive,on_leave',
+            'notes'     => 'nullable|string',
+            'password'  => 'nullable|string|min:8|confirmed',
+            'roles'     => 'required|array',
+        ]);
 
-        // تحديث البيانات الأساسية
-        $data = $request->except('password');
+        $update = [
+            'name'      => $data['name'],
+            'email'     => $data['email'],
+            'phone'     => $data['phone'],
+            'position'  => $data['position'],
+            'salary'    => $data['salary'],
+            'hire_date' => $data['hire_date'],
+            'status'    => $data['status'],
+            'notes'     => $data['notes'] ?? null,
+        ];
 
-        // تحديث كلمة المرور فقط إذا تم إدخالها
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
+        if (!empty($data['password'])) {
+            $update['password'] = Hash::make($data['password']);
         }
 
-        $employee->update($data);
+        $employee->update($update);
 
-        return redirect()->route('Pages.employee.index')
-            ->with('warning', 'تم تحديث بيانات الموظف بنجاح.');
+        // التحديث بنفس طريقة الأدمن
+        $employee->roles()->sync($data['roles']);
+
+        return redirect()->route('Pages.employee.index')->with('success', 'Employee updated successfully.');
     }
 
-    /**
-     * حذف موظف
-     */
     public function destroy($id)
     {
-        Gate::authorize('employee.delete'); //صلاحية حذف موظف
         $employee = Employee::findOrFail($id);
         $employee->delete();
-
-        return redirect()->route('Pages.employee.index')
-            ->with('danger', 'تم حذف الموظف من النظام.');
+        return redirect()->route('Pages.employee.index')->with('success', 'Employee deleted successfully.');
     }
 }

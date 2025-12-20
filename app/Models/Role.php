@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use App\Models\Ability;
 // use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 class Role extends Model
 {
     protected $fillable = ['name'];
+    // ربط بين الدور والموظفين باستخدام علاقة متعددة الأشكال
+   public function employees(): MorphToMany
+    {
+        return $this->morphedByMany(Employee::class, 'authorizable', 'role_user');
+    }
     // ريطط بين الدور والقدرات
     public function abilities()
     {

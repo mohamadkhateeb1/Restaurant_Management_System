@@ -6,26 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('role_user', function (Blueprint $table) {
-           // authorizable_id
-           // authorizable_type is the type of [admin user ]
-             $table->morphs('authorizable');
+            $table->id();
+            // authorizable_id & authorizable_type
+            $table->morphs('authorizable');
             $table->foreignId('role_id')->constrained('roles')->cascadeOnDelete();
-            $table->unique(['authorizable_id', 'role_id','authorizable_type']); // لضمان عدم تكرار نفس الدور لنفس المستخدم
+            
+            // إضافة اسم فريد للـ Unique لضمان عدم تكرار الدور لنفس المستخدم
+            $table->unique(['authorizable_id', 'role_id', 'authorizable_type'], 'role_user_morph_unique'); 
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('roles_users');
+        // تم تصحيح اسم الجدول هنا ليتطابق مع up
+        Schema::dropIfExists('role_user');
     }
 };

@@ -175,6 +175,26 @@
                 }
             });
         });
+    document.addEventListener('DOMContentLoaded', function() {
+        // نبحث عن أي عنصر يحمل كلاس flash-alert (الذي وضعناه في الكومبونانت)
+        // أو نبحث عن كلاس alert الافتراضي لبوتستراب
+        const alerts = document.querySelectorAll('.flash-alert, .alert');
+
+        alerts.forEach(function(alert) {
+            // ننتظر ثانيتين (2000 مللي ثانية)
+            setTimeout(function() {
+                // إضافة تأثير تلاشي ناعم
+                alert.style.transition = "opacity 0.8s ease, transform 0.8s ease";
+                alert.style.opacity = "0";
+                alert.style.transform = "translateY(-10px)";
+                
+                // حذف العنصر تماماً من الصفحة بعد انتهاء التلاشي
+                setTimeout(function() {
+                    alert.remove();
+                }, 800);
+            }, 2000);
+        });
+    });
     </script>
 </body>
 

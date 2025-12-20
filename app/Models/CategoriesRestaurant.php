@@ -8,7 +8,7 @@ class CategoriesRestaurant extends Model
 {
     protected $table = 'categories_restaurants';
 
-    protected $fillable = ['category_name', 'description', 'image', 'status'];
+    protected $fillable = ['name', 'description', 'image', 'status', 'price'];
 
     public function items()
     {

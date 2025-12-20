@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('categories_restaurants', function (Blueprint $table) {
            $table->id();
            
-            $table->string('category_name')->unique();
+            $table->string('name')->unique();
             $table->text('description')->nullable();
             $table->string('image')->nullable();
+            $table->decimal('price', 10, 2);            
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
             

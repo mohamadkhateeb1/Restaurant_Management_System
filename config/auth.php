@@ -40,10 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-       'admin' => [
-        'driver' => 'session',
-        'provider' => 'admins',
-    ],
+        'employee' => [
+            'driver' => 'session',
+            'provider' => 'employees',
+        ],
     ],
 
     /*
@@ -69,10 +69,10 @@ return [
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
         // أضف هذا الجزء ليرتبط بموديل Admin
-    'admins' => [
-        'driver' => 'eloquent',
-        'model' => App\Models\Admin::class, 
-    ],
+        'employees' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Employee::class,
+        ],
 
         // 'users' => [
         //     'driver' => 'database',

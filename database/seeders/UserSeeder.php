@@ -18,10 +18,13 @@ class UserSeeder extends Seeder
     
         //حساب ال admin لللمشروع 
         User::create([
-            'name' => 'John Doe',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('admin1234'),
-            
+            'name' => 'Super Admin',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('12345678'),
+            'Super_Admin' => true,
+            'email_verified_at' => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
     }
 }
