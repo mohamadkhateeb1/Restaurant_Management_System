@@ -34,7 +34,7 @@ class InvetoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Invetory $invetory)
+    public function show( $invetory)
     {
         //
     }
@@ -42,7 +42,7 @@ class InvetoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Invetory $invetory)
+    public function edit( $invetory)
     {
         //
     }
@@ -50,7 +50,7 @@ class InvetoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Invetory $invetory)
+    public function update(Request $request,  $invetory)
     {
         //
     }
@@ -58,7 +58,7 @@ class InvetoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Invetory $invetory)
+    public function destroy( $invetory)
     {
         //
     }

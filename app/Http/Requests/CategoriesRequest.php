@@ -25,9 +25,7 @@ class CategoriesRequest extends FormRequest
             'name' => 'required|string|max:255|unique:categories_restaurants,name',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'status' => 'required|in:active,inactive',
-            'price' => 'required|numeric|min:0',
-        
+            'status' => 'required|in:active,inactive',        
         ];
     }
 }

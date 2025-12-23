@@ -2,7 +2,6 @@
 <x-form-categories.input name="name" label="اسم التصنيف" :value="$category->name ?? null"  />
 
 {{-- حقل السعر (الجديد) --}}
-<x-form-categories.input type="number" name="price" label="السعر" placeholder="0.00" step="0.01" :value="$category->price ?? null"  />
 
 {{-- حقل الوصف --}}
 <x-form-categories.input name="description" label="وصف التصنيف" :value="$category->description ?? null" />

@@ -12,4 +12,5 @@ class Ability extends Model
     {
         return $this->belongsTo(Role::class);
     }
+ 
 }

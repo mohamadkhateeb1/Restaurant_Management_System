@@ -52,6 +52,7 @@
                                 VIP</option>
                         </select>
                     </div>
+                    
 
                     <div class="col-md-3">
                         <label class="form-label text-info small fw-bold">الحالة التشغيلية</label>

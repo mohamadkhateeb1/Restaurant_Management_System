@@ -6,6 +6,7 @@ use App\Models\CategoriesRestaurant;
 use Illuminate\Http\Request;
 use App\Http\Requests\CategoriesRequest;
 use Illuminate\Support\Facades\Storage;
+
 class CategoriesRestaurantController extends Controller
 {
     /**
@@ -24,7 +25,7 @@ class CategoriesRestaurantController extends Controller
     {
         $categories = CategoriesRestaurant::all();
 
-        return view('Pages.Categories.create',['categories'=>$categories]);
+        return view('Pages.Categories.create', ['categories' => $categories]);
     }
 
     /**
@@ -37,13 +38,12 @@ class CategoriesRestaurantController extends Controller
         $category->name = $request->name;
         $category->description = $request->description;
         $category->status = $request->status;
-        $category->price = $request->price;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('categories', 'public');
             $category->image = $imagePath;
         }
         $category->save();
-        return redirect()->route('Pages.categories.index')->with('success', 'Category created successfully.');
+        return redirect()->route('Pages.categories.index')->with('success', 'تم إنشاء القسم بنجاح.');
     }
 
     /**
@@ -51,8 +51,10 @@ class CategoriesRestaurantController extends Controller
      */
     public function show($id)
     {
-        $category = CategoriesRestaurant::findOrFail($id);
-        return view('Pages.Categories.show', ['category' => $category]);
+        // جلب القسم مع جميع الأطباق المرتبطة به
+        $category = CategoriesRestaurant::with('items')->findOrFail($id);
+
+        return view('Pages.Categories.show', compact('category'));
     }
 
     /**
@@ -64,24 +66,24 @@ class CategoriesRestaurantController extends Controller
         return view('Pages.Categories.edit', ['category' => $category]);
     }
     public function bulkDestroy(Request $request)
-{
-    $ids = $request->ids;
-    if (!$ids) {
-        return redirect()->back()->with('error', 'الرجاء تحديد عناصر أولاً');
-    }
-
-    // حذف الصور من السيرفر قبل حذف السجلات
-    $items = CategoriesRestaurant::whereIn('id', $ids)->get();
-    foreach ($items as $item) {
-        if ($item->image) {
-            Storage::disk('public')->delete($item->image);
+    {
+        $ids = $request->ids;
+        if (!$ids) {
+            return redirect()->back()->with('error', 'الرجاء تحديد عناصر أولاً');
         }
+
+        // حذف الصور من السيرفر قبل حذف السجلات
+        $items = CategoriesRestaurant::whereIn('id', $ids)->get(); //جلب العناصر التي سيتم حذفها
+        foreach ($items as $item) { //حذف الصورة الفعلية من مجلد storage/app/public/categories
+            if ($item->image) { //تحقق من وجود صورة قبل محاولة حذفها
+                Storage::disk('public')->delete($item->image); //حذف الصورة من التخزين
+            }
+        }
+
+        CategoriesRestaurant::whereIn('id', $ids)->delete(); //حذف السجلات من قاعدة البيانات
+
+        return redirect()->back()->with('success', 'تم حذف العناصر المختارة بنجاح');
     }
-
-    CategoriesRestaurant::whereIn('id', $ids)->delete();
-
-    return redirect()->back()->with('success', 'تم حذف العناصر المختارة بنجاح');
-}
 
     /**
      * Update the specified resource in storage.
@@ -93,19 +95,17 @@ class CategoriesRestaurantController extends Controller
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required|in:active,inactive',
-            'price' => 'required|numeric|min:0',
         ]);
         $category = CategoriesRestaurant::findOrFail($id);
         $category->name = $request->name;
         $category->description = $request->description;
         $category->status = $request->status;
-        $category->price = $request->price;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('categories', 'public');
             $category->image = $imagePath;
         }
         $category->save();
-        return redirect()->route('Pages.categories.index')->with('success', 'Category updated successfully.');
+        return redirect()->route('Pages.categories.index')->with('success', 'تم تعديل القسم بنجاح.');
     }
 
     /**
@@ -113,8 +113,8 @@ class CategoriesRestaurantController extends Controller
      */
     public function destroy($id)
     {
-        $category=CategoriesRestaurant::findOrFail($id);
+        $category = CategoriesRestaurant::findOrFail($id);
         $category->delete();
-        return redirect()->route('Pages.categories.index')->with('success', 'Category deleted successfully.');
+        return redirect()->route('Pages.categories.index')->with('success', 'تم حذف القسم بنجاح.');
     }
 }

@@ -15,6 +15,7 @@ return new class extends Migration
             
             $table->string('email')->unique(); 
             $table->string('phone')->unique(); 
+            $table->boolean('super_admin')->default(false);
             $table->string('position'); 
             $table->decimal('salary', 10, 2); 
             $table->string('password'); 

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+// use Illuminate\Support\Facades\Gate;
 
 class RoleController extends Controller
 {
@@ -12,6 +14,7 @@ class RoleController extends Controller
      */
     public function index()
     {
+        // $this->authorize('viewAny', Role::class);
         $roles = Role::paginate(10);
         return view('Pages.Roles.index', ['roles' => $roles]);
     }

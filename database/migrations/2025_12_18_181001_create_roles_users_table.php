@@ -13,7 +13,6 @@ return new class extends Migration
             // authorizable_id & authorizable_type
             $table->morphs('authorizable');
             $table->foreignId('role_id')->constrained('roles')->cascadeOnDelete();
-            
             // إضافة اسم فريد للـ Unique لضمان عدم تكرار الدور لنفس المستخدم
             $table->unique(['authorizable_id', 'role_id', 'authorizable_type'], 'role_user_morph_unique'); 
             $table->timestamps();

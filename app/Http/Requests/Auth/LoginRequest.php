@@ -37,22 +37,17 @@ class LoginRequest extends FormRequest
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function authenticate(): void
+  public function authenticate(): void
 {
     $this->ensureIsNotRateLimited();
 
-    // نحاول تسجيل الدخول عبر الـ guard الخاص بالأدمن
-    // if (! Auth::guard('admin')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-        
-        // إذا فشل، نحاول عبر الـ guard العادي (users)
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
+    if (! Auth::guard('employee')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        RateLimiter::hit($this->throttleKey());
+        throw ValidationException::withMessages(['email' => __('auth.failed')]);
+    }
 
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
-        }
-    
+    // إضافة هذا السطر ضروري جداً لتثبيت الجلسة
+    session()->regenerate(); 
 
     RateLimiter::clear($this->throttleKey());
 }
@@ -84,6 +79,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->string('email')) . '|' . $this->ip());
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-use App\Concems\HasRoles;
+use App\Concernc\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable; // تأكد من هذا السطر
 use Illuminate\Notifications\Notifiable;

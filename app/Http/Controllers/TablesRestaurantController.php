@@ -7,39 +7,39 @@ use Illuminate\Http\Request;
 
 class TablesRestaurantController extends Controller
 {
-public function index(Request $request)
-{
-    // 1. نبدأ ببناء الاستعلام (Query Builder)
-    $query = TablesRestaurant::query();
+    public function index(Request $request)
+    {
+        // 1. نبدأ ببناء الاستعلام (Query Builder)
+        $query = TablesRestaurant::query();
 
-    // 2. جلب قيم الفلترة من الرابط (Query Parameters)
-    $location = $request->query('location');
-    $status = $request->query('status');
+        // 2. جلب قيم الفلترة من الرابط (Query Parameters)
+        $location = $request->query('location');
+        $status = $request->query('status');
 
-    // 3. تطبيق الفلترة حسب الموقع (إذا كان موجوداً)
-    if ($location) {
-        $query->where('location', $location);
+        // 3. تطبيق الفلترة حسب الموقع (إذا كان موجوداً)
+        if ($location) {
+            $query->where('location', $location);
+        }
+
+        // 4. تطبيق الفلترة حسب الحالة (إذا كانت موجودة)
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        // 5. جلب الطاولات مرتبة رقمياً مع الترقيم (Pagination)
+        // استخدمنا paginate ليدعم التنقل بين الصفحات كما في الأصناف
+        $tables = $query->orderBy('table_number', 'asc')->paginate(12);
+
+        // 6. حساب الإحصائيات (تُحسب من قاعدة البيانات مباشرة لتكون دقيقة)
+        $stats = [
+            'total'     => TablesRestaurant::count(),// إجمالي الطاولات
+            'available' => TablesRestaurant::where('status', 'available')->count(),// الطاولات المتاحة
+            'occupied'  => TablesRestaurant::where('status', 'occupied')->count(),// الطاولات المشغولة
+            'reserved'  => TablesRestaurant::where('status', 'reserved')->count(),// الطاولات المحجوزة
+        ];
+
+        return view('Pages.Tables.index', compact('tables', 'stats'));
     }
-
-    // 4. تطبيق الفلترة حسب الحالة (إذا كانت موجودة)
-    if ($status) {
-        $query->where('status', $status);
-    }
-
-    // 5. جلب الطاولات مرتبة رقمياً مع الترقيم (Pagination)
-    // استخدمنا paginate ليدعم التنقل بين الصفحات كما في الأصناف
-    $tables = $query->orderBy('table_number', 'asc')->paginate(12);
-
-    // 6. حساب الإحصائيات (تُحسب من قاعدة البيانات مباشرة لتكون دقيقة)
-    $stats = [
-        'total'     => TablesRestaurant::count(),
-        'available' => TablesRestaurant::where('status', 'available')->count(),
-        'occupied'  => TablesRestaurant::where('status', 'occupied')->count(),
-        'reserved'  => TablesRestaurant::where('status', 'reserved')->count(),
-    ];
-
-    return view('Pages.Tables.index', compact('tables', 'stats'));
-}
     public function create()
     {
         return view('Pages.Tables.create');
@@ -55,7 +55,7 @@ public function index(Request $request)
         TablesRestaurant::create([
             'table_number' => $request->table_number,
             'seating_capacity' => $request->seating_capacity,
-            'location' => $request->location, 
+            'location' => $request->location,
             'status' => 'available'
         ]);
 
@@ -83,27 +83,29 @@ public function index(Request $request)
         ]);
         return redirect()->route('Pages.Tables.index')->with('success', 'تم تحديث بيانات الطاولة بنجاح.');
     }
+    // حذف طاولة واحدة
     public function destroy($id)
     {
         $table = TablesRestaurant::findOrFail($id);
         $table->delete();
         return redirect()->route('Pages.Tables.index')->with('success', 'تم حذف الطاولة بنجاح.');
     }
+    // حذف جماعي للطاولات بناءً على الفلترة الحالية
     public function bulkDestroy(Request $request)
-{
-    $query = TablesRestaurant::query();
+    {
+        $query = TablesRestaurant::query();
 
-    // إذا أردت حذف المفلتر فقط، نطبق الشروط هنا
-    if ($request->location) {
-        $query->where('location', $request->location);
+        // إذا أردت حذف المفلتر فقط، نطبق الشروط هنا
+        if ($request->location) {
+            $query->where('location', $request->location);
+        }
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+
+        $count = $query->count();
+        $query->delete();
+
+        return redirect()->route('Pages.Tables.index')->with('success', "تم حذف $count طاولة بنجاح.");
     }
-    if ($request->status) {
-        $query->where('status', $request->status);
-    }
-
-    $count = $query->count();
-    $query->delete();
-
-    return redirect()->route('Pages.Tables.index')->with('success', "تم حذف $count طاولة بنجاح.");
-}
 }

@@ -1,3 +1,4 @@
+{{--
 <aside class="main-sidebar elevation-4">
 
     <a href="{{ route('Pages.dashboard') }}" class="brand-link text-center">
@@ -8,11 +9,11 @@
 
     <div class="sidebar">
 
-        {{-- قائمة التنقل --}}
+   
         <nav class="mt-3">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-                {{-- الرئيسية --}}
+         
                 <li class="nav-item">
                     <a href="{{ route('Pages.dashboard') }}"
                         class="nav-link {{ request()->routeIs('Pages.dashboard') ? 'active' : '' }}">
@@ -20,6 +21,7 @@
                         <p>الرئيسية</p>
                     </a>
                 </li>
+    
                 <li class="nav-item">
                     <a href="{{ route('Pages.roles.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-users mr-2"></i>
@@ -28,15 +30,18 @@
                 </li>
 
 
-
-                {{-- الموظفين --}}
+               
                 <li class="nav-item">
                     <a href="{{ route('Pages.employee.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-users mr-2"></i>
                         <p>الموظفين</p>
                     </a>
                 </li>
-                {{-- قائمة الطعام --}}
+                {{-- @endcan 
+
+                {{-- العملاء 
+                {{-- قائمة الطعام 
+                {{-- @can('categories.view', App\Models\Customer::class) 
                 <li class="nav-item">
                     <a href="{{ route('Pages.categories.index') }}"
                         class="nav-link {{ request()->is('categories*') ? 'active' : '' }}">
@@ -44,47 +49,57 @@
                         <p> أصناف الطعام</p>
                     </a>
                 </li>
+                {{-- @endcan 
+
+                {{-- الأصناف 
 
 
-                {{-- الطاولات --}}
+                {{-- الطاولات 
                 <li class="nav-item">
-                    <a href="{{ route('Pages.Tables.index') }}" class="nav-link {{ request()->is('tables*') ? 'active' : '' }}">
+                    <a href="{{ route('Pages.Tables.index') }}"
+                        class="nav-link {{ request()->is('tables*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-chair mr-2"></i>
                         <p>الطاولات</p>
                     </a>
                 </li>
 
-                {{-- الطلبات --}}
+                {{-- الطلبات 
                 <li class="nav-item">
-                    <a href="{{ url('/orders') }}" class="nav-link {{ request()->is('orders*') ? 'active' : '' }}">
+                    <a href="{{ route('Pages.Items.index') }}" class="nav-link {{ request()->is('orders*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-shopping-cart mr-2"></i>
+                        <p>فئات الاصناف</p>
+                    </a>
+                </li>
+
+                {{-- التقارير 
+                {{-- <li class="nav-item">
+                    <a href="{{ route('Pages.OrderItems.index') }}" class="nav-link {{ request()->is('orders*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-chart-bar mr-2"></i>
                         <p>الطلبات</p>
                     </a>
-                </li>
+                </li> 
 
-                {{-- التقارير --}}
+                {{-- المخزون 
                 <li class="nav-item">
-                    <a href="{{ url('/reports') }}" class="nav-link {{ request()->is('reports*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-chart-bar mr-2"></i>
-                        <p>التقارير</p>
-                    </a>
-                </li>
-
-                {{-- المخزون --}}
-                <li class="nav-item">
-                    <a href="{{ url('/inventory') }}"
-                        class="nav-link {{ request()->is('inventory*') ? 'active' : '' }}">
+                    <a href="{{ route('Pages.waiter.index') }}"
+                        class="nav-link {{ request()->is('waiter*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-boxes mr-2"></i>
-                        <p>المخزون</p>
+                        <p>شاشة النادل</p>
                     </a>
                 </li>
 
-                {{-- الإعدادات --}}
                 <li class="nav-item">
-                    <a href="{{ url('/settings') }}"
-                        class="nav-link {{ request()->is('settings*') ? 'active' : '' }}">
+                    <a href="{{ route('Pages.cashier.index') }}"
+                        class="nav-link {{ request()->is('cashier*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-cog mr-2"></i>
-                        <p>الإعدادات</p>
+                        <p>شاشة الكاشير</p>
+                    </a>
+                </li>
+                   <li class="nav-item">
+                    <a href="{{ route('Pages.kitchen.index') }}"
+                        class="nav-link {{ request()->is('kitchen*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-cog mr-2"></i>
+                        <p>شاشة المطبخ</p>
                     </a>
                 </li>
 
@@ -101,4 +116,5 @@
             </ul>
         </nav>
     </div>
-</aside>
+</aside>--}}
+<x-side />

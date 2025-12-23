@@ -8,9 +8,10 @@ class Invoice extends Model
 {
     protected $table = 'invoices';
 
-    protected $fillable = [
-        'invoice_number', 'dine_in_order_id', 'takeaway_order_id', 'employee_id', 'amount_paid', 'payment_status'
-    ];
+  protected $fillable = [
+    'invoice_number', 'dine_in_order_id', 'employee_id', 
+    'takeaway_order_id', 'amount_paid', 'payment_status'
+];
 
     public function employee()
     {

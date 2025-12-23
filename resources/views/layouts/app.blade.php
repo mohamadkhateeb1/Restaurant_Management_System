@@ -146,15 +146,15 @@
             const currentTheme = localStorage.getItem('theme');
 
             function applyTheme(theme) {
-                if (theme === 'light') {
-                    body.removeClass(darkModeClass);
-                    themeIcon.removeClass('fa-sun').addClass('fa-moon');
+                if (theme === 'light') {// الوضع الفاتح
+                    body.removeClass(darkModeClass);// الوضع الفاتح
+                    themeIcon.removeClass('fa-sun').addClass('fa-moon');// الوضع الفاتح
                 } else {
                     body.addClass(darkModeClass);
-                    themeIcon.removeClass('fa-moon').addClass('fa-sun');
+                    themeIcon.removeClass('fa-moon').addClass('fa-sun');// الوضع الداكن
                 }
 
-                if (typeof AdminLTE !== 'undefined' && AdminLTE.layout) {
+                if (typeof AdminLTE !== 'undefined' && AdminLTE.layout) {//تأكد من أن AdminLTE محمل
                     AdminLTE.layout.fixIframeHeight();
                 }
             }
@@ -178,6 +178,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         // نبحث عن أي عنصر يحمل كلاس flash-alert (الذي وضعناه في الكومبونانت)
         // أو نبحث عن كلاس alert الافتراضي لبوتستراب
+        //  
         const alerts = document.querySelectorAll('.flash-alert, .alert');
 
         alerts.forEach(function(alert) {
@@ -186,7 +187,7 @@
                 // إضافة تأثير تلاشي ناعم
                 alert.style.transition = "opacity 0.8s ease, transform 0.8s ease";
                 alert.style.opacity = "0";
-                alert.style.transform = "translateY(-10px)";
+                alert.style.transform = "translateY(-10px)";// رفع العنصر قليلاً أثناء التلاشي
                 
                 // حذف العنصر تماماً من الصفحة بعد انتهاء التلاشي
                 setTimeout(function() {

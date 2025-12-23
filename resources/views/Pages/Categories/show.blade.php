@@ -40,12 +40,7 @@
                         <div class="mb-2 text-muted small text-uppercase tracking-widest">تفاصيل المنتج</div>
                         <h1 class="display-5 fw-bold mb-3">{{ $category->name }}</h1>
                         
-                        <div class="d-flex align-items-center mb-4">
-                            <div class="bg-soft-warning p-3 rounded-3 me-3">
-                                <h3 class="text-warning fw-bold mb-0">{{ number_format($category->price) }}</h3>
-                            </div>
-                            <span class="text-muted h5 mb-0">دولار</span>
-                        </div>
+                   
 
                         <hr class="border-secondary mb-4 opacity-25">
 
@@ -58,7 +53,7 @@
 
                         {{-- أزرار التحكم السريع --}}
                         <div class="d-flex gap-3 mt-auto pt-4">
-                            <a href="#" class="btn btn-warning btn-lg rounded-pill px-5 flex-grow-1 fw-bold transition-all hover-scale">
+                            <a href="{{ route('Pages.categories.edit', $category->id) }}" class="btn btn-warning btn-lg rounded-pill px-5 flex-grow-1 fw-bold transition-all hover-scale">
                                 <i class="fas fa-edit me-2"></i> تعديل الصنف
                             </a>
                             <button class="btn btn-soft-danger btn-lg rounded-circle p-3 transition-all hover-scale">

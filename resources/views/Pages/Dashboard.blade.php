@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Restaurant Admin Dashboard')
+@section('title', __('app.home'))
 @section('content')
 
     <div class="container-fluid">

@@ -2,46 +2,57 @@
 
 return [
     [
-        'url' => '/',
-        'icon' => 'fas fa-home',
-        'label' => 'الرئيسية'
+        'title' => 'Dashboard', // كانت "الرئيسية"
+        'route' => 'Pages.dashboard',
+        'icon'  => 'fas fa-home',
+        'active_check' => 'dashboard*',
     ],
     [
-        'url' => '/menu',
-        'icon' => 'fas fa-utensils',
-        'label' => 'إدارة قائمة الطعام'
+        'title' => 'Roles', // كانت "الصلاحيات"
+        'route' => 'Pages.roles.index',
+        'icon'  => 'fas fa-users-cog',
+        'active_check' => 'roles*',
     ],
     [
-        'url' => '/orders',
-        'icon' => 'fas fa-shopping-cart',
-        'label' => 'الطلبات'
+        'title' => 'Employees', // كانت "الموظفين"
+        'route' => 'Pages.employee.index',
+        'icon'  => 'fas fa-users',
+        'active_check' => 'employees*',
     ],
     [
-        'url' => '/reservations',
-        'icon' => 'fas fa-calendar-alt',
-        'label' => 'الحجوزات'
+        'title' => 'Food Categories', // كانت "أصناف الطعام"
+        'route' => 'Pages.categories.index',
+        'icon'  => 'fas fa-utensils',
+        'active_check' => 'categories*',
     ],
     [
-        'url' => '/staff',
-        'icon' => 'fas fa-users',
-        'label' => 'إدارة الموظفين'
+        'title' => 'Tables', // كانت "الطاولات"
+        'route' => 'Pages.Tables.index',
+        'icon'  => 'fas fa-chair',
+        'active_check' => 'tables*',
     ],
     [
-        'url' => '/inventory',
-        'icon' => 'fas fa-warehouse',
-        'label' => 'المخزون'
+        'title' => 'Item Categories', // كانت "فئات الاصناف"
+        'route' => 'Pages.Items.index',
+        'icon'  => 'fas fa-shopping-cart',
+        'active_check' => 'items*',
     ],
     [
-        'url' => '/reports',
-        'icon' => 'fas fa-chart-line',
-        'label' => 'التقارير'
+        'title' => 'Waiter Screen', // كانت "شاشة النادل"
+        'route' => 'Pages.waiter.index',
+        'icon'  => 'fas fa-user-tie',
+        'active_check' => 'waiter*',
     ],
     [
-        'url' => '/settings',
-        'icon' => 'fas fa-cog',
-        'label' => 'الإعدادات'
+        'title' => 'Cashier Screen', // كانت "شاشة الكاشير"
+        'route' => 'Pages.cashier.index',
+        'icon'  => 'fas fa-cash-register',
+        'active_check' => 'cashier*',
     ],
-    'inventory' => 'المخزون',
-    'reports' => 'التقارير',
-    'settings' => 'الإعدادات',
+    [
+        'title' => 'Kitchen Screen', // كانت "شاشة المطبخ"
+        'route' => 'Pages.kitchen.index',
+        'icon'  => 'fas fa-blender',
+        'active_check' => 'kitchen*',
+    ],
 ];
