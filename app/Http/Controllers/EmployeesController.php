@@ -2,27 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Concerns\HasRoles;// استدعاء التريت
-use App\Models\Employee;// استدعاء الموديل
-use App\Models\Role;// استدعاء موديل الدور
+use App\Models\Employee;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\EmoloyeeRequest;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Auth;
+
 class EmployeesController extends Controller
 {
-    use HasRoles;
     public function index()
     {
-        Gate::authorize('employee.view');
+        $this->authorize('viewAny', Employee::class);
+        
         $employees = Employee::with('roles')->get();
-        return view('Pages.Employees.index', ['employees' => $employees]);
+        return view('Pages.Employees.index', compact('employees'));
     }
 
     public function create()
     {
-        // Gate::authorize('employee.create', Employee::class);
+        $this->authorize('create', Employee::class);
+        
         return view('Pages.Employees.create', [
             'roles' => Role::all(),
             'employee' => new Employee()
@@ -31,9 +30,9 @@ class EmployeesController extends Controller
 
     public function store(EmoloyeeRequest $request)
     {
-        $data = $request->validate(EmoloyeeRequest::rules() + [
-            'roles' => 'required|array',
-        ]);
+        // $this->authorize('create', Employee::class);
+
+        $data = $request->validated(); // يفضل استخدام validated() الجاهزة من الـ Request class
 
         $employee = Employee::create([
             'name'      => $data['name'],
@@ -42,28 +41,22 @@ class EmployeesController extends Controller
             'position'  => $data['position'],
             'salary'    => $data['salary'],
             'hire_date' => $data['hire_date'],
-            'status'    => $data['status'], // أضفنا الستاتوس لأنها موجودة في الـ Request
+            'status'    => $data['status'],
             'notes'     => $data['notes'] ?? null,
             'password'  => Hash::make($data['password']),
         ]);
 
-        // الربط بنفس طريقة الأدمن
-        $employee->roles()->attach($data['roles']);
+        $employee->roles()->attach($request->roles);
 
         return redirect()->route('Pages.employee.index')->with('success', 'Employee created successfully.');
     }
 
-    public function show($id)
-    {
-        // Gate::authorize('employee.show', Employee::class);
-        $employee = Employee::with('roles')->findOrFail($id);
-        return view('Pages.Employees.show', ['employee' => $employee]);
-    }
-
     public function edit($id)
     {
-        // Gate::authorize('employee.edit', Employee::class);
         $employee = Employee::findOrFail($id);
+        // $this->authorize('update', $employee);
+
+
         return view('Pages.Employees.edit', [
             'employee' => $employee,
             'roles' => Role::all(),
@@ -74,10 +67,12 @@ class EmployeesController extends Controller
     public function update(Request $request, $id)
     {
         $employee = Employee::findOrFail($id);
+        // $this->authorize('update', $employee);
+        
 
         $data = $request->validate([
             'name'      => 'required|string|max:255',
-            'email'     => 'required|email',
+            'email'     => 'required|email|unique:employees,email,'.$id,
             'phone'     => 'required|string|max:20',
             'position'  => 'required|string|max:100',
             'salary'    => 'required|numeric|min:0',
@@ -88,33 +83,23 @@ class EmployeesController extends Controller
             'roles'     => 'required|array',
         ]);
 
-        $update = [
-            'name'      => $data['name'],
-            'email'     => $data['email'],
-            'phone'     => $data['phone'],
-            'position'  => $data['position'],
-            'salary'    => $data['salary'],
-            'hire_date' => $data['hire_date'],
-            'status'    => $data['status'],
-            'notes'     => $data['notes'] ?? null,
-        ];
+        $employee->fill($data);
 
-        if (!empty($data['password'])) {
-            $update['password'] = Hash::make($data['password']);
+        if ($request->filled('password')) {
+            $employee->password = Hash::make($request->password);
         }
 
-        $employee->update($update);
-
-        // التحديث بنفس طريقة الأدمن
-        $employee->roles()->sync($data['roles']);
+        $employee->save();
+        $employee->roles()->sync($request->roles);
 
         return redirect()->route('Pages.employee.index')->with('success', 'Employee updated successfully.');
     }
 
     public function destroy($id)
     {
-        // Gate::authorize('employee.delete', Employee::class);
         $employee = Employee::findOrFail($id);
+        // $this->authorize('delete', $employee);
+        
         $employee->delete();
         return redirect()->route('Pages.employee.index')->with('success', 'Employee deleted successfully.');
     }

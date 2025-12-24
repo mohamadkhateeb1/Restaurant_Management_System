@@ -4,80 +4,74 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-// use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\DB;
 
 class RoleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-        // $this->authorize('viewAny', Role::class);
-        $roles = Role::paginate(10);
-        return view('Pages.Roles.index', ['roles' => $roles]);
+        $this->authorize('viewAny', Role::class);
+        $roles = Role::with('abilities')->get();
+        return view(
+            'Pages.Roles.index',
+            [
+                'roles' => $roles
+            ]
+        );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
-        $role = new Role();
-        return view('Pages.Roles.create', ['role' => $role]);
+        $this->authorize('create', Role::class);
+        return view('Pages.Roles.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|unique:roles,name',
-            'abilities' => 'required|array',
-            
+            'name' => 'required|string|unique:roles,name',
+            'abilities' => 'required|array', 
         ]);
-        $role = Role::createwithAbilities($request);
-        return redirect()->route('Pages.roles.index')->with('success', 'Role created successfully.');
+
+        Role::createWithAbilities($request);
+        return redirect()->route('Pages.roles.index')->with('success', 'تم إنشاء الدور بنجاح');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Role $role)
     {
-        //
+        $this->authorize('view', $role);
+        return view('Pages.Roles.show', compact('role'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    
     public function edit(Role $role)
     {
-        $role_abilities = $role->abilities()->pluck('type','ability')->toArray();
+        $this->authorize('update', $role);
+        $role_abilities = $role->abilities()->pluck('type', 'ability')->toArray(); // تحويل الصلاحيات إلى مصفوفة من النوع => القدرة
         $role = Role::with('abilities')->findOrFail($role->id);
-        return view('Pages.Roles.edit', ['role' => $role , 'role_abilities' => $role_abilities]);
+        return view('Pages.Roles.edit', ['role' => $role, 'role_abilities' => $role_abilities]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+   
     public function update(Request $request, Role $role)
     {
+
         $request->validate([
-            'name' => 'required|unique:roles,name,'.$role->id,
+            'name' => 'required|unique:roles,name,' . $role->id,
             'abilities' => 'required|array',
         ]);
         $role->updateWithAbilities($request);
         return redirect()->route('Pages.roles.index')->with('success', 'Role updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Role $role)
+
+    public function destroy($id)
     {
+        $this->authorize('delete', Role::class);
+        $role = Role::findOrFail($id);
         Role::destroy($role->id);
         return redirect()->route('Pages.roles.index')->with('success', 'Role deleted successfully.');
     }

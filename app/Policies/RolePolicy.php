@@ -8,66 +8,56 @@ use Illuminate\Auth\Access\Response;
 
 class RolePolicy
 {
+      // قبل أي تحقق من القدرة
+    public function before($user)
+    {
+        if ($user->super_admin) {
+            return true;
+        }
+    }
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny($user): bool
     {
-        // view all roles
-        //return false;
-        return $user->hasAbility('roles.view');
+        return $user->hasAbility('role.view');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
+
     public function view( $user, Role $role): bool
     {
-        // view selected role
         return false;
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
         //return false;
-        return $user->hasAbility('roles.create');
+        return $user->hasAbility('role.create');
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
+   
     public function update(User $user, Role $role): bool
     {
-        // return false;
-        return $user->hasAbility('roles.update');
+        
+        return $user->hasAbility('role.update');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
+ 
     public function delete(User $user, Role $role): bool
     {
         //  return false;
-        return $user->hasAbility('roles.delete');
+        return $user->hasAbility('role.delete');
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
     public function restore(User $user, Role $role): bool
     {
         return false;
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
+
     public function forceDelete(User $user, Role $role): bool
     {
         // return false;
-        return $user->hasAbility('roles.delete');
+        return $user->hasAbility('role.delete');
     }
 }

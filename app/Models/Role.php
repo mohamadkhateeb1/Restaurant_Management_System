@@ -1,45 +1,52 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use App\Models\Ability;
+
 use Illuminate\Database\Eloquent\Model;
-use App\Concerns\HasRoles;
+
 class Role extends Model
 {
-    use HasRoles;
     protected $fillable = ['name'];
-    // ربط بين الدور والموظفين باستخدام علاقة متعددة الأشكال
-   public function employees(): MorphToMany
+
+    // علاقة الدور مع الموظفين
+
+    public function employees()
     {
-        return $this->morphedByMany(Employee::class, 'authorizable', 'role_user');// 'role_user' هو اسم جدول الربط
-    }
-    // ريطط بين الدور والقدرات
-    public function abilities()
-    {
-        return $this->hasMany(Ability::class); //(Ability أو RoleAbility) تأكد من اسم الموديل عندك 
+        return $this->belongsToMany(Employee::class, 'roles_employees');
     }
 
-    public static function createwithAbilities($request)
+    // علاقة الدور مع القدرات
+
+    public function abilities()
     {
-        $role = Role::create(['name' => $request->name]);
-        foreach ($request->abilities as $ability => $value) {
-            $role->abilities()->create([
+        return $this->hasMany(RoleAbilities::class);
+    }
+
+    // هذا الميثود لإنشاء دور مع القدرات
+
+    public static function createWithAbilities($request)
+    {
+        $role = Role::create(['name' => $request['name']]);
+        foreach ($request['abilities'] as $ability => $value) {
+            RoleAbilities::create([
                 'role_id' => $role->id,
                 'ability' => $ability,
-                'type' => $value,
+                'type' => $value
             ]);
         }
         return $role;
     }
-    public  function updateWithAbilities($request)
+
+    // هذا الميثود لتحديث الدور مع القدرات
+
+    public function updateWithAbilities($request)
     {
-        $this->update(['name' => $request->name]); // تحديث اسم الدور
-        foreach ($request->abilities as $ability => $value) {
-            Ability::updateOrCreate(
+        $this->update(['name' => $request['name']]); // تحديث اسم الدور
+        foreach ($request['abilities'] as $ability => $value) {
+            RoleAbilities::updateOrCreate(
                 [
                     'role_id' => $this->id,
-                    'ability' => $ability,
+                    'ability' => $ability
                 ],
                 [
                     'type' => $value

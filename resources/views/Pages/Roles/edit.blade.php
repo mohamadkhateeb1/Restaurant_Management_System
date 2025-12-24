@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Create Role')
+@section('title', 'Edit Role') {{-- تعديل العنوان --}}
 @section('content')
     <div class="row">
-        <!-- left column -->
         <div class="col-md-12">
             <div class="card card-primary">
                 <div class="card-header">
-                    <h3 class="card-title"> Create <small>Form</small></h3>
+                    {{-- تعديل المسمى --}}
+                    <h3 class="card-title"> Edit Role: <small>{{ $role->name }}</small></h3>
                 </div>
 
                 @if ($errors->any())
@@ -18,29 +18,32 @@
                             @endforeach
                         </ul>
                     </div>
-
                 @endif
+
                 <form action="{{ route('Pages.roles.update', $role->id) }}" method="POST">
                     @csrf
                     @method('PUT')
+                    
+                    {{-- تمرير البيانات للملف المشترك لضمان استقرار العرض --}}
                     @include('Pages.Roles._form')
-                    <!-- /.card-body -->
+
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Update Role</button>
+                        <a href="{{ route('Pages.roles.index') }}" class="btn btn-secondary">Cancel</a>
                     </div>
                 </form>
             </div>
-            <!-- /.card -->
         </div>
+    </div>
+@endsection
 
+@push('styles')
+    <style>
+        .alert {
+            margin-top: 10px
+        }
+    </style>
+@endpush
 
-    @endsection
-    @push('styles')
-        <style>
-            .alert {
-                margin-top: 10px
-            }
-        </style>
-    @endpush
-    @push('stripts')
-    @endpush
+@push('scripts') {{-- تصحيح كلمة scripts --}}
+@endpush
