@@ -11,10 +11,9 @@
                 {{-- رأس الصفحة --}}
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2 class="h3 text-light">
-                        <i class="fas fa-user-plus text-primary me-2"></i> إضافة موظف جديد
-                    </h2>
+                        <i class="fas fa-user-plus text-primary me-2"></i> @lang('Add New Employee')</h2>
                     <a href="{{ route('Pages.employee.index') }}" class="btn btn-outline-secondary btn-sm shadow-sm">
-                        <i class="fas fa-arrow-right me-2"></i> العودة للقائمة
+                        <i class="fas fa-arrow-right me-2"></i> @lang('Back to List')
                     </a>
                 </div>
 
@@ -22,7 +21,7 @@
                 <div class="card shadow-lg border-0 overflow-hidden">
                     <div class="card-header bg-primary py-3">
                         <h5 class="card-title mb-0 text-white fw-bold">
-                            <i class="fas fa-id-card me-2"></i> بيانات الموظف والصلاحيات
+                            <i class="fas fa-id-card me-2"></i> @lang('Employee Details and Permissions')
                         </h5>
                     </div>
 
@@ -38,10 +37,10 @@
                             {{-- أزرار التحكم --}}
                             <div class="d-flex justify-content-end gap-2 mt-5 pt-3 border-top border-secondary">
                                 <button type="reset" class="btn btn-outline-secondary px-4">
-                                    <i class="fas fa-undo me-2"></i> إعادة تعيين
+                                    <i class="fas fa-undo me-2"></i> @lang('Reset')
                                 </button>
                                 <button type="submit" class="btn btn-success btn-lg px-5 shadow">
-                                    <i class="fas fa-save me-2"></i> حفظ الموظف
+                                    <i class="fas fa-save me-2"></i> @lang('Save Employee')
                                 </button>
                             </div>
                         </form>

@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 class RoleController extends Controller
 {
-
     public function index()
     {
         $this->authorize('viewAny', Role::class);
@@ -21,19 +20,19 @@ class RoleController extends Controller
         );
     }
 
-
     public function create()
     {
         $this->authorize('create', Role::class);
         return view('Pages.Roles.create');
     }
 
-
     public function store(Request $request)
     {
+        $this->authorize('create', Role::class);
+
         $request->validate([
             'name' => 'required|string|unique:roles,name',
-            'abilities' => 'required|array', 
+            'abilities' => 'required|array',
         ]);
 
         Role::createWithAbilities($request);
@@ -46,18 +45,17 @@ class RoleController extends Controller
         return view('Pages.Roles.show', compact('role'));
     }
 
-    
     public function edit(Role $role)
     {
         $this->authorize('update', $role);
-        $role_abilities = $role->abilities()->pluck('type', 'ability')->toArray(); // تحويل الصلاحيات إلى مصفوفة من النوع => القدرة
+        $role_abilities = $role->abilities()->pluck('type', 'ability')->toArray();
         $role = Role::with('abilities')->findOrFail($role->id);
         return view('Pages.Roles.edit', ['role' => $role, 'role_abilities' => $role_abilities]);
     }
 
-   
     public function update(Request $request, Role $role)
     {
+        $this->authorize('update', $role);
 
         $request->validate([
             'name' => 'required|unique:roles,name,' . $role->id,
@@ -67,11 +65,11 @@ class RoleController extends Controller
         return redirect()->route('Pages.roles.index')->with('success', 'Role updated successfully.');
     }
 
-
     public function destroy($id)
     {
-        $this->authorize('delete', Role::class);
         $role = Role::findOrFail($id);
+        $this->authorize('delete', $role);
+
         Role::destroy($role->id);
         return redirect()->route('Pages.roles.index')->with('success', 'Role deleted successfully.');
     }

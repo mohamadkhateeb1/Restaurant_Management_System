@@ -4,35 +4,34 @@
     <div class="container mt-5" dir="rtl">
         <div class="row align-items-center mb-5">
             <div class="col-md-6 text-right">
-                <h1 class="text-white fw-bold mb-1 display-6">إدارة تصنيفات النظام</h1>
-                <p class="text-muted fs-5">التحكم في أقسام البيع (المنيو) وأقسام المخزن الإدارية</p>
+                <h1 class="text-white fw-bold mb-1 display-6">@lang('Categories Management')</h1>
+                <p class="text-muted fs-5">@lang('Manage the system categories (menu) and inventory categories')</p>
             </div>
             <div class="col-md-6 text-left mt-4 mt-md-0">
                 <div class="d-flex gap-2 justify-content-start justify-content-md-end">
 
                     @if ($categories->count() > 0)
-                        {{-- نموذج الحذف الجماعي المبسط --}}
                         <form action="{{ route('Pages.categories.bulkDestroy') }}" method="POST"
                             onsubmit="return confirm('🚨 تنبيه: مسح كافة الأقسام سيؤدي لإزالة جميع سجلات المخزن والمواد الخام المرتبطة بها. هل أنت متأكد؟')">
                             @csrf
                             @method('DELETE')
 
-                            {{-- وضع كافة المعرفات في حقول مخفية مباشرة --}}
                             @foreach ($categories as $cat)
                                 <input type="hidden" name="ids[]" value="{{ $cat->id }}">
                             @endforeach
 
                             <button type="submit"
                                 class="btn btn-outline-danger shadow-sm px-4 rounded-pill transition-all">
-                                <i class="fas fa-trash-sweep me-2"></i> مسح كافة الأقسام
+                                <i class="fas fa-trash-sweep me-2"></i> @lang('Delete All Categories')
                             </button>
                         </form>
                     @endif
-
+                    @can('create', App\Models\CategoriesRestaurant::class)
                     <a href="{{ route('Pages.categories.create') }}"
                         class="btn btn-primary shadow-sm px-4 rounded-pill transition-all hover-lift">
-                        <i class="fas fa-plus-circle me-2"></i> إضافة قسم جديد
+                        <i class="fas fa-plus-circle me-2"></i> @lang('Add New Category')
                     </a>
+                    @endcan
                 </div>
             </div>
         </div>
@@ -45,10 +44,10 @@
                     <thead class="bg-secondary bg-opacity-25 text-muted text-uppercase small">
                         <tr>
                             <th class="py-4" style="width: 80px;">#</th>
-                            <th class="py-4 text-right pr-5">اسم القسم</th>
-                            <th class="py-4">نوع القسم (النطاق)</th>
-                            <th class="py-4">حالة النشاط</th>
-                            <th class="py-4">العمليات</th>
+                            <th class="py-4 text-right pr-5">@lang('Name')</th>
+                            <th class="py-4">@lang('Category Type')</th>
+                            <th class="py-4">@lang('Status')</th>
+                            <th class="py-4">@lang('Actions')</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -95,10 +94,15 @@
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center gap-2">
+                                        @can('view', App\Models\CategoriesRestaurant::class)
                                         <a href="{{ route('Pages.categories.show', $category->id) }}"
                                             class="btn btn-icon btn-soft-primary"><i class="fas fa-eye"></i></a>
+                                        @endcan
+                                        @can('update', App\Models\CategoriesRestaurant::class)
                                         <a href="{{ route('Pages.categories.edit', $category->id) }}"
                                             class="btn btn-icon btn-soft-warning"><i class="fas fa-edit"></i></a>
+                                        @endcan
+                                        @can('delete', App\Models\CategoriesRestaurant::class)
                                         <form action="{{ route('Pages.categories.destroy', $category->id) }}"
                                             method="POST" class="d-inline"
                                             onsubmit="return confirm('هل أنت متأكد من الحذف؟')">
@@ -106,6 +110,7 @@
                                             <button type="submit" class="btn btn-icon btn-soft-danger"><i
                                                     class="fas fa-trash"></i></button>
                                         </form>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>

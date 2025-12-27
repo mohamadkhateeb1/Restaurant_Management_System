@@ -8,14 +8,12 @@
 
         <div class="d-flex justify-content-between align-items-center pt-4 pb-3">
             <h2 class="h3 text-light">
-                <i class="fas fa-users-cog me-2 text-primary"></i> قائمة الموظفين
-            </h2>
+                <i class="fas fa-users-cog me-2 text-primary"></i> @lang('Employees List')</h2>
 
             {{-- تفعيل صلاحية الإضافة --}}
             @can('create', App\Models\Employee::class)
                 <a href="{{ route('Pages.employee.create') }}" class="btn btn-primary shadow-sm">
-                    <i class="fas fa-user-plus me-2"></i> إضافة موظف جديد
-                </a>
+                    <i class="fas fa-user-plus me-2"></i> @lang('Add New Employee')</a>
             @endcan
         </div>
 
@@ -31,13 +29,13 @@
 
                         <thead>
                             <tr class="text-secondary text-uppercase small border-bottom border-secondary">
-                                <th class="ps-4">الاسم والأدوار</th> {{-- عدلنا العنوان هنا --}}
-                                <th>الوظيفة</th>
-                                <th>رقم الهاتف</th>
-                                <th>الراتب</th>
-                                <th>تاريخ التوظيف</th>
-                                <th>الحالة</th>
-                                <th class="text-center pe-4">الإجراءات</th>
+                                <th class="ps-4">@lang('Name and Roles')</th> {{-- عدلنا العنوان هنا --}}
+                                <th>@lang('Position')</th>
+                                <th>@lang('Contact Information')</th>
+                                <th>@lang('Salary')</th>
+                                <th>@lang('Hire Date')</th>
+                                <th>@lang('Status')</th>
+                                <th class="text-center pe-4">@lang('Actions')</th>
                             </tr>
                         </thead>
 

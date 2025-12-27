@@ -2,62 +2,43 @@
 
 namespace App\Policies;
 
+use App\Models\Employee;
 use App\Models\Role;
-use App\Models\User;
-use Illuminate\Auth\Access\Response;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class RolePolicy
 {
-      // قبل أي تحقق من القدرة
-    public function before($user)
+    use HandlesAuthorization;
+
+    public function before(Employee $employee)
     {
-        if ($user->super_admin) {
+        if ($employee->super_admin) {
             return true;
         }
     }
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny($user): bool
+
+    public function viewAny(Employee $employee)
     {
-        return $user->hasAbility('role.view');
+        return $employee->hasAbility('role.view');
     }
 
-
-    public function view( $user, Role $role): bool
+    public function view(Employee $employee, Role $role)
     {
-        return false;
+        return $employee->hasAbility('role.show');
     }
 
-    public function create(User $user): bool
+    public function create(Employee $employee)
     {
-        //return false;
-        return $user->hasAbility('role.create');
+        return $employee->hasAbility('role.create');
     }
 
-   
-    public function update(User $user, Role $role): bool
+    public function update(Employee $employee, Role $role)
     {
-        
-        return $user->hasAbility('role.update');
+        return $employee->hasAbility('role.update');
     }
 
- 
-    public function delete(User $user, Role $role): bool
+    public function delete(Employee $employee, Role $role)
     {
-        //  return false;
-        return $user->hasAbility('role.delete');
-    }
-
-    public function restore(User $user, Role $role): bool
-    {
-        return false;
-    }
-
-
-    public function forceDelete(User $user, Role $role): bool
-    {
-        // return false;
-        return $user->hasAbility('role.delete');
+        return $employee->hasAbility('role.delete');
     }
 }

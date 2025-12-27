@@ -2,28 +2,25 @@
 
 namespace App\Concerns;
 
-use App\Models\Role;
-use Illuminate\Support\Facades\Gate;
 trait HasRoles
 {
-    // تحقق مما إذا كان الموظف يمتلك دورًا معينًا
     public function hasRole($roleName)
     {
         return $this->roles()->where('name', $roleName)->exists();
     }
 
-    
-
-    // تحقق مما إذا كان الموظف يمتلك قدرة معينة
-    
     public function hasAbility($ability)
     {
+        // 1. إذا كان سوبر أدمن، افتح له كل شيء فوراً
         if ($this->super_admin) {
-        return true;
-    }
-        return $this->roles()->whereHas('abilities', function ($query) use ($ability) {
-            $query->where('ability', $ability)
-                ->where('type', 'allow');
+            return true;
+        } 
+        
+        // 2. البحث في قاعدة البيانات عن الصلاحية بشرط أن يكون النوع 'allow'
+        // هذا السطر يحل مشكلة ظهور العناصر للموظف العادي
+        return $this->roles()->whereHas('abilities', function ($q) use ($ability) {
+            $q->where('ability', $ability)
+              ->where('type', 'allow');
         })->exists();
     }
 }

@@ -38,13 +38,16 @@
                                             @endforeach
                                         </td>
                                         <td>
+                                            @can('update',App\Models\Role::class)
                                             <a href="{{ route('Pages.roles.edit', $role->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                            
+                                            @endcan
+                                            @can('delete',App\Models\Role::class)
                                             <form action="{{ route('Pages.roles.destroy', $role->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
                                             </form>
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach

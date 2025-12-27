@@ -2,51 +2,31 @@
 
 namespace App\Providers;
 
-use App\Models\Attendance;
-use App\Models\Department;
 use App\Models\Employee;
-use App\Models\LeaveRequest;
-use App\Models\LeaveType;
 use App\Models\Role;
-use App\Models\Task;
-use App\Policies\AttendancePolicy;
-use App\Policies\DepartmentPolicy;
+use App\Models\CategoriesRestaurant;
 use App\Policies\EmployeePolicy;
-use App\Policies\LeaveRequestPolicy;
-use App\Policies\LeaveTypePolicy;
 use App\Policies\RolePolicy;
-use App\Policies\TaskPolicy;
+use App\Policies\CategoriesRestaurantPolicy;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Validation\Rules\In;
-use App\Models\Inventory;
-use App\Policies\InventoryPolicy;
-use App\Models\Cachier;
-use App\Policies\CachierPolicy;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+
 class AuthServiceProvider extends ServiceProvider
 {
-    
-
-    protected $policies = [// ربط النماذج بالسياسات الخاصة بها
-        Employee::class => EmployeePolicy::class, // نموذج الموظف وسياسة الموظف
-        Role::class => RolePolicy::class,// نموذج الدور وسياسة الدور
-        Inventory::class => InventoryPolicy::class, // نموذج الجرد وسياسة الجرد
-        Cachier::class => CachierPolicy::class, // نموذج الكاشير وسياسة الكاشير
-        
+    protected $policies = [
+        // ربط يدوي لأن اسم المودل لا يطابق اسم السياسة تلقائياً
+        Employee::class => EmployeePolicy::class,
+        Role::class => RolePolicy::class,
+        CategoriesRestaurant::class => CategoriesRestaurantPolicy::class,
     ];
-    public function register(): void
-    {
-        //
-    }
 
     public function boot(): void
     {
+        $this->registerPolicies();
 
-     
-        foreach (config('abilities') as $code => $label) {
-            Gate::define($code, function ($user) use ($code) {
-                return $user->hasAbility($code);
-            });
-        }
+        // السوبر أدمن يتخطى كافة الفحوصات (هذا يحل مشكلة السوبر أدمن عندك)
+        Gate::before(function ($user, $ability) {
+            return $user->super_admin ? true : null;
+        });
     }
 }

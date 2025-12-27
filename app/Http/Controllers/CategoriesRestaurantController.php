@@ -7,14 +7,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\Gate;
 
 class CategoriesRestaurantController extends Controller
 {
-    /**
-     * عرض جميع الأقسام مع تفعيل نظام الفلترة المتقدم.
-     */
+
     public function index(Request $request)
     {
+        // فحص صلاحية عرض القائمة
+        $this->authorize('viewAny', CategoriesRestaurant::class);
+
         $categories = CategoriesRestaurant::query()
             ->when($request->name, function ($q) use ($request) {
                 return $q->where('name', 'LIKE', "%{$request->name}%");
@@ -32,24 +34,26 @@ class CategoriesRestaurantController extends Controller
         return view('Pages.Categories.index', compact('categories'));
     }
 
-    /**
-     * واجهة إضافة قسم جديد.
-     */
+
     public function create()
     {
-        $category = new CategoriesRestaurant(); 
+        // فحص صلاحية الدخول لصفحة الإضافة
+        $this->authorize('create', CategoriesRestaurant::class);
+
+        $category = new CategoriesRestaurant();
         return view('Pages.Categories.create', compact('category'));
     }
 
-    /**
-     * حفظ القسم الجديد.
-     */
+
     public function store(Request $request)
     {
+        // فحص صلاحية الحفظ
+        $this->authorize('create', CategoriesRestaurant::class);
+
         $request->validate([
             'name'             => 'required|string|max:255|unique:categories_restaurants,name',
             'status'           => 'required|in:active,inactive',
-            'is_menu_category' => 'required|boolean', 
+            'is_menu_category' => 'required|boolean',
             'description'      => 'nullable|string',
             'image'            => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
@@ -75,30 +79,35 @@ class CategoriesRestaurantController extends Controller
         }
     }
 
-    /**
-     * عرض تفاصيل القسم.
-     */
+
     public function show($id)
     {
         $category = CategoriesRestaurant::with(['items.inventory'])->findOrFail($id);
+
+        // فحص صلاحية عرض تفاصيل قسم معين
+        $this->authorize('view', $category);
+
         return view('Pages.Categories.show', compact('category'));
     }
 
-    /**
-     * واجهة تعديل القسم.
-     */
+
     public function edit($id)
     {
         $category = CategoriesRestaurant::findOrFail($id);
+
+        // فحص صلاحية الدخول لصفحة التعديل
+        $this->authorize('update', $category);
+
         return view('Pages.Categories.edit', compact('category'));
     }
 
-    /**
-     * تحديث بيانات القسم.
-     */
+
     public function update(Request $request, $id)
     {
         $category = CategoriesRestaurant::findOrFail($id);
+
+        // فحص صلاحية التحديث
+        $this->authorize('update', $category);
 
         $request->validate([
             'name'             => 'required|string|max:255|unique:categories_restaurants,name,' . $id,
@@ -123,7 +132,7 @@ class CategoriesRestaurantController extends Controller
                 }
 
                 $category->save();
-                
+
                 return redirect()->route('Pages.categories.index')->with('success', 'تم تحديث بيانات القسم بنجاح.');
             });
         } catch (Exception $e) {
@@ -131,21 +140,20 @@ class CategoriesRestaurantController extends Controller
         }
     }
 
-    /**
-     * حذف قسم واحد (تم التعديل لضمان حذف الصورة والسجل معاً).
-     */
+
     public function destroy($id)
     {
-        try {
-            return DB::transaction(function () use ($id) {
-                $category = CategoriesRestaurant::findOrFail($id);
+        $category = CategoriesRestaurant::findOrFail($id);
 
-                // حذف الصورة من القرص الصلب أولاً
+        // فحص صلاحية الحذف
+        $this->authorize('delete', $category);
+
+        try {
+            return DB::transaction(function () use ($category) {
                 if ($category->image) {
                     Storage::disk('public')->delete($category->image);
                 }
 
-                // حذف السجل من قاعدة البيانات
                 $category->delete();
 
                 return redirect()->route('Pages.categories.index')->with('success', 'تم حذف القسم وجميع صوره بنجاح.');
@@ -155,12 +163,12 @@ class CategoriesRestaurantController extends Controller
         }
     }
 
-    /**
-     * الحذف الجماعي للأقسام المحددة (تم التعديل لضمان حذف الصور دفعة واحدة).
-     */
+
     public function bulkDestroy(Request $request)
     {
-        // التأكد من أن IDs وصلت كمصفوفة
+        // فحص صلاحية الحذف (استخدمنا صلاحية الـ delete العامة هنا)
+        $this->authorize('delete', CategoriesRestaurant::class);
+
         $ids = $request->ids;
 
         if (!$ids || !is_array($ids)) {
@@ -170,17 +178,15 @@ class CategoriesRestaurantController extends Controller
         try {
             return DB::transaction(function () use ($ids) {
                 $categories = CategoriesRestaurant::whereIn('id', $ids)->get();
-                
-                // الدوران على الأقسام لحذف صورها من التخزين
+
                 foreach ($categories as $category) {
                     if ($category->image) {
                         Storage::disk('public')->delete($category->image);
                     }
                 }
 
-                // حذف جميع السجلات دفعة واحدة بعد حذف الصور
                 CategoriesRestaurant::whereIn('id', $ids)->delete();
-                
+
                 return redirect()->route('Pages.categories.index')->with('success', 'تم مسح كافة الأقسام والصور المحددة بنجاح.');
             });
         } catch (Exception $e) {

@@ -4,8 +4,7 @@
     <div class="col-md-6">
         <div class="p-4 rounded-3 h-100" style="background-color: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);">
             <h6 class="text-info border-bottom border-secondary pb-3 mb-4 d-flex align-items-center">
-                <i class="fas fa-user-circle me-2 fs-5"></i> المعلومات الشخصية والأمان
-            </h6>
+                <i class="fas fa-user-circle me-2 fs-5"></i>@lang('Personal Information and Security')</h6>
 
             <div class="mb-3">
                 <x-form.input label="الاسم الكامل" name="name" :value="$employee->name" placeholder="أدخل الاسم الكامل"  />
@@ -20,7 +19,7 @@
                 @if (isset($employee->id))
                     <div class="mt-1 ps-1">
                         <small class="text-muted" style="font-size: 0.75rem;">
-                            <i class="fas fa-info-circle me-1"></i> اتركه فارغاً إذا كنت لا تريد التغيير
+                            <i class="fas fa-info-circle me-1"></i> @lang('Leave it blank if you do not want to change')
                         </small>
                     </div>
                 @endif
@@ -36,7 +35,7 @@
     <div class="col-md-6">
         <div class="p-4 rounded-3 h-100" style="background-color: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);">
             <h6 class="text-info border-bottom border-secondary pb-3 mb-4 d-flex align-items-center">
-                <i class="fas fa-briefcase me-2 fs-5"></i> تفاصيل الوظيفة والراتب
+                <i class="fas fa-briefcase me-2 fs-5"></i> @lang('Job Details and Status')
             </h6>
 
             <div class="mb-3">
@@ -49,7 +48,7 @@
 
             {{-- حقل الأدوار بشكل أكثر أناقة --}}
             <div class="mb-3">
-                <label class="form-label text-white fw-bold mb-2 small">الأدوار الوظيفية (الصلاحيات)</label>
+                <label class="form-label text-white fw-bold mb-2 small">@lang('Functional Roles (Permissions)')</label>
                 <div class="p-3 rounded-2 shadow-inner" style="background-color: #1a1d20; border: 1px solid #343a40; max-height: 120px; overflow-y: auto;">
                     <div class="row g-2">
                         @foreach ($roles as $role)
