@@ -12,11 +12,11 @@
             </h2>
 
             {{-- تفعيل صلاحية الإضافة --}}
-            {{-- @can('employees.create') --}}
-            <a href="{{ route('Pages.employee.create') }}" class="btn btn-primary shadow-sm">
-                <i class="fas fa-user-plus me-2"></i> إضافة موظف جديد
-            </a>
-            {{-- @endcan --}}
+            @can('create', App\Models\Employee::class)
+                <a href="{{ route('Pages.employee.create') }}" class="btn btn-primary shadow-sm">
+                    <i class="fas fa-user-plus me-2"></i> إضافة موظف جديد
+                </a>
+            @endcan
         </div>
 
         <div class="mb-4">
@@ -43,11 +43,13 @@
 
                         <tbody>
                             @forelse ($employees as $employee)
-                                <tr>
-                                    <td class="ps-4">
-                                        <div class="d-flex flex-column">
-                                            <span class="fw-bold text-white">{{ $employee->name }}</span>
-                                          
+                            @if ($employee->super_admin){{-- تجاهل عرض المدير العام --}}
+                                @continue
+                            @endif
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex flex-column">
+                                        <span class="fw-bold text-white">{{ $employee->name }}</span>
                                         </div>
                                     </td>
                                     <td>
@@ -70,29 +72,32 @@
 
                                     <td class="pe-4">
                                         <div class="d-flex justify-content-center gap-2">
+                                            @can('view', $employee)
+                                                <a href="{{ route('Pages.employee.show', $employee->id) }}"
+                                                    class="btn btn-sm btn-outline-light border-0" title="عرض التفاصيل">
+                                                    <i class="fas fa-eye text-info"></i>
+                                                </a>
+                                            @endcan
 
-                                            <a href="{{ route('Pages.employee.show', $employee->id) }}"
-                                                class="btn btn-sm btn-outline-light border-0" title="عرض التفاصيل">
-                                                <i class="fas fa-eye text-info"></i>
-                                            </a>
-
-                                            <a href="{{ route('Pages.employee.edit', $employee->id) }}"
-                                                class="btn btn-sm btn-outline-light border-0" title="تعديل">
-                                                <i class="fas fa-edit text-warning"></i>
-                                            </a>
-
-                                            <form method="POST"
-                                                action="{{ route('Pages.employee.destroy', $employee->id) }}"
-                                                onsubmit="return confirm('هل أنت متأكد من حذف الموظف ({{ $employee->name }}) نهائياً؟');"
-                                                class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-outline-light border-0"
-                                                    title="حذف">
-                                                    <i class="fas fa-trash text-danger"></i>
-                                                </button>
-                                            </form>
-                                            {{-- @endcan --}}
+                                            @can('update', $employee)
+                                                <a href="{{ route('Pages.employee.edit', $employee->id) }}"
+                                                    class="btn btn-sm btn-outline-light border-0" title="تعديل">
+                                                    <i class="fas fa-edit text-warning"></i>
+                                                </a>
+                                            @endcan
+                                            @can('delete', $employee)
+                                                <form method="POST"
+                                                    action="{{ route('Pages.employee.destroy', $employee->id) }}"
+                                                    onsubmit="return confirm('هل أنت متأكد من حذف الموظف ({{ $employee->name }}) نهائياً؟');"
+                                                    class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-outline-light border-0"
+                                                        title="حذف">
+                                                        <i class="fas fa-trash text-danger"></i>
+                                                    </button>
+                                                </form>
+                                            @endcan
                                         </div>
                                     </td>
                                 </tr>

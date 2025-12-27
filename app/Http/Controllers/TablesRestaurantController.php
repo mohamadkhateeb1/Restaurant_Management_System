@@ -10,25 +10,25 @@ class TablesRestaurantController extends Controller
     public function index(Request $request)
     {
         // 1. نبدأ ببناء الاستعلام (Query Builder)
-        $query = TablesRestaurant::query();
+            $query = TablesRestaurant::query();
 
-        // 2. جلب قيم الفلترة من الرابط (Query Parameters)
-        $location = $request->query('location');
-        $status = $request->query('status');
+            // 2. جلب قيم الفلترة من الرابط (Query Parameters)
+            $location = $request->query('location');
+            $status = $request->query('status');
 
-        // 3. تطبيق الفلترة حسب الموقع (إذا كان موجوداً)
-        if ($location) {
-            $query->where('location', $location);
-        }
+            // 3. تطبيق الفلترة حسب الموقع (إذا كان موجوداً)
+            if ($location) {
+                $query->where('location', $location);
+            }
 
-        // 4. تطبيق الفلترة حسب الحالة (إذا كانت موجودة)
-        if ($status) {
-            $query->where('status', $status);
-        }
+            // 4. تطبيق الفلترة حسب الحالة (إذا كانت موجودة)
+            if ($status) {
+                $query->where('status', $status);
+            }
 
-        // 5. جلب الطاولات مرتبة رقمياً مع الترقيم (Pagination)
-        // استخدمنا paginate ليدعم التنقل بين الصفحات كما في الأصناف
-        $tables = $query->orderBy('table_number', 'asc')->paginate(12);
+            // 5. جلب الطاولات مرتبة رقمياً مع الترقيم (Pagination)
+            // استخدمنا paginate ليدعم التنقل بين الصفحات كما في الأصناف
+            $tables = $query->orderBy('table_number', 'asc')->paginate(12);
 
         // 6. حساب الإحصائيات (تُحسب من قاعدة البيانات مباشرة لتكون دقيقة)
         $stats = [

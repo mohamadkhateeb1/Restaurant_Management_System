@@ -1,393 +1,340 @@
 @extends('layouts.app')
 
-@section('title', __('app.home'))
+@section('title', 'لوحة التحكم - SRMS')
 @section('content')
 
-    <div class="container-fluid">
+    <div class="container-fluid py-3" dir="rtl">
+        {{-- الهيدر العلوي: ترحيب أنيق + ساعة حية --}}
+        <div class="d-flex justify-content-between align-items-center mb-4 animated-title">
+            <div class="text-white">
+                <h2 class="fw-black mb-0">
+                    <span class="text-neon-blue">أهلاً بك،</span> {{ auth()->user()->name ?? 'المدير' }} ✨
+                </h2>
+                <p class="text-muted small">نظرة عامة على نشاط المطعم اليوم</p>
+            </div>
+            <div class="header-clock p-3 rounded-4 bg-dark-card border border-secondary shadow-sm text-center">
+                <h4 class="mb-0 fw-black text-neon-blue font-monospace" id="liveClock"></h4>
+                <span class="text-muted small fw-bold" id="liveDate"></span>
+            </div>
+        </div>
 
-        {{-- 1. قسم الإحصائيات الرئيسية (KPIs) --}}
-        <h3 class="mt-2 mb-4 animated-title">📈 مؤشرات الأداء الرئيسية (KPIs)</h3>
+        {{-- قسم التنبيهات --}}
+        @if ($lowStockCount > 0)
+            <div class="alert alert-glass-danger border-0 mb-4 animated-kpi shadow-sm d-flex align-items-center">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                <div class="ms-2">
+                    <strong>تنبيه المخزن:</strong> يوجد ({{ $lowStockCount }}) مواد وصلت للحد الأدنى.
+                    <a href="{{ route('Pages.reports.index', ['tab' => 'inventory']) }}"
+                        class="text-danger fw-bold ms-2">تأمين النواقص <i class="fas fa-external-link-alt small"></i></a>
+                </div>
+            </div>
+        @endif
+
+        {{-- 1. بطاقات الأداء المحدثة بألوان نيون عميقة --}}
+        <div class="row mb-4 animated-kpi">
+            {{-- المبيعات - أخضر نيون --}}
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="kpi-card bg-neon-green shadow">
+                    <div class="kpi-content">
+                        <span class="kpi-label">مبيعات اليوم</span>
+                        <h3 class="kpi-value">{{ number_format($todaySales, 0) }} <small>ل.س</small></h3>
+                    </div>
+                    <div class="kpi-icon"><i class="fas fa-chart-line"></i></div>
+                </div>
+            </div>
+
+            {{-- الطاولات - أزرق كهربائي --}}
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="kpi-card bg-neon-blue-card shadow">
+                    <div class="kpi-content">
+                        <span class="kpi-label">طاولات مفتوحة</span>
+                        <h3 class="kpi-value">{{ $openTables }}</h3>
+                    </div>
+                    <div class="kpi-icon"><i class="fas fa-utensils"></i></div>
+                </div>
+            </div>
+
+            {{-- التحضير - برتقالي متوهج --}}
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="kpi-card bg-neon-orange shadow">
+                    <div class="kpi-content">
+                        <span class="kpi-label">قيد التحضير</span>
+                        <h3 class="kpi-value">{{ $preparingOrders }}</h3>
+                    </div>
+                    <div class="kpi-icon"><i class="fas fa-fire"></i></div>
+                </div>
+            </div>
+
+            {{-- الفريق - بنفسجي ملكي --}}
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="kpi-card bg-neon-purple shadow">
+                    <div class="kpi-content">
+                        <span class="kpi-label">فريق العمل</span>
+                        <h3 class="kpi-value">{{ $activeEmployeesCount }}</h3>
+                    </div>
+                    <div class="kpi-icon"><i class="fas fa-user-friends"></i></div>
+                </div>
+            </div>
+        </div>
+
+        {{-- 2. قسم الرسوم البيانية --}}
         <div class="row mb-4">
-
-            {{-- بطاقة 1: المبيعات اليومية --}}
-            <div class="col-lg-3 col-md-6 col-12 mb-3">
-                <div class="small-box bg-success animated-kpi">
-                    <div class="inner">
-                        <h3>$2,450</h3>
-                        <p>المبيعات اليومية</p>
+            <div class="col-lg-8 mb-4">
+                <div class="card bg-dark-card shadow-lg border-0 rounded-4 animated-kpi">
+                    <div class="card-header bg-transparent border-0 py-3 text-white">
+                        <h5 class="fw-bold mb-0"><i class="fas fa-signal text-neon-blue me-2"></i>تحليل مبيعات الأسبوع</h5>
                     </div>
-                    <div class="icon">
-                        <i class="fas fa-dollar-sign"></i>
-                    </div>
-                    <a href="#" class="small-box-footer">
-                        <i class="fas fa-arrow-up"></i> 15% من أمس
-                    </a>
+                    <div class="card-body"><canvas id="salesChart" height="300"></canvas></div>
                 </div>
             </div>
-
-            {{-- بطاقة 2: الطلبات المكتملة --}}
-            <div class="col-lg-3 col-md-6 col-12 mb-3">
-                <div class="small-box bg-info animated-kpi" style="animation-delay: 0.1s;">
-                    <div class="inner">
-                        <h3>450</h3>
-                        <p>الطلبات المكتملة (شهر)</p>
+            <div class="col-lg-4 mb-4">
+                <div class="card bg-dark-card shadow-lg border-0 rounded-4 animated-kpi">
+                    <div class="card-header bg-transparent border-0 py-3 text-white">
+                        <h5 class="fw-bold mb-0"><i class="fas fa-pie-chart text-warning me-2"></i>توزيع الطلبات</h5>
                     </div>
-                    <div class="icon">
-                        <i class="fas fa-receipt"></i>
-                    </div>
-                    <a href="#" class="small-box-footer">
-                        معدل الإنجاز 98%
-                    </a>
-                </div>
-            </div>
-
-            {{-- بطاقة 3: الموظفون النشطون --}}
-            <div class="col-lg-3 col-md-6 col-12 mb-3">
-                <div class="small-box bg-warning animated-kpi" style="animation-delay: 0.2s;">
-                    <div class="inner">
-                        <h3>15</h3>
-                        <p>الموظفون النشطون</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <a href="#" class="small-box-footer">
-                        12 نادل، 3 مطبخ
-                    </a>
-                </div>
-            </div>
-
-            {{-- بطاقة 4: متوسط التقييم --}}
-            <div class="col-lg-3 col-md-6 col-12 mb-3">
-                <div class="small-box bg-danger animated-kpi" style="animation-delay: 0.3s;">
-                    <div class="inner">
-                        <h3>4.7 / 5.0</h3>
-                        <p>متوسط التقييم</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <a href="#" class="small-box-footer">
-                        بناءً على 50 تقييماً
-                    </a>
+                    <div class="card-body d-flex align-items-center justify-content-center"><canvas id="ordersPieChart"
+                            height="300"></canvas></div>
                 </div>
             </div>
         </div>
 
-
-
-        {{-- 2. قسم الجداول (المستخدمين والموظفين) --}}
-        <h3 class="mt-4 mb-4 animated-title" style="animation-delay: 0.4s;">📋 بيانات المستخدمين والموظفين</h3>
-
-        {{-- ---------------------------Table Users ---------------- --}}
+        {{-- 3. الجداول --}}
         <div class="row">
-            <div class="col-12 mb-4">
-                <div class="card animated-kpi" style="animation-delay: 0.5s;">
-
-                    {{-- Header الكارت --}}
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-user-shield ml-2"></i>
-                            جدول المستخدمين
-                        </h3>
-                        <div class="card-tools">
-                            <span class="badge badge-info">3 مستخدمين</span>
-                        </div>
+            <div class="col-lg-7 mb-4">
+                <div class="card bg-dark-card border-0 rounded-4 shadow animated-kpi">
+                    <div class="card-header bg-transparent border-0 py-3">
+                        <h5 class="text-white fw-bold mb-0">👔 الطاقم الإداري</h5>
                     </div>
-
-                    {{-- Body الكارت --}}
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-hover table-striped text-nowrap">
-                            <thead>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover mb-0 text-center">
+                            <thead class="small text-muted text-uppercase">
                                 <tr>
-                                    <th>اسم المستخدم</th>
-                                    <th>البريد الإلكتروني</th>
-                                    <th>الدور</th>
-                                    <th>رقم الهاتف</th>
-                                    <th class="text-center">الحالة</th>
+                                    <th>المدير</th>
+                                    <th>المنصب</th>
+                                    <th>تاريخ البدء</th>
                                 </tr>
                             </thead>
                             <tbody>
-
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="user-panel d-flex">
-                                                <div class="image">
-                                                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center"
-                                                        style="width: 40px; height: 40px;">
-                                                        <span class="text-white font-weight-bold">أ</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <span class="mr-2 font-weight-bold">أحمد الشريف</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-envelope text-info ml-2"></i>
-                                        ahmad@example.com
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-purple">
-                                            <i class="fas fa-user-shield ml-1"></i>
-                                            مدير
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-phone ml-2"></i>
-                                        501234567
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge badge-success">
-                                            <i class="fas fa-check-circle ml-1"></i>
-                                            نشط
-                                        </span>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="user-panel d-flex">
-                                                <div class="image">
-                                                    <div class="bg-pink rounded-circle d-flex align-items-center justify-content-center"
-                                                        style="width: 40px; height: 40px;">
-                                                        <span class="text-white font-weight-bold">ف</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <span class="mr-2 font-weight-bold">فاطمة محمد</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-envelope text-info ml-2"></i>
-                                        fatima@example.com
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-info">
-                                            <i class="fas fa-concierge-bell ml-1"></i>
-                                            نادل
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-phone ml-2"></i>
-                                        559876543
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge badge-warning">
-                                            <i class="fas fa-clock ml-1"></i>
-                                            إجازة
-                                        </span>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="user-panel d-flex">
-                                                <div class="image">
-                                                    <div class="bg-success rounded-circle d-flex align-items-center justify-content-center"
-                                                        style="width: 40px; height: 40px;">
-                                                        <span class="text-white font-weight-bold">خ</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <span class="mr-2 font-weight-bold">خالد العلي</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-envelope text-info ml-2"></i>
-                                        khalid@example.com
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-warning">
-                                            <i class="fas fa-hat-chef ml-1"></i>
-                                            طباخ
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-phone ml-2"></i>
-                                        530001112
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge badge-success">
-                                            <i class="fas fa-check-circle ml-1"></i>
-                                            نشط
-                                        </span>
-                                    </td>
-                                </tr>
-
+                                @foreach ($employees as $emp)
+                                    <tr>
+                                        <td class="fw-bold text-white"><i class="fas fa-shield-alt text-neon-blue me-2"></i>
+                                            {{ $emp->name }}</td>
+                                        <td><span class="badge badge-info-soft">سوبر أدمن</span></td>
+                                        <td class="small text-muted">{{ $emp->created_at->format('Y-m-d') }}</td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
-
-                    {{-- <div class="card-footer clearfix">
-                        <div class="float-right">
-                            <small class="text-muted">
-                                مثال: يوضح هذا الجدول صلاحيات المستخدمين وحالاتهم.
-                            </small>
-                        </div>
-                        <ul class="pagination pagination-sm m-0 float-left">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#">
-                                    <i class="fas fa-chevron-right"></i>
-                                </a>
-                            </li>
-                            <li class="page-item active">
-                                <a class="page-link" href="#">1</a>
-                            </li>
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#">
-                                    <i class="fas fa-chevron-left"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div> --}}
                 </div>
             </div>
-        </div>
 
-        {{-- ---------------------------Table Employees ---------------- --}}
-        <div class="row mt-4">
-            <div class="col-12 mb-4">
-                <div class="card animated-kpi" style="animation-delay: 0.6s;">
-
-                    {{-- Header الكارت --}}
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-users-cog ml-2"></i>
-                            جدول الموظفين
-                        </h3>
-                        {{-- @foreach ($employees as $employee) --}}
-                        <div class="card-tools">
-                            <span class="badge badge-warning">4 موظفين</span>
-                        </div>
+            <div class="col-lg-5 mb-4">
+                <div class="card bg-dark-card border-0 rounded-4 shadow animated-kpi">
+                    <div class="card-header bg-transparent border-0 py-3">
+                        <h5 class="text-white fw-bold mb-0">🏆 الأصناف الأكثر طلباً</h5>
                     </div>
-
-                    {{-- Body الكارت --}}
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-hover table-striped text-nowrap">
-                            <thead>
-                                <tr>
-                                    <th>الاسم</th>
-                                    <th>الوظيفة</th>
-                                    <th>تاريخ الانضمام</th>
-                                    <th>ساعات العمل</th>
-                                    <th class="text-center">الراتب الشهري</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>احمد</td>
-                                    <td>مدير مطعم</td>
-                                    <td>2022-01-15</td>
-                                    <td>8 ساعات</td>
-                                    <td class="text-center">6,500 ر.س</td>
-                                </tr>
-                                <tr>
-                                    <td>سارة فهد</td>
-                                    <td>رئيس الطهاة</td>
-                                    <td>2021-08-20</td>
-                                    <td>9 ساعات</td>
-                                    <td class="text-center">7,200 ر.س</td>
-                                </tr>
-                                <tr>
-                                    <td>يوسف خالد</td>
-                                    <td>نادل</td>
-                                    <td>2023-05-10</td>
-                                    <td>7 ساعات</td>
-                                    <td class="text-center">3,500 ر.س</td>
-                                </tr>
-                                <tr>
-                                    <td>نورة جمال</td>
-                                    <td>محاسب</td>
-                                    <td>2024-02-01</td>
-                                    <td>8 ساعات</td>
-                                    <td class="text-center">5,800 ر.س</td>
-                                </tr>
-                            </tbody>
-                            {{-- @endforeach --}}
-                        </table>
-                    </div>
-
-                    <div class="card-footer clearfix">
-                        <div class="float-right">
-                            <small class="text-muted">
-                                مثال: لتتبع دوام الموظفين ومعدلات الرواتب.
-                            </small>
-                        </div>
+                    <div class="card-body">
+                        @foreach ($topItems as $item)
+                            <div
+                                class="d-flex justify-content-between align-items-center mb-3 p-2 rounded-3 bg-dark-soft border border-secondary border-opacity-10">
+                                <span class="text-white fw-bold">{{ $item->item_name }}</span>
+                                <span class="badge badge-warning rounded-pill px-3">{{ $item->total }} طلب</span>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 
-    @push('styles')
-        <style>
-            @keyframes fadeInUp {
-                0% {
-                    opacity: 0;
-                    transform: translateY(20px);
+    <style>
+        :root {
+            --neon-blue: #00d2ff;
+            --dark-bg: #0d0f11;
+            --card-bg: #1a1d20;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .bg-dark-card {
+            background-color: var(--card-bg) !important;
+        }
+
+        .bg-dark-soft {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .text-neon-blue {
+            color: var(--neon-blue);
+        }
+
+        .fw-black {
+            font-weight: 900 !important;
+        }
+
+        /* تصميم الكاردات الجديد */
+        .kpi-card {
+            position: relative;
+            padding: 25px;
+            border-radius: 20px;
+            overflow: hidden;
+            color: white;
+            transition: 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            height: 120px;
+            display: flex;
+            align-items: center;
+        }
+
+        .kpi-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .kpi-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .kpi-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            opacity: 0.9;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .kpi-value {
+            font-size: 1.7rem;
+            font-weight: 900;
+            margin: 0;
+        }
+
+        .kpi-icon {
+            position: absolute;
+            right: -10px;
+            bottom: -10px;
+            font-size: 5rem;
+            opacity: 0.15;
+            transform: rotate(-10deg);
+            z-index: 1;
+        }
+
+        /* الألوان الجديدة */
+        .bg-neon-green {
+            background: linear-gradient(135deg, #00b09b, #96c93d);
+        }
+
+        .bg-neon-blue-card {
+            background: linear-gradient(135deg, #2193b0, #6dd5ed);
+        }
+
+        .bg-neon-orange {
+            background: linear-gradient(135deg, #f12711, #f5af19);
+        }
+
+        .bg-neon-purple {
+            background: linear-gradient(135deg, #654ea3, #eaafc8);
+        }
+
+        .alert-glass-danger {
+            background: rgba(235, 51, 73, 0.1);
+            backdrop-filter: blur(10px);
+            border-right: 5px solid #eb3349 !important;
+            color: #ff6b6b;
+        }
+
+        .badge-info-soft {
+            background: rgba(0, 210, 255, 0.1);
+            color: var(--neon-blue);
+            border: 1px solid rgba(0, 210, 255, 0.2);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animated-title,
+        .animated-kpi {
+            animation: fadeInUp 0.7s ease-out both;
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function updateClockAndDate() {
+                const now = new Date();
+                const timeOptions = {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                };
+                const dateOptions = {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                };
+                document.getElementById('liveClock').textContent = now.toLocaleTimeString('ar-SA', timeOptions);
+                document.getElementById('liveDate').textContent = now.toLocaleDateString('ar-SA', dateOptions);
+            }
+            setInterval(updateClockAndDate, 1000);
+            updateClockAndDate();
+
+            Chart.defaults.color = '#888';
+            new Chart(document.getElementById('salesChart'), {
+                type: 'bar',
+                data: {
+                    labels: {!! json_encode($salesData->pluck('date')) !!},
+                    datasets: [{
+                        label: 'المبيعات',
+                        data: {!! json_encode($salesData->pluck('total')) !!},
+                        backgroundColor: 'rgba(0, 210, 255, 0.6)',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
                 }
+            });
 
-                100% {
-                    opacity: 1;
-                    transform: translateY(0);
+            new Chart(document.getElementById('ordersPieChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['صالة', 'سفري'],
+                    datasets: [{
+                        data: [{{ $dineInCount }}, {{ $takeawayCount }}],
+                        backgroundColor: ['#00ff88', '#ffc107'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%'
                 }
-            }
-
-            .animated-title,
-            .animated-kpi {
-                animation: fadeInUp 0.5s ease-out both;
-            }
-
-            body:not(.dark-mode) {
-                background-color: #f4f6f9;
-                color: #343a40;
-            }
-
-            body:not(.dark-mode) .content-wrapper {
-                background-color: transparent !important;
-            }
-
-            body,
-            .content-wrapper,
-            .main-header,
-            .main-sidebar,
-            .card {
-                transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-            }
-
-
-            .small-box {
-                box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 3px 6px rgba(0, 0, 0, .2) !important;
-                transition: transform 0.2s ease, box-shadow 0.2s ease;
-            }
-
-            .small-box:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 8px 16px rgba(0, 0, 0, .3) !important;
-            }
-
-            .dark-mode .table-striped tbody tr:nth-of-type(odd) {
-                background-color: rgba(255, 255, 255, 0.05);
-            }
-
-            .badge-purple {
-                background-color: #6f42c1;
-                color: white;
-            }
-
-            .bg-pink {
-                background-color: #e83e8c !important;
-            }
-
-            .small-box .icon {
-                left: 10px;
-                right: auto;
-            }
-        </style>
-    @endpush
-
+            });
+        });
+    </script>
 @endsection

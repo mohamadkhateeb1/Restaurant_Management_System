@@ -9,10 +9,11 @@
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Roles List</h3>
+                        @can('create', App\Models\Role::class)
                         <div class="card-tools">
-                            {{-- الحفاظ على الرابط كما طلبتم --}}
                             <a href="{{ route('Pages.roles.create') }}" class="btn btn-primary btn-sm">Create New Role</a>
                         </div>
+                        @endcan
                     </div>
                     <div class="card-body table-responsive p-0">
                         <table class="table table-hover text-nowrap">

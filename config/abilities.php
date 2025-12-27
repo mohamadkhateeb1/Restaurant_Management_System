@@ -13,22 +13,41 @@
                 'employee.update' => 'Update Employee',
                 'employee.delete' => 'Delete Employee',
                 'employee.show' => 'Show Employee',
-                // Admin Permissions
-                'admin.create' => 'Create Admin',
-                'admin.view'   =>  'View Admin',
-                'admin.update' => 'Update Admin',
-                'admin.delete' => 'Delete Admin',
-                'admin.show' => 'Show Admin',
-                // Product Permissions
-                'product.create' => 'Create Product',
-                'product.view'   =>  'View Product',
-                'product.update' => 'Update Product',
-                'product.delete' => 'Delete Product',
-                'product.show' => 'Show Product',
-                // Order Permissions
-                'order.create' => 'Create Order',
-                'order.view'   =>  'View Order',
-                'order.update' => 'Update Order',
-                'order.delete' => 'Delete Order',
-                'order.show' => 'Show Order',
+                // Inventory Permissions
+                'inventory.create' => 'Create Inventory',
+                'inventory.view'   =>  'View Inventory',
+                'inventory.update' => 'Update Inventory',
+                'inventory.delete' => 'Delete Inventory',
+                'inventory.show' => 'Show Inventory',
+                // ItemsRestaurant Permissions
+                'itemsrestaurant.create' => 'Create ItemsRestaurant',
+                'itemsrestaurant.view'   =>  'View ItemsRestaurant',
+                'itemsrestaurant.update' => 'Update ItemsRestaurant',
+                'itemsrestaurant.delete' => 'Delete ItemsRestaurant',
+                'itemsrestaurant.show' => 'Show ItemsRestaurant',
+                // InvetoryTransactions Permissions
+                'invetorytransactions.create' => 'Create InvetoryTransactions',
+                'invetorytransactions.view'   =>  'View InvetoryTransactions',
+                'invetorytransactions.update' => 'Update InvetoryTransactions',
+                'invetorytransactions.delete' => 'Delete InvetoryTransactions',
+                'invetorytransactions.show' => 'Show InvetoryTransactions',
+                // Invoice Permissions
+                'invoice.create' => 'Create Invoice',
+                'invoice.view'   =>  'View Invoice',
+                'invoice.update' => 'Update Invoice',
+                'invoice.delete' => 'Delete Invoice',
+                'invoice.show' => 'Show Invoice',
+                //categoriesrestaurant Permissions
+                'categoriesrestaurant.create' => 'Create CategoriesRestaurant',
+                'categoriesrestaurant.view'   =>  'View CategoriesRestaurant',
+                'categoriesrestaurant.update' => 'Update CategoriesRestaurant',
+                'categoriesrestaurant.delete' => 'Delete CategoriesRestaurant',
+                'categoriesrestaurant.show' => 'Show CategoriesRestaurant',
+                //witer Permissions
+                'waiter.view'   =>  'View Waiter',
+                //cashier Permissions
+                'cashier.view'   =>  'View Cashier',
+                'cashier.paydinein'   =>  'Pay Dine-In',
+                'cashier.paytakeaway'   =>  'Pay Takeaway',
+
             ];

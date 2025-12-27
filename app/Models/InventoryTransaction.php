@@ -6,20 +6,29 @@ use Illuminate\Database\Eloquent\Model;
 
 class InventoryTransaction extends Model
 {
-    protected $table = 'inventory_transactions';
+    public $timestamps = false; 
+    protected $casts = [
+    'created_at' => 'datetime', 
+];
 
     protected $fillable = [
-        'inventory_id', 'transaction_type', 'performed_by_user', 'quantity', 'unit_price', 'notes'
+        'inventory_id', 
+        'type', 
+        'quantity', 
+        'reference', 
+        'notes', 
+        'employee_id' 
     ];
 
+    // علاقة الحركة بالمادة الخام
     public function inventory()
     {
-        return $this->belongsTo(Inventory::class, 'inventory_id');
+        return $this->belongsTo(Inventory::class);
     }
 
+    // علاقة الحركة بالموظف
     public function employee()
     {
-        // الموظف الذي قام بالعملية
-        return $this->belongsTo(Employee::class, 'performed_by_user');
+        return $this->belongsTo(Employee::class, 'employee_id');
     }
 }

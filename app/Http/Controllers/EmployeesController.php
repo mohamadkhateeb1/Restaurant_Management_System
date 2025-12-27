@@ -31,21 +31,29 @@ class EmployeesController extends Controller
     public function store(EmoloyeeRequest $request)
     {
         // $this->authorize('create', Employee::class);
-
-        $data = $request->validated(); // يفضل استخدام validated() الجاهزة من الـ Request class
-
-        $employee = Employee::create([
-            'name'      => $data['name'],
-            'email'     => $data['email'],
-            'phone'     => $data['phone'],
-            'position'  => $data['position'],
-            'salary'    => $data['salary'],
-            'hire_date' => $data['hire_date'],
-            'status'    => $data['status'],
-            'notes'     => $data['notes'] ?? null,
-            'password'  => Hash::make($data['password']),
+        $employee = new Employee();
+         $request->validate([
+            'name'      => 'required|string|max:255',
+            'email'     => 'required|email|unique:employees,email',
+            'phone'     => 'required|string|max:20',
+            'position'  => 'required|string|max:100',
+            'salary'    => 'required|numeric|min:0',
+            'hire_date' => 'required|date',
+            'status'    => 'required|in:active,inactive,on_leave',
+            'notes'     => 'nullable|string',
+            'password'  => 'required|string|min:8',
+            'roles'     => 'required|array',
         ]);
-
+        $employee->name = $request->name;
+        $employee->email = $request->email;
+        $employee->phone = $request->phone;
+        $employee->position = $request->position;
+        $employee->salary = $request->salary;
+        $employee->hire_date = $request->hire_date;
+        $employee->status = $request->status;
+        $employee->notes = $request->notes;
+        $employee->password = Hash::make($request->password);
+        $employee->save();
         $employee->roles()->attach($request->roles);
 
         return redirect()->route('Pages.employee.index')->with('success', 'Employee created successfully.');
@@ -54,7 +62,7 @@ class EmployeesController extends Controller
     public function edit($id)
     {
         $employee = Employee::findOrFail($id);
-        // $this->authorize('update', $employee);
+        $this->authorize('update', $employee);
 
 
         return view('Pages.Employees.edit', [
@@ -67,23 +75,28 @@ class EmployeesController extends Controller
     public function update(Request $request, $id)
     {
         $employee = Employee::findOrFail($id);
-        // $this->authorize('update', $employee);
         
 
-        $data = $request->validate([
-            'name'      => 'required|string|max:255',
-            'email'     => 'required|email|unique:employees,email,'.$id,
-            'phone'     => 'required|string|max:20',
-            'position'  => 'required|string|max:100',
-            'salary'    => 'required|numeric|min:0',
-            'hire_date' => 'required|date',
-            'status'    => 'required|in:active,inactive,on_leave',
+       $request->validate([
+            'name'      => 'string|max:255',
+            'email'     => 'email|unique:employees,email,'.$id,
+            'phone'     => 'string|max:20',
+            'position'  => 'string|max:100',
+            'salary'    => 'numeric|min:0',
+            'hire_date' => 'date',
+            'status'    => 'in:active,inactive,on_leave',
             'notes'     => 'nullable|string',
-            'password'  => 'nullable|string|min:8|confirmed',
-            'roles'     => 'required|array',
+            'password'  => 'nullable|string|min:8',
+            'roles'     => 'array',
         ]);
-
-        $employee->fill($data);
+        $employee->name = $request->name ?? $employee->name;
+        $employee->email = $request->email ?? $employee->email;
+        $employee->phone = $request->phone ?? $employee->phone;
+        $employee->position = $request->position ?? $employee->position;
+        $employee->salary = $request->salary ?? $employee->salary;
+        $employee->hire_date = $request->hire_date ?? $employee->hire_date;
+        $employee->status = $request->status ?? $employee->status;
+        $employee->notes = $request->notes ?? $employee->notes;
 
         if ($request->filled('password')) {
             $employee->password = Hash::make($request->password);
@@ -93,6 +106,13 @@ class EmployeesController extends Controller
         $employee->roles()->sync($request->roles);
 
         return redirect()->route('Pages.employee.index')->with('success', 'Employee updated successfully.');
+    }
+    public function show($id)
+    {
+        $employee = Employee::with('roles')->findOrFail($id);
+        $this->authorize('view', $employee);
+
+        return view('Pages.Employees.show', compact('employee'));
     }
 
     public function destroy($id)

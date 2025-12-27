@@ -1,160 +1,255 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شاشة النادل الملكية - نظام الملكي المطور</title>
+    <title>شاشة النادل - SRMS</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --main-bg: #fdfcf9;
-            --primary-gold: #c5a059;
-            --dark-charcoal: #1a1a1a;
-            --kitchen-blue: #4a90e2;
-            --cashier-green: #27ae60;
-            --soft-gray: #f4f4f2;
-            --ready-green: #2ecc71;
-            --preparing-orange: #e67e22;
+            --royal-gold: #d4af37;
+            --dark-ash: #121416;
+            --card-bg: #1c1f22;
+            --text-gray: #a0a0a0;
+            --accent-blue: #00d2ff;
+            --success-green: #2ecc71;
+            --warning-orange: #f39c12;
         }
 
         body {
-            background-color: var(--main-bg);
+            background-color: var(--dark-ash);
             font-family: 'Cairo', sans-serif;
+            color: #fff;
             height: 100vh;
             overflow: hidden;
+            /* لمنع تمرير الصفحة كاملة */
             margin: 0;
         }
 
-        .pos-container { display: flex; height: calc(100vh - 70px); }
+        /* تنسيق الـ Scrollbar لكل المتصفحات */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: var(--royal-gold);
+            border-radius: 10px;
+        }
+
+        .custom-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: var(--royal-gold) rgba(255, 255, 255, 0.05);
+        }
 
         /* الهيدر */
         .royal-header {
-            background: #fff;
+            background: rgba(28, 31, 34, 0.9);
+            backdrop-filter: blur(10px);
             padding: 10px 30px;
-            border-bottom: 2px solid var(--soft-gray);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
             height: 70px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
-        /* تنسيق الطاولات */
+        .table-indicator {
+            background: linear-gradient(45deg, #1c1f22, #2c3136);
+            padding: 5px 20px;
+            border-radius: 50px;
+            border: 1px solid var(--royal-gold);
+        }
+
+        .pos-container {
+            display: flex;
+            height: calc(100vh - 70px);
+        }
+
+        .items-side {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* قسم الطاولات العلوي */
         .tables-grid {
-            height: 30%;
+            height: 150px;
+            /* طول ثابت للطاولات */
             padding: 20px;
-            background: var(--soft-gray);
-            overflow-y: auto;
-            border-bottom: 2px solid #ddd;
+            background: #0e1012;
+            overflow-x: auto;
+            /* تمرير أفقي للطاولات */
+            overflow-y: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            white-space: nowrap;
         }
 
         .table-card-new {
-            background: white;
+            background: var(--card-bg);
             border-radius: 15px;
-            padding: 12px;
+            padding: 10px;
             text-align: center;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-            position: relative;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s;
             text-decoration: none;
-            display: block;
-            min-height: 90px;
+            display: inline-block;
+            width: 100px;
+            margin-left: 10px;
+            vertical-align: top;
         }
 
         .table-card-new.active-table {
-            border: 2px solid var(--primary-gold);
-            background: #fffdf9;
-            transform: translateY(-5px);
+            border: 2px solid var(--royal-gold);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
         }
 
-        .status-badge {
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 0.65rem;
-            font-weight: bold;
-            color: white;
+        /* المنيو - هنا الـ Scroll الأساسي */
+        .menu-side {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            /* تمرير عمودي للمنيو */
+            background: radial-gradient(circle at top right, #1c1f22, #121416);
         }
-
-        /* المنيو */
-        .menu-grid { flex: 1; padding: 20px; overflow-y: auto; }
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
 
         .product-item-btn {
-            background: white; border-radius: 15px; padding: 15px;
-            border: 1px solid #eee; transition: 0.2s; width: 100%; text-align: right;
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            width: 100%;
+            text-align: right;
+            transition: 0.2s;
         }
-        .product-item-btn:hover { border-color: var(--primary-gold); transform: translateY(-3px); }
+
+        .product-item-btn:hover:not(.disabled) {
+            border-color: var(--royal-gold);
+            transform: translateY(-3px);
+        }
 
         /* السلة الجانبية */
-        .bill-side { width: 400px; background: var(--dark-charcoal); color: white; display: flex; flex-direction: column; padding: 20px; }
-        .bill-items-area { flex: 1; overflow-y: auto; }
-        
-        .draft-item { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 12px; margin-bottom: 10px; border-right: 4px solid var(--primary-gold); }
-        
-        .qty-btn { width: 30px; height: 30px; border-radius: 8px; border: none; background: #343a40; color: #fff; }
+        .bill-side {
+            width: 380px;
+            background: #16181a;
+            border-right: 1px solid rgba(212, 175, 55, 0.2);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding: 20px;
+        }
 
-        .btn-action { border: none; border-radius: 12px; padding: 15px; width: 100%; font-weight: 700; margin-top: 10px; color: #fff; }
+        .bill-items-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            /* تمرير عمودي للسلة */
+            margin-bottom: 15px;
+        }
+
+        .draft-item {
+            background: rgba(212, 175, 55, 0.05);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-right: 3px solid var(--royal-gold);
+        }
+
+        .qty-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: transparent;
+            color: var(--royal-gold);
+        }
+
+        .btn-action-royal {
+            border-radius: 12px;
+            padding: 15px;
+            font-weight: 700;
+            width: 100%;
+            border: none;
+        }
+
+        .btn-send {
+            background: var(--royal-gold);
+            color: #000;
+        }
+
+        .btn-bill {
+            background: transparent;
+            border: 1px solid var(--success-green);
+            color: var(--success-green);
+        }
     </style>
 </head>
+
 <body>
 
-    <header class="royal-header shadow-sm">
-        <h4 class="fw-bold mb-0 text-dark"><i class="fas fa-crown text-gold me-2"></i>نظام الملكي</h4>
-        <div class="bg-light p-2 px-3 rounded-pill border small">الطاولة المختارة:
-            <b class="text-primary">{{ $selectedTable->table_number ?? '---' }}</b>
+    <header class="royal-header">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-crown text-gold me-2 fs-4"></i>
+            <h5 class="fw-black mb-0">SRMS <span class="fw-light">PREMIUM</span></h5>
+        </div>
+        <div class="table-indicator">
+            <small class="text-muted">طاولة:</small>
+            <b class="text-white ms-1">{{ $selectedTable->table_number ?? '---' }}</b>
         </div>
     </header>
 
     <div class="pos-container">
-        <div class="items-side flex-grow-1 d-flex flex-column overflow-hidden">
+        <div class="items-side">
             <div class="tables-grid custom-scroll">
-                <div class="row g-3">
-                    @foreach ($tables as $table)
-                        <div class="col-4 col-md-2">
-                            <a href="?table_id={{ $table->id }}&category_id={{ request('category_id') }}"
-                                class="table-card-new {{ request('table_id') == $table->id ? 'active-table' : '' }}">
-                                
-                                @php $activeOrder = $table->dineInOrders()->whereIn('status', ['pending', 'preparing', 'ready'])->first(); @endphp
-                                
-                                @if($activeOrder)
-                                    <span class="status-badge {{ $activeOrder->status == 'ready' ? 'bg-success' : 'bg-warning text-dark' }}">
-                                        {{ $activeOrder->status == 'ready' ? 'جاهز' : 'يُطبخ' }}
-                                    </span>
-                                @endif
+                @foreach ($tables as $table)
+                    <a href="?table_id={{ $table->id }}&category_id={{ request('category_id') }}"
+                        class="table-card-new {{ request('table_id') == $table->id ? 'active-table' : '' }}">
 
-                                <div class="mt-2">
-                                    <b class="text-dark fs-5">#{{ $table->table_number }}</b>
-                                    <div class="small mt-1 {{ $table->status == 'available' ? 'text-muted' : 'text-danger fw-bold' }}">
-                                        {{ $table->status == 'available' ? 'متاحة' : 'مشغولة' }}
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    @endforeach
-                </div>
+                        @php
+                            $activeOrder = $table
+                                ->dineInOrders()
+                                ->whereIn('status', ['pending', 'preparing', 'ready'])
+                                ->first();
+                        @endphp
+
+                        @if ($activeOrder)
+                            <div class="badge rounded-pill {{ $activeOrder->status == 'ready' ? 'bg-success' : 'bg-warning text-dark' }} mb-1"
+                                style="font-size: 0.6rem;">
+                                {{ $activeOrder->status == 'ready' ? 'جاهز' : 'يُطبخ' }}
+                            </div>
+                        @endif
+                        <div class="fw-bold">#{{ $table->table_number }}</div>
+                        <small class="{{ $table->status == 'available' ? 'text-success' : 'text-danger' }}"
+                            style="font-size: 0.7rem;">
+                            {{ $table->status == 'available' ? 'متاحة' : 'مشغولة' }}
+                        </small>
+                    </a>
+                @endforeach
             </div>
 
-            <div class="menu-grid custom-scroll">
+            <div class="menu-side custom-scroll">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="fw-bold m-0 text-secondary">قائمة المنيو</h5>
+                    <h6 class="fw-bold m-0 text-muted">قائمة الطعام</h6>
                     <div class="dropdown">
-                        <button class="btn btn-white border dropdown-toggle rounded-pill px-4 shadow-sm" data-bs-toggle="dropdown">
-                            <i class="fas fa-filter me-2 text-gold"></i>
-                            {{ $categories->where('id', request('category_id'))->first()->name ?? 'جميع الأقسام' }}
+                        <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 dropdown-toggle text-white"
+                            data-bs-toggle="dropdown">
+                            {{ $categories->where('id', request('category_id'))->first()->name ?? 'كل الأقسام' }}
                         </button>
-                        <ul class="dropdown-menu shadow border-0">
+                        <ul class="dropdown-menu dropdown-menu-dark">
                             <li><a class="dropdown-item" href="?table_id={{ request('table_id') }}">الكل</a></li>
                             @foreach ($categories as $cat)
-                                <li><a class="dropdown-item" href="?category_id={{ $cat->id }}&table_id={{ request('table_id') }}">{{ $cat->name }}</a></li>
+                                <li><a class="dropdown-item"
+                                        href="?category_id={{ $cat->id }}&table_id={{ request('table_id') }}">{{ $cat->name }}</a>
+                                </li>
                             @endforeach
                         </ul>
                     </div>
@@ -167,44 +262,43 @@
                                 @csrf
                                 <input type="hidden" name="table_id" value="{{ request('table_id') }}">
                                 <input type="hidden" name="item_id" value="{{ $item->id }}">
-                                <button type="submit" class="product-item-btn shadow-sm @if(!request('table_id')) disabled @endif">
-                                    <h6 class="fw-bold mb-1 text-dark">{{ $item->item_name }}</h6>
-                                    <span class="text-gold fw-bold">{{ number_format($item->price) }} ل.س</span>
+                                <button type="submit"
+                                    class="product-item-btn shadow-sm @if (!request('table_id')) disabled opacity-50 @endif">
+                                    <div class="fw-bold small text-white mb-2">{{ $item->item_name }}</div>
+                                    <div class="text-gold fw-bold">{{ number_format($item->price) }} <small
+                                            style="font-size: 0.6rem;">ل.س</small></div>
                                 </button>
                             </form>
                         </div>
                     @empty
-                        <div class="col-12 text-center mt-5 opacity-50">لا توجد أصناف في هذا القسم</div>
+                        <div class="col-12 text-center py-5 opacity-25">لا توجد أصناف</div>
                     @endforelse
                 </div>
             </div>
         </div>
 
-        <div class="bill-side shadow-lg">
-            <h5 class="fw-bold mb-4 border-bottom border-secondary pb-3">تفاصيل الفاتورة</h5>
-            
+        <aside class="bill-side">
+            <div class="fw-bold mb-3 pb-2 border-bottom border-secondary small">تفاصيل الطلب الحالي</div>
+
             <div class="bill-items-area custom-scroll">
                 @if ($currentOrder)
-                    <div class="mb-4">
-                        <small class="text-muted d-block mb-2 fw-bold text-uppercase">طلبات المطبخ</small>
-                        @foreach ($currentOrder->orderItems as $sent)
-                            <div class="d-flex justify-content-between mb-2 opacity-50 small">
-                                <span>{{ $sent->item->item_name }} (x{{ $sent->quantity }})</span>
-                                <span>{{ number_format($sent->price * $sent->quantity) }}</span>
-                            </div>
-                        @endforeach
-                    </div>
+                    @foreach ($currentOrder->orderItems as $sent)
+                        <div class="d-flex justify-content-between mb-2 small opacity-50 px-2">
+                            <span>{{ $sent->item->item_name }} x{{ $sent->quantity }}</span>
+                            <span>{{ number_format($sent->price * $sent->quantity) }}</span>
+                        </div>
+                    @endforeach
                 @endif
 
-                <div class="draft-container">
-                    <small class="text-gold d-block mb-2 fw-bold text-uppercase">إضافات جديدة</small>
+                <div class="mt-3">
                     @php $draftTotal = 0; @endphp
                     @forelse($draft as $id => $details)
                         @php $draftTotal += ($details['price'] * $details['quantity']); @endphp
                         <div class="draft-item">
                             <div class="d-flex justify-content-between mb-2">
-                                <span class="fw-bold small">{{ $details['name'] }}</span>
-                                <span class="text-gold">{{ number_format($details['price'] * $details['quantity']) }}</span>
+                                <span class="small fw-bold">{{ $details['name'] }}</span>
+                                <span
+                                    class="text-gold small">{{ number_format($details['price'] * $details['quantity']) }}</span>
                             </div>
                             <div class="d-flex align-items-center gap-2">
                                 <form action="{{ route('Pages.waiter.updateDraft') }}" method="POST"> @csrf
@@ -213,7 +307,7 @@
                                     <input type="hidden" name="action" value="decrease">
                                     <button class="qty-btn"><i class="fas fa-minus small"></i></button>
                                 </form>
-                                <span class="fw-bold px-2">{{ $details['quantity'] }}</span>
+                                <span class="fw-bold">{{ $details['quantity'] }}</span>
                                 <form action="{{ route('Pages.waiter.addToDraft') }}" method="POST"> @csrf
                                     <input type="hidden" name="table_id" value="{{ request('table_id') }}">
                                     <input type="hidden" name="item_id" value="{{ $id }}">
@@ -222,39 +316,37 @@
                             </div>
                         </div>
                     @empty
-                        <p class="text-muted text-center small py-4">السلة فارغة</p>
+                        <div class="text-center py-5 opacity-25 small">السلة فارغة</div>
                     @endforelse
                 </div>
             </div>
 
-            <div class="footer mt-auto pt-3 border-top border-secondary">
-                <div class="d-flex justify-content-between h4 fw-bold mb-4">
-                    <span>الإجمالي</span>
-                    <span class="text-gold">{{ number_format(($currentOrder->total_amount ?? 0) + $draftTotal) }}</span>
+            <div class="bill-footer pt-3 border-top border-secondary">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-muted small">المجموع الإجمالي</span>
+                    <span
+                        class="h5 fw-black text-gold mb-0">{{ number_format(($currentOrder->total_amount ?? 0) + $draftTotal) }}</span>
                 </div>
 
-                @if(count($draft) > 0)
+                @if (count($draft) > 0)
                     <form action="{{ route('Pages.waiter.storeOrder') }}" method="POST">
                         @csrf
                         <input type="hidden" name="table_id" value="{{ request('table_id') }}">
-                        <button type="submit" class="btn-action bg-primary w-100 py-3 shadow mb-2">
-                            إرسال للمطبخ <i class="fas fa-fire ms-2"></i>
-                        </button>
+                        <button type="submit" class="btn-action-royal btn-send mb-2">إرسال للمطبخ</button>
                     </form>
                 @endif
 
-                @if($currentOrder)
+                @if ($currentOrder)
                     <form action="{{ route('Pages.waiter.requestBill', $currentOrder->id) }}" method="POST">
                         @csrf
-                        <button type="submit" class="btn-action bg-success w-100 py-3 shadow">
-                            طلب الحساب <i class="fas fa-file-invoice-dollar ms-2"></i>
-                        </button>
+                        <button type="submit" class="btn-action-royal btn-bill">طلب الحساب</button>
                     </form>
                 @endif
             </div>
-        </div>
+        </aside>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

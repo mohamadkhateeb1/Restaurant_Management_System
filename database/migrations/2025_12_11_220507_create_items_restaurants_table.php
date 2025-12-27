@@ -7,25 +7,39 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * تشغيل الميغريشن لإنشاء جدول الأصناف (المنيو المربوط بالمخزن).
      */
     public function up(): void
-    { //إنشاء جدول الأصناف في المطعم
+    {
         Schema::create('items_restaurants', function (Blueprint $table) {
-            $table->id(); //المعرف الأساسي للجدول
-            $table->foreignId('category_id')->constrained('categories_restaurants')->cascadeOnDelete(); //معرف الفئة المرتبطة بالجدول الفئات
-            $table->string('item_name'); //اسم الصنف
-            $table->text('description')->nullable(); //وصف الصنف
-            $table->string('image')->nullable(); //صورة الصنف
-            $table->decimal('price', 8, 2); //سعر الصنف
-            $table->enum('status', ['available', 'unavailable'])->default('available'); //حالة الصنف(متوفر أو غير متوفر)
-            $table->integer('prepare_time')->nullable(); //وقت التحضير بالدقائق
+            $table->id();
+
+            // 1. الربط الجوهري مع سجل المخزن (المايسترو)
+            // نستخدم unique لضمان أن كل مادة مخزنية لها سجل عرض واحد فقط في المنيو
+            $table->foreignId('inventory_id')->unique()->constrained('inventories')->cascadeOnDelete();
+
+            // 2. الربط مع القسم (يجب أن يكون القسم is_menu_category = true برمجياً)
+            $table->foreignId('category_id')->constrained('categories_restaurants')->cascadeOnDelete();
+
+            // 3. بيانات العرض (يتم مزامنتها آلياً من المخزن عند الإنشاء)
+            $table->string('item_name'); // اسم الطبق المعروض للزبائن
+            $table->decimal('quantity', 10, 2)->default(0); // للوصول السريع للكمية
+            $table->string('unit', 50); // قطعة، وجبة، لتر.. إلخ
+            $table->decimal('min_quantity', 10, 2); // حد التنبيه
+
+            // 4. بيانات تسويقية وبيعية (خاصة بالمنيو فقط)
+            $table->decimal('price', 10, 2); // سعر البيع للزبون
+            $table->text('description')->nullable(); // وصف المكونات
+            $table->string('image')->nullable(); // صورة الطبق
+            $table->enum('status', ['available', 'unavailable'])->default('available');
+            $table->integer('prepare_time')->nullable(); // وقت التحضير بالدقائق
+            
             $table->timestamps();
         });
     }
 
     /**
-     * Reverse the migrations.
+     * التراجع عن الميغريشن.
      */
     public function down(): void
     {

@@ -18,16 +18,21 @@ use App\Policies\RolePolicy;
 use App\Policies\TaskPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
-
+use Illuminate\Validation\Rules\In;
+use App\Models\Inventory;
+use App\Policies\InventoryPolicy;
+use App\Models\Cachier;
+use App\Policies\CachierPolicy;
 class AuthServiceProvider extends ServiceProvider
 {
-    /**
-     * Register services.
-     */
+    
 
     protected $policies = [// ربط النماذج بالسياسات الخاصة بها
         Employee::class => EmployeePolicy::class, // نموذج الموظف وسياسة الموظف
         Role::class => RolePolicy::class,// نموذج الدور وسياسة الدور
+        Inventory::class => InventoryPolicy::class, // نموذج الجرد وسياسة الجرد
+        Cachier::class => CachierPolicy::class, // نموذج الكاشير وسياسة الكاشير
+        
     ];
     public function register(): void
     {

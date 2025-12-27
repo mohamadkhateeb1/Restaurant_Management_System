@@ -24,11 +24,13 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        
+        // تنفيذ عملية التحقق من البيانات
         $request->authenticate();
 
+        // إعادة توليد الجلسة للأمان
         $request->session()->regenerate();
-        
+
+        // التوجيه الافتراضي للجميع إلى لوحة التحكم
         return redirect()->route('Pages.dashboard');
     }
 
@@ -37,6 +39,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        // تسجيل الخروج باستخدام الحارس الافتراضي
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

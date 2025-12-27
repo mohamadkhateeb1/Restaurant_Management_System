@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mt-5">
+<div class="container mt-5" dir="rtl">
     {{-- زر الرجوع --}}
     <div class="mb-4">
         <a href="{{ route('Pages.categories.index') }}" class="btn btn-soft-primary rounded-pill px-4 transition-all">
-            <i class="fas fa-arrow-right me-2"></i> العودة لقائمة الأصناف
+            <i class="fas fa-arrow-right ml-2"></i> العودة لقائمة الأقسام
         </a>
     </div>
 
@@ -14,7 +14,7 @@
             <div class="card bg-dark text-white border-0 shadow-lg overflow-hidden" style="border-radius: 30px;">
                 <div class="row g-0">
                     
-                    {{-- قسم الصورة (نصف العرض) --}}
+                    {{-- قسم الصورة --}}
                     <div class="col-md-6 position-relative">
                         @if($category->image)
                             <img src="{{ asset('storage/' . $category->image) }}" 
@@ -23,42 +23,66 @@
                                  alt="{{ $category->name }}">
                         @else
                             <div class="bg-secondary h-100 d-flex align-items-center justify-content-center" style="min-height: 450px;">
-                                <i class="fas fa-utensils fa-5x text-dark opacity-25"></i>
+                                <i class="fas fa-warehouse fa-5x text-dark opacity-25"></i>
                             </div>
                         @endif
                         
-                        {{-- شارة الحالة فوق الصورة --}}
-                        <div class="position-absolute top-0 start-0 m-4">
+                        {{-- شارات الحالة --}}
+                        <div class="position-absolute top-0 right-0 m-4 d-flex flex-column gap-2 align-items-end">
                             <span class="badge rounded-pill {{ $category->status == 'active' ? 'bg-success' : 'bg-danger' }} px-4 py-2 shadow-lg">
-                                {{ $category->status == 'active' ? 'صنف نشط' : 'صنف متوقف' }}
+                                {{ $category->status == 'active' ? 'قسم نشط' : 'قسم معطل' }}
                             </span>
+                            
+                            @if($category->is_menu_category)
+                                <span class="badge rounded-pill bg-primary px-4 py-2 shadow-lg">
+                                    <i class="fas fa-utensils ml-1"></i> قسم تجاري (منيو)
+                                </span>
+                            @else
+                                <span class="badge rounded-pill bg-info px-4 py-2 shadow-lg text-dark">
+                                    <i class="fas fa-warehouse ml-1"></i> مخزني إداري
+                                </span>
+                            @endif
                         </div>
                     </div>
 
-                    {{-- قسم التفاصيل (النصف الآخر) --}}
-                    <div class="col-md-6 p-5 d-flex flex-column justify-content-center">
-                        <div class="mb-2 text-muted small text-uppercase tracking-widest">تفاصيل المنتج</div>
+                    {{-- قسم التفاصيل --}}
+                    <div class="col-md-6 p-5 d-flex flex-column justify-content-center text-right">
+                        <div class="mb-2 text-muted small text-uppercase tracking-widest">تفاصيل القسم النظامي</div>
                         <h1 class="display-5 fw-bold mb-3">{{ $category->name }}</h1>
                         
-                   
+                        <div class="mb-3">
+                            <h6 class="text-white fw-bold mb-2 small text-muted">الدور الإداري للقسم:</h6>
+                            <div class="p-3 rounded bg-secondary bg-opacity-10 border-start border-4 {{ $category->is_menu_category ? 'border-primary' : 'border-info' }}">
+                                <p class="fs-6 mb-0">
+                                    @if($category->is_menu_category)
+                                        هذا القسم **مزدوج**؛ ينظم المواد في المخزن ويعرض المنتجات الجاهزة في **قائمة الطعام**.
+                                    @else
+                                        هذا القسم **إداري بحت**؛ مخصص لمتابعة المواد الأولية (خامات) ولا يظهر للزبائن في المنيو.
+                                    @endif
+                                </p>
+                            </div>
+                        </div>
 
                         <hr class="border-secondary mb-4 opacity-25">
 
                         <div class="mb-5">
-                            <h6 class="text-white fw-bold mb-3"><i class="fas fa-align-left me-2 text-primary"></i> الوصف:</h6>
+                            <h6 class="text-white fw-bold mb-3"><i class="fas fa-align-right ml-2 text-primary"></i> الوصف العام:</h6>
                             <p class="text-light opacity-75 lh-lg fs-5">
-                                {{ $category->description ?? 'لا يوجد وصف مخصص لهذا الصنف حتى الآن. يمكنك إضافة وصف لزيادة مبيعات هذا الصنف.' }}
+                                {{ $category->description ?? 'لا يوجد وصف مخصص لهذا القسم حتى الآن.' }}
                             </p>
                         </div>
 
-                        {{-- أزرار التحكم السريع --}}
                         <div class="d-flex gap-3 mt-auto pt-4">
                             <a href="{{ route('Pages.categories.edit', $category->id) }}" class="btn btn-warning btn-lg rounded-pill px-5 flex-grow-1 fw-bold transition-all hover-scale">
-                                <i class="fas fa-edit me-2"></i> تعديل الصنف
+                                <i class="fas fa-edit ml-2"></i> تعديل القسم
                             </a>
-                            <button class="btn btn-soft-danger btn-lg rounded-circle p-3 transition-all hover-scale">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                            
+                            <form action="{{ route('Pages.categories.destroy', $category->id) }}" method="POST" class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا القسم؟')">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="btn btn-soft-danger btn-lg rounded-circle p-3 transition-all hover-scale">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -68,19 +92,7 @@
 </div>
 
 <style>
-    .bg-soft-warning { background-color: rgba(255, 193, 7, 0.1); }
-    .bg-soft-primary { background-color: rgba(13, 110, 253, 0.1); color: #0d6efd; border: 1px solid rgba(13, 110, 253, 0.2); }
-    .bg-soft-primary:hover { background-color: #0d6efd; color: white; }
-    
-    .transition-all { transition: all 0.3s ease; }
-    .hover-scale:hover { transform: scale(1.05); }
-    
     .lh-lg { line-height: 1.8 !important; }
-    
-    /* جعل التصميم متجاوب في الجوال */
-    @media (max-width: 768px) {
-        .card img { min-height: 250px !important; }
-        .p-5 { padding: 2rem !important; }
-    }
+    @media (max-width: 768px) { .card img { min-height: 250px !important; } .p-5 { padding: 2rem !important; } }
 </style>
 @endsection

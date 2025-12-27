@@ -4,159 +4,120 @@ namespace App\Http\Controllers;
 
 use App\Models\CategoriesRestaurant;
 use App\Models\ItemsRestaurant;
+use App\Models\Inventory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class ItemsRestaurantController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * عرض قائمة المنيو.
      */
     public function index(Request $request)
     {
-        // 1. جلب جميع الأقسام لعرضها في قائمة الفلترة
-        $categories = CategoriesRestaurant::all();
+        $categories = CategoriesRestaurant::where('is_menu_category', true)->get();
+        // استخدام with لضمان جلب بيانات المخزن مع الطبق لسرعة الأداء
+        $query = ItemsRestaurant::with(['category', 'inventory']);
 
-        // 2. بناء استعلام الأطباق
-        $query = ItemsRestaurant::with('category'); // جلب الصنف مع الفئة المرتبطة
-
-        if ($request->filled('category_id')) { // تحقق من وجود قيمة في حقل الفئة
-            $query->where('category_id', $request->category_id); // استخدم الفلترة حسب الفئة
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
         }
 
-        if ($request->filled('status')) { // تحقق من وجود قيمة في الحقل
-            $query->where('status', $request->status); // استخدم الفلترة حسب الحالة
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
         }
 
-        $items = $query->get(); // تنفيذ الاستعلام وجلب النتائج
-
+        $items = $query->latest()->get();
         return view('Pages.Items.index', compact('items', 'categories'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * واجهة الإضافة.
      */
     public function create()
     {
-        // جلب الأقسام المتوفرة فقط
-        $categories = CategoriesRestaurant::where('status', 'active')->get();
+        $categories = CategoriesRestaurant::where('is_menu_category', true)->where('status', 'active')->get();
+        
+        $available_inventory = Inventory::where('item_type', 'menu_item')
+                                        ->whereDoesntHave('item')
+                                        ->get();
 
-        $item = new ItemsRestaurant(); // كائن فارغ للفورم
-        return view('Pages.Items.create', compact('categories', 'item'));
+        $item = new ItemsRestaurant();
+        return view('Pages.Items.create', compact('categories', 'item', 'available_inventory'));
     }
 
-
+    /**
+     * حفظ الطبق في المنيو (بدون تكرار عمود الكمية).
+     */
     public function store(Request $request)
     {
         $request->validate([
-            'category_id' => 'required|exists:categories_restaurants,id',
-            'name' => 'required|string|max:255|unique:items_restaurants,item_name',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'price' => 'required|numeric|min:0',
-            'status' => 'required|in:available,unavailable',
-            'prepare_time' => 'nullable|integer|min:0',
+            'inventory_id' => 'required|exists:inventories,id|unique:items_restaurants,inventory_id',
+            'price'        => 'required|numeric|min:0',
+            'status'       => 'required|in:available,unavailable',
         ]);
-        $item = new ItemsRestaurant();
-        $item->category_id = $request->category_id;
-        $item->item_name = $request->name;
-        $item->description = $request->description;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('items_images', 'public');
-            $item->image = $imagePath;
-        }
-        $item->price = $request->price;
-        $item->status = $request->status;
-        $item->prepare_time = $request->prepare_time;
-        $item->save();
-        return redirect()->route('Pages.Items.index')->with('success', 'تم إضافة الصنف بنجاح.');
-    }
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        // جلب الصنف مع القسم الخاص به
-        $item = ItemsRestaurant::with('category')->findOrFail($id);
 
-        return view('Pages.Items.show', compact('item'));
+        return DB::transaction(function () use ($request) {
+            $inventory = Inventory::findOrFail($request->inventory_id);
+
+            $item = new ItemsRestaurant();
+            $item->inventory_id = $inventory->id;
+            $item->category_id  = $inventory->category_id;
+            $item->item_name    = $inventory->name;
+            $item->price        = $request->price;
+            $item->description  = $request->description;
+            $item->status       = $inventory->quantity > 0 ? $request->status : 'unavailable'; // عدم الإتاحة إذا كان المخزن فارغاً
+            $item->prepare_time = $request->prepare_time;
+            $item->image        = $inventory->image; 
+
+            $item->save();
+
+            return redirect()->route('Pages.Items.index')->with('success', 'تم ربط الصنف بالمخزن بنجاح.');
+        });
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * التحديث والمزامنة.
      */
-    public function edit($id)
-    {
-        $item = ItemsRestaurant::findOrFail($id);
-        $categories = CategoriesRestaurant::all();
-        return view('Pages.Items.edit', compact('item', 'categories'));
-    }
-    /**
-     * Update the specified resource in storage.
-     */
-    // لاحظ تغيير المسمى ليتوافق مع الـ Route أو استخدم المعرف مباشرة
     public function update(Request $request, $id)
     {
-        // 1. جلب السجل الموجود فعلياً (لضمان عمل Update وليس Insert)
         $item = ItemsRestaurant::findOrFail($id);
 
         $request->validate([
-            'category_id'  => 'required|exists:categories_restaurants,id',
-            'name'         => 'required|string|max:255|unique:items_restaurants,item_name,' . $id,
-            'description'  => 'nullable|string',
-            'image'        => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'price'        => 'required|numeric|min:0',
-            'status'       => 'required|in:available,unavailable',
-            'prepare_time' => 'nullable|integer|min:0',
+            'price'  => 'required|numeric|min:0',
+            'status' => 'required|in:available,unavailable',
         ]);
 
-        $item->category_id  = $request->category_id;
-        $item->item_name    = $request->name;
-        $item->description  = $request->description;
-        $item->price        = $request->price;
-        $item->status       = $request->status;
-        $item->prepare_time = $request->prepare_time;
+        return DB::transaction(function () use ($request, $item) {
+            $item->price        = $request->price;
+            $item->description  = $request->description;
+            $item->status       = ($item->inventory->quantity > 0) ? $request->status : 'unavailable';
+            $item->prepare_time = $request->prepare_time;
 
-        if ($request->hasFile('image')) {
-            if ($item->image && Storage::disk('public')->exists($item->image)) {
-                Storage::disk('public')->delete($item->image);
-            }
-            $item->image = $request->file('image')->store('items_images', 'public');
-        }
+            $item->item_name    = $item->inventory->name;
+            $item->image        = $item->inventory->image; 
 
-        $item->save();
+            $item->save();
 
-        return redirect()->route('Pages.Items.index')->with('success', 'تم تعديل الصنف بنجاح.');
+            return redirect()->route('Pages.Items.index')->with('success', 'تم تحديث البيانات والمزامنة.');
+        });
     }
 
     public function destroy($id)
     {
         $item = ItemsRestaurant::findOrFail($id);
-        // 2. حذف الصورة الفعلية من مجلد storage/app/public/items_images
-        if ($item->image && Storage::disk('public')->exists($item->image)) { //تحقق من وجود صورة قبل محاولة حذفها
-            Storage::disk('public')->delete($item->image); //حذف الصورة من التخزين
-        }
-        // حذف السجل من قاعدة البيانات
         $item->delete();
-        return redirect()->route('Pages.Items.index')->with('success', 'تم حذف الطبق وصورته بنجاح');
+        return redirect()->route('Pages.Items.index')->with('success', 'تمت إزالة الطبق من المنيو.');
     }
-    public function bulkDestroy(Request $request)
+    public function show($id)
     {
-        $ids = $request->ids;
-        if (!$ids) {
-            return redirect()->back()->with('error', 'الرجاء تحديد عناصر أولاً');
-        }
-
-        // حذف الصور من السيرفر قبل حذف السجلات
-        $items = ItemsRestaurant::whereIn('id', $ids)->get(); //جلب العناصر التي سيتم حذفها
-        foreach ($items as $item) { //حذف الصورة الفعلية من مجلد storage/app/public/items_images
-            if ($item->image) { //تحقق من وجود صورة قبل محاولة حذفها
-                Storage::disk('public')->delete($item->image); //حذف الصورة من التخزين
-            }
-        }
-
-        ItemsRestaurant::whereIn('id', $ids)->delete(); //حذف السجلات من قاعدة البيانات
-
-        return redirect()->back()->with('success', 'تم حذف العناصر المختارة بنجاح');
+        $item = ItemsRestaurant::with(['category', 'inventory'])->findOrFail($id);
+        return view('Pages.Items.show', compact('item'));
+    }
+    public function edit($id)
+    {
+        $item = ItemsRestaurant::findOrFail($id);
+        $categories = CategoriesRestaurant::where('is_menu_category', true)->where('status', 'active')->get();
+        return view('Pages.Items.edit', compact('item', 'categories'));
     }
 }

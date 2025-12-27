@@ -11,16 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-  Schema::create('inventory_transactions', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('inventory_id')->constrained('inventories')->cascadeOnDelete();
-    $table->foreignId('performed_by_user')->constrained('employees')->cascadeOnDelete(); // الربط المفقود
-    $table->enum('transaction_type', ['in', 'out']);
-    $table->decimal('quantity', 10, 2);
-    $table->decimal('unit_price', 10, 2)->nullable();
-    $table->text('notes')->nullable(); 
-    $table->timestamps();
-});
+        Schema::create('inventory_transactions', function (Blueprint $table) {
+            $table->id(); // المعرف
+            $table->foreignId('inventory_id')->constrained('inventories')->cascadeOnDelete(); // معرف المادة
+            $table->enum('type', ['in', 'out', 'adjustment']); // نوع الحركة
+            $table->decimal('quantity', 10, 2); // الكمية
+            $table->string('reference')->nullable(); // مرجع العملية
+            $table->text('notes')->nullable(); // ملاحظات
+            $table->foreignId('employee_id')->constrained('employees'); // الموظف الذي قام بالحركة
+            $table->timestamp('created_at'); // تاريخ الحركة
+            //useCurrent يضمن أن يتم تعيين الطابع الزمني الحالي عند إنشاء السجل
+        });
     }
 
     /**
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('invetory_transactions');
+        Schema::dropIfExists('inventory_transactions');
     }
 };

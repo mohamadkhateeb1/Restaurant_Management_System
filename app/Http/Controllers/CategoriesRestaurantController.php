@@ -4,117 +4,187 @@ namespace App\Http\Controllers;
 
 use App\Models\CategoriesRestaurant;
 use Illuminate\Http\Request;
-use App\Http\Requests\CategoriesRequest;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use Exception;
 
 class CategoriesRestaurantController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * عرض جميع الأقسام مع تفعيل نظام الفلترة المتقدم.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = CategoriesRestaurant::all();
+        $categories = CategoriesRestaurant::query()
+            ->when($request->name, function ($q) use ($request) {
+                return $q->where('name', 'LIKE', "%{$request->name}%");
+            })
+            ->when($request->status, function ($q) use ($request) {
+                return $q->where('status', $request->status);
+            })
+            ->when($request->has('type') && $request->type !== '', function ($q) use ($request) {
+                return $q->where('is_menu_category', $request->type);
+            })
+            ->orderBy('status', 'asc')
+            ->orderBy('is_menu_category', 'desc')
+            ->get();
+
         return view('Pages.Categories.index', compact('categories'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * واجهة إضافة قسم جديد.
      */
     public function create()
     {
-        $categories = CategoriesRestaurant::all();
-
-        return view('Pages.Categories.create', ['categories' => $categories]);
+        $category = new CategoriesRestaurant(); 
+        return view('Pages.Categories.create', compact('category'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * حفظ القسم الجديد.
      */
     public function store(Request $request)
     {
-        $request->validate(CategoriesRequest::rules());
-        $category = new CategoriesRestaurant();
-        $category->name = $request->name;
-        $category->description = $request->description;
-        $category->status = $request->status;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('categories', 'public');
-            $category->image = $imagePath;
+        $request->validate([
+            'name'             => 'required|string|max:255|unique:categories_restaurants,name',
+            'status'           => 'required|in:active,inactive',
+            'is_menu_category' => 'required|boolean', 
+            'description'      => 'nullable|string',
+            'image'            => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        try {
+            return DB::transaction(function () use ($request) {
+                $category = new CategoriesRestaurant();
+                $category->name = $request->name;
+                $category->description = $request->description;
+                $category->status = $request->status;
+                $category->is_menu_category = $request->is_menu_category;
+
+                if ($request->hasFile('image')) {
+                    $category->image = $request->file('image')->store('categories', 'public');
+                }
+
+                $category->save();
+
+                return redirect()->route('Pages.categories.index')->with('success', 'تم إضافة القسم الجديد بنجاح.');
+            });
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'حدث خطأ أثناء الحفظ، يرجى المحاولة لاحقاً.');
         }
-        $category->save();
-        return redirect()->route('Pages.categories.index')->with('success', 'تم إنشاء القسم بنجاح.');
     }
 
     /**
-     * Display the specified resource.
+     * عرض تفاصيل القسم.
      */
     public function show($id)
     {
-        // جلب القسم مع جميع الأطباق المرتبطة به
-        $category = CategoriesRestaurant::with('items')->findOrFail($id);
-
+        $category = CategoriesRestaurant::with(['items.inventory'])->findOrFail($id);
         return view('Pages.Categories.show', compact('category'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * واجهة تعديل القسم.
      */
     public function edit($id)
     {
         $category = CategoriesRestaurant::findOrFail($id);
-        return view('Pages.Categories.edit', ['category' => $category]);
-    }
-    public function bulkDestroy(Request $request)
-    {
-        $ids = $request->ids;
-        if (!$ids) {
-            return redirect()->back()->with('error', 'الرجاء تحديد عناصر أولاً');
-        }
-
-        // حذف الصور من السيرفر قبل حذف السجلات
-        $items = CategoriesRestaurant::whereIn('id', $ids)->get(); //جلب العناصر التي سيتم حذفها
-        foreach ($items as $item) { //حذف الصورة الفعلية من مجلد storage/app/public/categories
-            if ($item->image) { //تحقق من وجود صورة قبل محاولة حذفها
-                Storage::disk('public')->delete($item->image); //حذف الصورة من التخزين
-            }
-        }
-
-        CategoriesRestaurant::whereIn('id', $ids)->delete(); //حذف السجلات من قاعدة البيانات
-
-        return redirect()->back()->with('success', 'تم حذف العناصر المختارة بنجاح');
+        return view('Pages.Categories.edit', compact('category'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * تحديث بيانات القسم.
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'status' => 'required|in:active,inactive',
-        ]);
         $category = CategoriesRestaurant::findOrFail($id);
-        $category->name = $request->name;
-        $category->description = $request->description;
-        $category->status = $request->status;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('categories', 'public');
-            $category->image = $imagePath;
+
+        $request->validate([
+            'name'             => 'required|string|max:255|unique:categories_restaurants,name,' . $id,
+            'status'           => 'required|in:active,inactive',
+            'is_menu_category' => 'required|boolean',
+            'description'      => 'nullable|string',
+            'image'            => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        try {
+            return DB::transaction(function () use ($request, $category) {
+                $category->name = $request->name;
+                $category->description = $request->description;
+                $category->status = $request->status;
+                $category->is_menu_category = $request->is_menu_category;
+
+                if ($request->hasFile('image')) {
+                    if ($category->image) {
+                        Storage::disk('public')->delete($category->image);
+                    }
+                    $category->image = $request->file('image')->store('categories', 'public');
+                }
+
+                $category->save();
+                
+                return redirect()->route('Pages.categories.index')->with('success', 'تم تحديث بيانات القسم بنجاح.');
+            });
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'حدث خطأ أثناء التحديث.');
         }
-        $category->save();
-        return redirect()->route('Pages.categories.index')->with('success', 'تم تعديل القسم بنجاح.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * حذف قسم واحد (تم التعديل لضمان حذف الصورة والسجل معاً).
      */
     public function destroy($id)
     {
-        $category = CategoriesRestaurant::findOrFail($id);
-        $category->delete();
-        return redirect()->route('Pages.categories.index')->with('success', 'تم حذف القسم بنجاح.');
+        try {
+            return DB::transaction(function () use ($id) {
+                $category = CategoriesRestaurant::findOrFail($id);
+
+                // حذف الصورة من القرص الصلب أولاً
+                if ($category->image) {
+                    Storage::disk('public')->delete($category->image);
+                }
+
+                // حذف السجل من قاعدة البيانات
+                $category->delete();
+
+                return redirect()->route('Pages.categories.index')->with('success', 'تم حذف القسم وجميع صوره بنجاح.');
+            });
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'لا يمكن حذف القسم، قد يكون مرتبطاً بمنتجات أو طلبات نشطة.');
+        }
+    }
+
+    /**
+     * الحذف الجماعي للأقسام المحددة (تم التعديل لضمان حذف الصور دفعة واحدة).
+     */
+    public function bulkDestroy(Request $request)
+    {
+        // التأكد من أن IDs وصلت كمصفوفة
+        $ids = $request->ids;
+
+        if (!$ids || !is_array($ids)) {
+            return redirect()->back()->with('error', 'يرجى تحديد العناصر المطلوب حذفها أولاً.');
+        }
+
+        try {
+            return DB::transaction(function () use ($ids) {
+                $categories = CategoriesRestaurant::whereIn('id', $ids)->get();
+                
+                // الدوران على الأقسام لحذف صورها من التخزين
+                foreach ($categories as $category) {
+                    if ($category->image) {
+                        Storage::disk('public')->delete($category->image);
+                    }
+                }
+
+                // حذف جميع السجلات دفعة واحدة بعد حذف الصور
+                CategoriesRestaurant::whereIn('id', $ids)->delete();
+                
+                return redirect()->route('Pages.categories.index')->with('success', 'تم مسح كافة الأقسام والصور المحددة بنجاح.');
+            });
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'فشل الحذف الجماعي، بعض الأقسام مرتبطة ببيانات أخرى لا يمكن حذفها.');
+        }
     }
 }

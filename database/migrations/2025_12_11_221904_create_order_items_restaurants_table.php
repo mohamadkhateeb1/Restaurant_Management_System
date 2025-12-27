@@ -6,25 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-       Schema::create('order_items_restaurants', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('dine_in_order_id')->nullable()->constrained('dine_in_order_restaurants')->onDelete('set null');
-    $table->foreignId('take_away_order_id')->nullable()->constrained('take_aways_restaurants')->onDelete('set null'); // تصحيح الاسم
-    $table->foreignId('item_id')->constrained('items_restaurants')->cascadeOnDelete();
-    $table->integer('quantity');
-    $table->decimal('price', 8, 2);
-    $table->timestamps();
-});
+        Schema::create('order_items_restaurants', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('dine_in_order_id')->nullable()->constrained('dine_in_order_restaurants')->onDelete('set null');
+        $table->foreignId('take_away_order_id')->nullable()->constrained('take_aways_restaurants')->onDelete('set null');
+        $table->foreignId('item_id')->constrained('items_restaurants')->cascadeOnDelete(); // الحقل الذي كان مفقوداً في الخطأ
+        $table->integer('quantity');
+        $table->decimal('price', 10, 2);
+        $table->timestamps();
+    });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('order_items_restaurants');

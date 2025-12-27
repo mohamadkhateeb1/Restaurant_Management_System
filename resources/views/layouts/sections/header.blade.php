@@ -1,35 +1,29 @@
-<nav class="main-header navbar navbar-expand navbar-dark">
-    {{-- هذا الشريط العلوي يستخدم AdminLTE القياسي --}}
+<nav class="main-header navbar navbar-expand navbar-dark bg-dark shadow-sm py-2">
+    <div class="container-fluid d-flex align-items-center flex-row-reverse">
+        
+        <div style="flex: 1;" class="d-none d-md-block"></div>
 
-  <ul>
-    @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
-        <li>
-            <a rel="alternate" hreflang="{{ $localeCode }}" href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
-                {{ $properties['native'] }}
-            </a>
-        </li>
-    @endforeach
-</ul>
-<select>
-    @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
-        <option value="{{ LaravelLocalization::getLocalizedURL($localeCode)}}" @selected($localeCode== App::currentLocale())>
-            {{ $properties['native'] }}
-        </option>
-    @endforeach
-</select>
+        <div style="flex: 2;" class="text-center">
+            <h4 class="text-white mb-0 font-weight-bold shadow-text">
+                <i class="fas fa-utensils mr-2"></i> Smart Restaurant Management System
+            </h4>
+        </div>
 
-    {{-- عنوان لوحة التحكم في المنتصف --}}
-    <div class="navbar-text mx-auto text-white">
-        <h2>Restaurant Pages Dashboard</h2>
+        <div style="flex: 1;" class="d-flex justify-content-start align-items-center">
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary btn-sm dropdown-toggle text-white border-0 py-1" type="button" data-toggle="dropdown">
+                    <i class="fas fa-globe ml-1"></i> {{ LaravelLocalization::getCurrentLocaleNative() }}
+                </button>
+                <div class="dropdown-menu dropdown-menu-left shadow-lg border-0 mt-2">
+                    @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                        <a rel="alternate" hreflang="{{ $localeCode }}" 
+                           href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}"
+                           class="dropdown-item {{ App::currentLocale() == $localeCode ? 'active' : '' }} text-right py-2">
+                             {{ $properties['native'] }} <i class="fas fa-language ml-2 opacity-50"></i>
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        </div>
     </div>
-
-    {{-- القائمة اليسرى (التي تظهر على اليمين في وضع RTL) --}}
-    <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-            {{-- زر تبديل السمة (Dark/Light Mode) --}}
-            <a class="nav-link" href="#" id="theme-toggle" role="button" title="تبديل وضع العرض">
-                <i class="fas fa-sun" id="theme-icon"></i>
-            </a>
-        </li>
-    </ul>
 </nav>

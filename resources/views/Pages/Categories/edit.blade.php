@@ -17,7 +17,7 @@
                     <div class="bg-soft-warning rounded-circle p-2 me-3 d-inline-flex">
                         <i class="fas fa-edit text-warning"></i>
                     </div>
-                    <h4 class="mb-0 fw-bold">تعديل بيانات الصنف: {{ $category->name }}</h4>
+                    <h4 class="mb-0 fw-bold">تعديل بيانات القسم: {{ $category->name }}</h4>
                 </div>
 
                 <div class="card-body p-4">
@@ -26,7 +26,7 @@
                         @method('PUT')
 
                         {{-- تضمين الفورم المشترك --}}
-                        @include('Pages.categories._form')
+                        @include('Pages.Categories._form')
 
                         <hr class="border-secondary my-4 opacity-25">
 
@@ -48,17 +48,12 @@
 </div>
 
 <style>
-    /* تنسيقات إضافية للتناسق */
     .bg-soft-primary { background-color: rgba(13, 110, 253, 0.1); color: #0d6efd; border: 1px solid rgba(13, 110, 253, 0.2); }
     .bg-soft-primary:hover { background-color: #0d6efd; color: white; }
-    
     .bg-soft-warning { background-color: rgba(255, 193, 7, 0.1); }
-    
     .transition-all { transition: all 0.3s ease; }
     .hover-scale:hover { transform: scale(1.05); }
     .hover-white:hover { color: white !important; }
-
-    /* تحسين شكل المدخلات داخل الفورم (إذا لم تكن منسقة في الكومبونانت) */
     .form-control:focus {
         background-color: #2b3035 !important;
         border-color: #ffc107 !important;

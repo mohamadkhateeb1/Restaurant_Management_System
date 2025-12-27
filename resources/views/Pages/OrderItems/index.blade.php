@@ -1,106 +1,171 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-4 text-end" dir="rtl">
-    {{-- تفاصيل الطلب --}}
-    @if($orderInfo) 
-    <div class="card bg-dark border-info mb-4 shadow-sm">
-        <div class="card-body">
-            <div class="row align-items-center">
-                <div class="col-md-4 border-start border-secondary">
-                    <h5 class="text-info mb-1">
-                        <i class="fas fa-file-invoice me-2"></i> رقم الفاتورة: 
-                        <span class="text-white">{{ $orderInfo->order_number ?? $orderInfo->id }}</span>
-                    </h5>
-                    <p class="text-muted mb-0 small">التاريخ: {{ $orderInfo->created_at->format('Y-m-d H:i A') }}</p>
-                </div>
-                <div class="col-md-4 border-start border-secondary text-center">
-                    @if($dine_in_id)
-                        <span class="badge bg-success p-2 px-3 fs-6">
-                            <i class="fas fa-chair me-1"></i> طاولة رقم: {{ $orderInfo->table->table_number ?? 'N/A' }}
-                        </span>
-                    @else
-                        <span class="badge bg-warning text-dark p-2 px-3 fs-6">
-                            <i class="fas fa-motorcycle me-1"></i> طلب سفري (Takeaway)
-                        </span>
-                    @endif
-                </div>
-                <div class="col-md-4">
-                    <p class="mb-1 text-muted small">الموظف المسئول:</p>
-                    <h6 class="text-white mb-0">
-                        <i class="fas fa-user-tie me-1 text-info"></i> {{ $orderInfo->employee->name ?? 'غير محدد' }}
-                    </h6>
-                </div>
+    <div class="container py-5 px-4" dir="rtl">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="text-white fw-black mb-0">
+                <i class="fas fa-database text-neon-blue me-2"></i>سجل الطلبات للمطعم
+            </h4>
+
+            <div class="filter-group d-flex gap-2">
+                <a href="{{ route('Pages.OrderItems.index') }}"
+                    class="btn btn-sm rounded-pill px-4 {{ !request()->has('type') ? 'btn-neon-blue' : 'btn-outline-secondary' }}">
+                    الكل
+                </a>
+                <a href="{{ route('Pages.OrderItems.index', ['type' => 'dine_in']) }}"
+                    class="btn btn-sm rounded-pill px-4 {{ request('type') == 'dine_in' ? 'btn-success-neon' : 'btn-outline-secondary' }}">
+                    <i class="fas fa-chair me-1"></i> صالة
+                </a>
+                <a href="{{ route('Pages.OrderItems.index', ['type' => 'takeaway']) }}"
+                    class="btn btn-sm rounded-pill px-4 {{ request('type') == 'takeaway' ? 'btn-warning-neon' : 'btn-outline-secondary' }}">
+                    <i class="fas fa-motorcycle me-1"></i> سفري
+                </a>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-2xl rounded-5 overflow-hidden" style="background: #111315;">
+            <div class="table-responsive">
+                <table class="table table-dark mb-0 align-middle text-center custom-table">
+                    <thead>
+                        <tr style="background: rgba(255,255,255,0.03);">
+                            <th class="py-4 text-muted small fw-bold">رقم السجل (الفاتورة)</th>
+                            <th class="py-4 text-muted small fw-bold">نوع العملية</th>
+                            <th class="py-4 text-muted small fw-bold">التاريخ والوقت</th>
+                            <th class="py-4 text-muted small fw-bold">الموظف المسؤول</th>
+                            <th class="py-4 text-muted small fw-bold">القيمة المالية</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($records as $record)
+                            <tr class="premium-row">
+                                <td class="py-4">
+                                    <span
+                                        class="text-neon-blue fw-black font-monospace fs-5">#{{ $record->invoice_number }}</span>
+                                </td>
+                                <td class="py-4">
+                                    <div
+                                        class="badge-type-table {{ $record->dine_in_order_id ? 'text-success-neon' : 'text-warning-neon' }}">
+                                        {!! $record->dine_in_order_id
+                                            ? '<i class="fas fa-chair me-1"></i> صالة'
+                                            : '<i class="fas fa-motorcycle me-1"></i> سفري' !!}
+                                    </div>
+                                </td>
+                                <td class="py-4 text-white">
+                                    <div class="small">{{ $record->created_at->format('Y-m-d') }}</div>
+                                    <div class="text-muted extra-small font-monospace">
+                                        {{ $record->created_at->format('H:i A') }}</div>
+                                </td>
+                                <td class="py-4">
+                                    <span class="text-white fw-bold">{{ $record->employee->name ?? 'النظام' }}</span>
+                                </td>
+                                <td class="py-4">
+                                    <span
+                                        class="text-success-neon fw-black fs-4 font-monospace">{{ number_format($record->amount_paid, 0) }}</span>
+                                    <small class="text-success-neon ms-1 small">ل.س</small>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="py-5 text-muted small italic">لا توجد بيانات مالية مسجلة بعد</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    @endif
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="h4 text-white m-0">
-            <i class="fas fa-list-ul me-2 text-info"></i> تفاصيل أصناف الطلب
-        </h2>
-        <a href="{{ $dine_in_id ? route('Pages.waiter.index') : '#' }}" class="btn btn-outline-info">
-            <i class="fas fa-chevron-right ms-1"></i> العودة للطلبات
-        </a>
-    </div>
+    <style>
+        :root {
+            --neon-blue: #00d2ff;
+            --neon-success: #00ff88;
+            --neon-warning: #ffc107;
+            --carbon-dark: #0d0f11;
+        }
 
-    {{-- جدول الأصناف المضافة --}}
-    <div class="card bg-dark border-0 shadow-sm overflow-hidden">
-        <div class="table-responsive">
-            <x-flash_message />
-            <table class="table table-dark table-hover mb-0 align-middle">
-                <thead class="bg-secondary text-white">
-                    <tr>
-                        <th class="px-4 py-3">الصنف</th>
-                        <th class="px-4 py-3 text-center">الكمية</th>
-                        <th class="px-4 py-3">سعر الوحدة</th>
-                        <th class="px-4 py-3">الإجمالي</th>
-                        <th class="px-4 py-3 text-start">العمليات</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($items as $item)
-                        <tr class="border-bottom border-secondary">
-                            <td class="px-4 py-3">
-                                <div class="d-flex align-items-center">
-                                    <span class="fw-bold text-white">{{ $item->item->item_name }}</span>
-                                </div>
-                            </td>
-                            <td class="px-4 text-center">
-                                <span class="badge bg-info bg-opacity-10 text-info border border-info px-3 py-2">{{ $item->quantity }}</span>
-                            </td>
-                            <td class="px-4 text-muted">{{ number_format($item->price, 2) }} ج.م</td>
-                            <td class="px-4 fw-bold text-success">
-                                {{ number_format($item->price * $item->quantity, 2) }} ج.م
-                            </td>
-                            <td class="px-4 text-start">
-                                <form  method="POST" onsubmit="return confirm('إزالة الصنف؟')">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="btn-action btn-delete">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center py-5 text-muted">لم يتم إضافة أصناف لهذا الطلب بعد</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-                @if($items->count() > 0)
-                <tfoot class="bg-darker">
-                    <tr>
-                        <td colspan="3" class="text-start fw-bold text-white py-3 px-4">إجمالي الفاتورة النهائي:</td>
-                        <td colspan="2" class="text-success fw-bold h5 py-3 px-4">
-                            {{ number_format($items->sum(fn($i) => $i->price * $i->quantity), 2) }} ج.م
-                        </td>
-                    </tr>
-                </tfoot>
-                @endif
-            </table>
-        </div>
-    </div>
-</div>
+        body {
+            background-color: var(--carbon-dark);
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .fw-black {
+            font-weight: 900 !important;
+        }
+
+        .shadow-2xl {
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.9);
+        }
+
+        .badge-type-table {
+            font-weight: 800;
+            font-size: 0.85rem;
+            padding: 5px 15px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            display: inline-block;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Neon Buttons State */
+        .btn-neon-blue {
+            background-color: var(--neon-blue);
+            color: #000;
+            font-weight: 800;
+            border: none;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+        }
+
+        .btn-success-neon {
+            background-color: var(--neon-success);
+            color: #000;
+            font-weight: 800;
+            border: none;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-warning-neon {
+            background-color: var(--neon-warning);
+            color: #000;
+            font-weight: 800;
+            border: none;
+            box-shadow: 0 0 15px rgba(255, 193, 7, 0.3);
+        }
+
+        .btn-outline-secondary {
+            border-color: rgba(255, 255, 255, 0.1);
+            color: #888;
+            transition: 0.3s;
+        }
+
+        .btn-outline-secondary:hover {
+            border-color: var(--neon-blue);
+            color: var(--neon-blue);
+            background: transparent;
+        }
+
+        .text-success-neon {
+            color: var(--neon-success);
+        }
+
+        .text-warning-neon {
+            color: var(--neon-warning);
+        }
+
+        .text-neon-blue {
+            color: var(--neon-blue);
+        }
+
+        .font-monospace {
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .premium-row {
+            transition: 0.3s;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .premium-row:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+    </style>
 @endsection

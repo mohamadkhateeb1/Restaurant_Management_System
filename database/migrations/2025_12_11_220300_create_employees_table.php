@@ -10,18 +10,19 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); 
-            
-            
-            $table->string('email')->unique(); 
-            $table->string('phone')->unique(); 
+            $table->string('name');
+
+
+            $table->string('email')->unique();
+            $table->string('phone')->unique();
             $table->boolean('super_admin')->default(false);
-            $table->string('position'); 
-            $table->decimal('salary', 10, 2); 
-            $table->string('password'); 
-            $table->date('hire_date'); 
-            $table->text('notes')->nullable(); 
-            $table->enum('status', ['active', 'inactive'])->default('active'); 
+            $table->string('position');
+            $table->decimal('salary', 10, 2);
+            $table->string('password');
+            $table->date('hire_date');
+            $table->text('notes')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->rememberToken();
             $table->timestamps();
         });
     }

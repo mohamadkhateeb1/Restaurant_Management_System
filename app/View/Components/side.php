@@ -11,6 +11,7 @@ class side extends Component
     public $sideItems;
     public function __construct()
     {
+        
         $this->sideItems = config('side');
     }
 

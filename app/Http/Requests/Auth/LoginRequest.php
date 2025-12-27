@@ -37,20 +37,20 @@ class LoginRequest extends FormRequest
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-  public function authenticate(): void
-{
-    $this->ensureIsNotRateLimited();
+    public function authenticate(): void
+    {
+        $this->ensureIsNotRateLimited();
 
-    if (! Auth::guard('employee')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-        RateLimiter::hit($this->throttleKey());
-        throw ValidationException::withMessages(['email' => __('auth.failed')]);
+        if (! Auth::guard('employee')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+            RateLimiter::hit($this->throttleKey());
+            throw ValidationException::withMessages(['email' => __('auth.failed')]);
+        }
+
+        // إضافة هذا السطر ضروري جداً لتثبيت الجلسة
+        session()->regenerate();
+
+        RateLimiter::clear($this->throttleKey());
     }
-
-    // إضافة هذا السطر ضروري جداً لتثبيت الجلسة
-    session()->regenerate(); 
-
-    RateLimiter::clear($this->throttleKey());
-}
     /**
      * Ensure the login request is not rate limited.
      *

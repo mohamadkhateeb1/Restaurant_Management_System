@@ -12,22 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('invoices', function (Blueprint $table) {
-            $table->id();
-            $table->string('invoice_number')->unique(); // رقم الفاتورة الفريد
-            // 1. المفتاح الخارجي للطلب الداخلي (Dine-In Order)
-            // يجب أن يكون NULLABLE لأنه قد تكون الفاتورة لطلب سفري.
-            $table->foreignId('dine_in_order_id')->nullable()
-                ->constrained('dine_in_order_restaurants') // يربط بجدول الطلبات الداخلية
-                ->onDelete('set null'); // يحافظ على سجل الفاتورة إذا حُذف الطلب
-            $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete(); // ربط الفاتورة بالموظف الذي أصدرها
-            $table->foreignId('takeaway_order_id')->nullable()
-                ->constrained('take_aways_restaurants') // يربط بجدول الطلبات السفرية
-                ->onDelete('set null'); // يحافظ على سجل الفاتورة إذا حُذف الطلب
-            $table->decimal('amount_paid', 10, 2); // المبلغ المدفوع الفعلي
-            $table->enum('payment_status', ['paid', 'unpaid']); // طريقة الدفع
-
-            $table->timestamps();
-        });
+    $table->id();
+    $table->string('invoice_number')->unique(); // رقم الفاتورة المميز للأرشيف
+    $table->foreignId('dine_in_order_id')->nullable()->constrained('dine_in_order_restaurants')->onDelete('set null');
+    $table->foreignId('takeaway_order_id')->nullable()->constrained('take_aways_restaurants')->onDelete('set null');
+    $table->foreignId('employee_id')->constrained('employees'); // الموظف المسؤول (الكاشير)
+    $table->decimal('amount_paid', 12, 2); // المبلغ الإجمالي النهائي
+    $table->enum('payment_status', ['paid', 'pending', 'refunded'])->default('paid');
+    $table->timestamps(); // تاريخ ووقت العملية
+});
     }
 
     /**

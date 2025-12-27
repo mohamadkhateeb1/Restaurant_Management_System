@@ -14,32 +14,33 @@ use Illuminate\Support\Facades\DB;
 class WaiterController extends Controller
 {
     /**
-     * عرض الصفحة الرئيسية للنادل
+     * عرض الصفحة الرئيسية للنادل بنظام النيون المظلم
      */
     public function index(Request $request)
-    {// جلب جميع الطاولات والأصناف والتصنيفات
+    {
         $tables = TablesRestaurant::all();
         $categories = CategoriesRestaurant::where('status', 'active')->get();
-// تصفية الأصناف حسب التصنيف إذا تم التحديد
+
         $categoryId = $request->get('category_id');
+        // جلب الأصناف مع علاقة المخزن لعرض الكمية المتاحة للنادل قبل الطلب
         $items = ItemsRestaurant::where('status', 'available')
-            ->when($categoryId, fn($q) => $q->where('category_id', $categoryId))// إضافة شرط تصفية حسب التصنيف
+            ->with('inventory')
+            ->when($categoryId, fn($q) => $q->where('category_id', $categoryId))
             ->get();
-// تهيئة المتغيرات الافتراضية
+
         $selectedTable = null;
         $currentOrder = null;
-        $draft = [];// مسودة الطلبات من الجلسة
+        $draft = [];
 
-        if ($request->has('table_id')) {// إذا تم اختيار طاولة معينة
-            $selectedTable = TablesRestaurant::find($request->table_id);// جلب بيانات الطاولة المحددة
+        if ($request->has('table_id')) {
+            $selectedTable = TablesRestaurant::find($request->table_id);
             
-            // جلب الطلب المرسل مسبقاً (الموجود في قاعدة البيانات)
+            // جلب الطلبات النشطة (قيد الانتظار، قيد التحضير، أو جاهزة)
             $currentOrder = DineInOrderRestaurant::where('table_id', $request->table_id)
                 ->whereIn('status', ['pending', 'preparing', 'ready'])
                 ->with('orderItems.item')
                 ->first();
 
-            // جلب "المسودة" الحالية من الجلسة (الأصناف التي لم تُرسل بعد)
             $draft = session()->get('waiter_draft_' . $request->table_id, []);
         }
 
@@ -47,7 +48,7 @@ class WaiterController extends Controller
     }
 
     /**
-     * إضافة صنف إلى مسودة الجلسة (Backend Session)
+     * إضافة صنف لمسودة الطاولة (Session)
      */
     public function addToDraft(Request $request)
     {
@@ -72,90 +73,99 @@ class WaiterController extends Controller
         }
 
         session()->put('waiter_draft_' . $request->table_id, $cart);
-        return back();
+        return back()->with('success', 'تمت الإضافة للمسودة');
     }
 
     /**
-     * تحديث أو حذف صنف من المسودة
+     * إرسال الطلبات للمطبخ وتثبيتها في قاعدة البيانات
      */
-    public function updateDraft(Request $request)
-    {
-        $cart = session()->get('waiter_draft_' . $request->table_id, []);
-        $id = $request->item_id;
-
-        if(isset($cart[$id])) {// التحقق من وجود الصنف في المسودة
-            if($request->action == 'decrease' && $cart[$id]['quantity'] > 1) {
-                $cart[$id]['quantity']--;
-            } else {
-                unset($cart[$id]);
-            }
-        }
-
-        session()->put('waiter_draft_' . $request->table_id, $cart);
-        return back();
-    }
-
-    /**
-     * إرسال الطلبات من المسودة (Session) إلى قاعدة البيانات (المطبخ)
-     */
-    public function storeOrder(Request $request)// تخزين الطلبات
+    public function storeOrder(Request $request)
     {
         $request->validate([
             'table_id' => 'required|exists:tables_restaurants,id',
         ]);
 
-        // جلب الأصناف من الجلسة بدلاً من الـ Request لضمان الأمان
-        $draftItems = session()->get('waiter_draft_' . $request->table_id, []);// جلب المسودة من الجلسة
+        $draftItems = session()->get('waiter_draft_' . $request->table_id, []);
 
-        if (empty($draftItems)) {// التحقق من أن المسودة غير فارغة
-            return back()->with('error', 'المسودة فارغة');
+        if (empty($draftItems)) {
+            return back()->with('error', 'يجب إضافة أصناف للمسودة أولاً');
         }
 
         return DB::transaction(function () use ($request, $draftItems) {
             
-            $order = DineInOrderRestaurant::where('table_id', $request->table_id)// جلب الطلب القائم للطاولة إذا وجد
+            // البحث عن طلب قائم أو إنشاء واحد جديد
+            $order = DineInOrderRestaurant::where('table_id', $request->table_id)
                 ->whereIn('status', ['pending', 'preparing', 'ready'])
                 ->first();
 
-            if (!$order) {// إنشاء طلب جديد إذا لم يكن هناك طلب قائم
-                $order = DineInOrderRestaurant::create([// إنشاء طلب جديد
-                    'table_id'     => $request->table_id,// معرف الطاولة
+            if (!$order) {
+                $order = DineInOrderRestaurant::create([
+                    'table_id'     => $request->table_id,
                     'employee_id'  => Auth::id(),
                     'order_number' => 'DIN-' . strtoupper(uniqid()),
                     'status'       => 'pending',
                     'total_amount' => 0.00
                 ]);
 
-                TablesRestaurant::where('id', $request->table_id)->update(['status' => 'occupied']);// تحديث حالة الطاولة إلى مشغولة
+                TablesRestaurant::where('id', $request->table_id)->update(['status' => 'occupied']);
             }
 
-            foreach ($draftItems as $item) {// حفظ كل صنف في قاعدة البيانات
+            // تخزين العناصر مع تثبيت السعر الحالي
+            foreach ($draftItems as $item) {
                 OrderItemsRestaurant::create([
                     'dine_in_order_id' => $order->id,
                     'item_id'          => $item['id'],
                     'quantity'         => $item['quantity'],
-                    'price'            => $item['price'],
+                    'price'            => $item['price'], // السعر الثابت وقت الطلب
                 ]);
             }
 
+            // تحديث إجمالي الطلب وتغيير الحالة للمطبخ
             $order->refreshTotalAmount();
             $order->update(['status' => 'preparing']);
 
-            // مسح المسودة من الجلسة بعد التخزين بنجاح
             session()->forget('waiter_draft_' . $request->table_id);
 
-            return back()->with('success', 'تم إرسال الطلبات للمطبخ');
+            return back()->with('success', 'تم إرسال الطلب للمطبخ بنجاح');
         });
     }
 
+   public function updateDraft() {
+    $tableId = request()->table_id;
+    $itemId = request()->item_id;
+    $action = request()->action; // سنضيف متغير "الأكشن" لنعرف إذا كان المطلوب زيادة أو نقصان
+
+    $cart = session()->get('waiter_draft_' . $tableId, []);
+
+    if(isset($cart[$itemId])) {
+        if($action == 'decrease') {
+            // ينقص واحد من الكمية الموجودة أصلاً
+            $cart[$itemId]['quantity'] -= 1;
+        } else {
+            // في حال أردت استخدام نفس الدالة للزيادة
+            $cart[$itemId]['quantity'] += 1;
+        }
+
+        // إذا وصلت الكمية لصفر أو أقل، احذف الصنف نهائياً
+        if($cart[$itemId]['quantity'] <= 0) {
+            unset($cart[$itemId]);
+        }
+
+        session()->put('waiter_draft_' . $tableId, $cart);
+    }
+
+    return back()->with('success', 'تم تحديث المسودة بنجاح');
+}
+
     /**
-     * طلب الحساب (تحويل الحالة لـ ready ليراها الكاشير)
+     * طلب الحساب (جاهز للدفع)
      */
     public function requestBill($id)
     {
         $order = DineInOrderRestaurant::findOrFail($id);
+        // تحويل الحالة إلى ready ليراها الكاشير في لوحة التحصيل
         $order->update(['status' => 'ready']);
 
-        return back()->with('success', 'تم إرسال طلب الحساب للكاشير');
+        return back()->with('success', 'تم تنبيه الكاشير لطلب الحساب');
     }
 }

@@ -10,6 +10,9 @@
     "Waiter Screen": "شاشة النادل",
     "Cashier Screen": "شاشة الكاشير",
     "Kitchen Screen": "شاشة المطبخ",
-    "logout": "تسجيل الخروج"
+    "logout": "تسجيل الخروج",
+    "Reports": "التقارير",
+    "Invoice Warehouse": "فواتير المخزن",
+    "Inventory Management": "إدارة المخزون"
 
 }

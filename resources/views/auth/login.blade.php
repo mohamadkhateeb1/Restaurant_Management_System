@@ -28,7 +28,7 @@
                 <x-input-label for="email" value="البريد الإلكتروني" class="text-gray-300" />
                 <x-text-input id="email"
                     class="block w-full bg-gray-600 border-gray-500 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-yellow-400 shadow-inner p-3"
-                    type="email" name="email" :value="old('email')"  autofocus autocomplete="username" />
+                    type="email" name="email" :value="old('email')" autofocus autocomplete="username" />
                 <x-input-error :messages="$errors->get('email')" class="mt-2 text-red-400" />
             </div>
 
@@ -38,7 +38,7 @@
 
                 <x-text-input id="password"
                     class="block w-full bg-gray-600 border-gray-500 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-yellow-400 shadow-inner p-3"
-                    type="password" name="password"  autocomplete="current-password" />
+                    type="password" name="password" autocomplete="current-password" />
 
                 <x-input-error :messages="$errors->get('password')" class="mt-2 text-red-400" />
             </div>

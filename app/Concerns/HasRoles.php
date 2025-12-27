@@ -18,6 +18,9 @@ trait HasRoles
     
     public function hasAbility($ability)
     {
+        if ($this->super_admin) {
+        return true;
+    }
         return $this->roles()->whereHas('abilities', function ($query) use ($ability) {
             $query->where('ability', $ability)
                 ->where('type', 'allow');

@@ -6,35 +6,38 @@ use App\Models\OrderItemsRestaurant;
 use App\Models\ItemsRestaurant;
 use App\Models\DineInOrderRestaurant;
 use App\Models\TakeAwaysRestaurant;
+use App\Models\Invoice; // تأكد من استدعاء موديل الفواتير
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrderItemsRestaurantController extends Controller
 {
     /**
-     * عرض تفاصيل الطلب الكاملة (أصناف + بيانات الفاتورة)
+     * عرض سجل الأرشيف والجرد المالي (قائمة الفواتير)
      */
-public function index(Request $request)
+   public function index(Request $request)
 {
-    $dine_in_id = $request->get('dine_in_id');
-    $takeaway_id = $request->get('takeaway_id');
+    // البدء باستعلام أساسي مع العلاقات
+    $query = Invoice::with(['dineInOrder', 'takeawayOrder', 'employee']);
 
-    // جلب العناصر مع العلاقات
-    $items = OrderItemsRestaurant::with(['item', 'dineInOrder', 'takeawayOrder'])
-        ->when($dine_in_id, fn($q) => $q->where('dine_in_order_id', $dine_in_id))
-        ->when($takeaway_id, fn($q) => $q->where('takeaway_order_id', $takeaway_id))
-        ->get();
-
-    // تعريف المتغير وإرساله لتجنب الخطأ
-    $orderInfo = null;
-    if ($dine_in_id) {
-        $orderInfo = \App\Models\DineInOrderRestaurant::with(['table', 'employee'])->find($dine_in_id);
+    // الفلترة حسب النوع
+    if ($request->has('type')) {
+        if ($request->type == 'dine_in') {
+            // طلبات الصالة: حيث معرّف طلب الصالة ليس فارغاً
+            $query->whereNotNull('dine_in_order_id');
+        } elseif ($request->type == 'takeaway') {
+            // طلبات السفري: حيث معرّف طلب السفري ليس فارغاً
+            $query->whereNotNull('takeaway_order_id');
+        }
     }
 
-    return view('Pages.OrderItems.index', compact('items', 'dine_in_id', 'takeaway_id', 'orderInfo'));
+    $records = $query->orderBy('created_at', 'desc')->get();
+
+    return view('Pages.OrderItems.index', compact('records'));
 }
 
     /**
-     * إضافة صنف للطلب مع تثبيت السعر
+     * إضافة صنف وتثبيت السعر وقت الطلب (لحماية الفاتورة من تغير الأسعار لاحقاً)
      */
     public function store(Request $request)
     {
@@ -42,26 +45,27 @@ public function index(Request $request)
             'item_id' => 'required|exists:items_restaurants,id',
             'quantity' => 'required|integer|min:1',
             'dine_in_order_id' => 'nullable|exists:dine_in_order_restaurants,id',
-            'takeaway_order_id' => 'nullable|exists:take_aways_restaurants,id',
+            'take_away_order_id' => 'nullable|exists:take_aways_restaurants,id',
         ]);
 
-        // جلب سعر الصنف الحالي من المنيو لتخزينه في المخزون/الفاتورة
+        // جلب سعر الصنف الحالي من المنيو
         $menuItem = ItemsRestaurant::findOrFail($request->item_id);
         $validated['price'] = $menuItem->price; 
 
+        // تسجيل الصنف في الفاتورة
         OrderItemsRestaurant::create($validated);
 
-        return back()->with('success', 'تم إضافة الصنف للطلب وتحديث البيانات');
+        return back()->with('success', 'تم إضافة ' . $menuItem->item_name . ' للطلب بنجاح');
     }
 
     /**
-     * حذف صنف من الفاتورة
+     * حذف صنف
      */
     public function destroy($id)
     {
         $orderItem = OrderItemsRestaurant::findOrFail($id);
         $orderItem->delete();
 
-        return back()->with('success', 'تم إزالة الصنف من الطلب بنجاح');
+        return back()->with('info', 'تم تحديث محتويات الطلب وإزالة الصنف');
     }
 }

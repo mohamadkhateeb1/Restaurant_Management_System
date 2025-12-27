@@ -22,7 +22,7 @@ class EmployeePolicy
 
     public function view(Employee $employee, Employee $emp): bool
     {
-        return $employee->hasAbility('employees.view');
+        return $employee->hasAbility('employee.view');
     }
 
     public function create(Employee $employee): bool
