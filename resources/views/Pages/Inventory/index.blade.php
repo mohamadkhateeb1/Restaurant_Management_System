@@ -9,11 +9,13 @@
                 </div>
                 <h2 class="fw-black text-white display-5 mb-0">المخزن <span class="text-glow">المركزي</span></h2>
             </div>
-            <div class="col-md-5 d-flex justify-content-md-end gap-3 mt-4 mt-md-0">
-                <a href="{{ route('Pages.inventory.create') }}" class="btn btn-neon-glow rounded-pill px-4 fw-bold">
-                    <i class="fas fa-plus-circle me-2"></i> إضافة مادة جديدة
-                </a>
-            </div>
+            @can('create', App\Models\Inventory::class)
+                <div class="col-md-5 d-flex justify-content-md-end gap-3 mt-4 mt-md-0">
+                    <a href="{{ route('Pages.inventory.create') }}" class="btn btn-neon-glow rounded-pill px-4 fw-bold">
+                        <i class="fas fa-plus-circle me-2"></i> إضافة مادة جديدة
+                    </a>
+                </div>
+            @endcan
         </div>
         <div class="row mb-4 animate-slide-down">
             <div class="col-12">
@@ -128,16 +130,22 @@
 
                         <div class="grid-col actions">
                             <div class="btn-group-premium">
-                                <a href="{{ route('Pages.inventory.show', $item->id) }}" class="p-btn view"
-                                    title="مشاهدة"><i class="fas fa-eye"></i></a>
-                                <a href="{{ route('Pages.inventory.edit', $item->id) }}" class="p-btn edit"
-                                    title="تعديل"><i class="fas fa-edit"></i></a>
-                                <form action="{{ route('Pages.inventory.destroy', $item->id) }}" method="POST"
-                                    class="d-inline">
-                                    @csrf @method('DELETE')
-                                    <button class="p-btn delete" onclick="return confirm('حذف المادة؟')"><i
-                                            class="fas fa-trash"></i></button>
-                                </form>
+                                @can('view', App\Models\Inventory::class)
+                                    <a href="{{ route('Pages.inventory.show', $item->id) }}" class="p-btn view"
+                                        title="مشاهدة"><i class="fas fa-eye"></i></a>
+                                @endcan
+                                @can('update', App\Models\Inventory::class)
+                                    <a href="{{ route('Pages.inventory.edit', $item->id) }}" class="p-btn edit"
+                                        title="تعديل"><i class="fas fa-edit"></i></a>
+                                @endcan
+                                @can('delete', App\Models\Inventory::class)
+                                    <form action="{{ route('Pages.inventory.destroy', $item->id) }}" method="POST"
+                                        class="d-inline">
+                                        @csrf @method('DELETE')
+                                        <button class="p-btn delete" onclick="return confirm('حذف المادة؟')"><i
+                                                class="fas fa-trash"></i></button>
+                                    </form>
+                                @endcan
                             </div>
                         </div>
                     </div>

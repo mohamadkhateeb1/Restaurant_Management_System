@@ -6,8 +6,10 @@
             <h2 class="h3 text-light">
                 <i class="fas fa-users-cog me-2 text-primary"></i> @lang('Employees List')
             </h2>
+            @can('create', App\Models\Employee::class)
             <a href="{{ route('Pages.employee.create') }}" class="btn btn-primary shadow-sm">
                 <i class="fas fa-user-plus me-2"></i> @lang('Add New Employee')</a>
+            @endcan
         </div>
         <div class="mb-4">
             <x-flash_message />
@@ -56,15 +58,20 @@
                                         @endif
                                     </td>
                                     <td class="pe-4">
+                                        @can('view', App\Models\Employee::class)
                                         <div class="d-flex justify-content-center gap-2">
                                             <a href="{{ route('Pages.employee.show', $employee->id) }}"
                                                 class="btn btn-sm btn-outline-light border-0" title="عرض التفاصيل">
                                                 <i class="fas fa-eye text-info"></i>
                                             </a>
+                                            @endcan
+                                            @can('update',App\Models\Employee::class)
                                             <a href="{{ route('Pages.employee.edit', $employee->id) }}"
                                                 class="btn btn-sm btn-outline-light border-0" title="تعديل">
                                                 <i class="fas fa-edit text-warning"></i>
                                             </a>
+                                            @endcan
+                                            @can('delete',App\Models\Employee::class)
                                             <form method="POST"
                                                 action="{{ route('Pages.employee.destroy', $employee->id) }}"
                                                 onsubmit="return confirm('هل أنت متأكد من حذف الموظف ({{ $employee->name }}) نهائياً؟');"
@@ -76,6 +83,7 @@
                                                     <i class="fas fa-trash text-danger"></i>
                                                 </button>
                                             </form>
+                                            @endcan
                                         </div>
                                     </td>
                                 </tr>

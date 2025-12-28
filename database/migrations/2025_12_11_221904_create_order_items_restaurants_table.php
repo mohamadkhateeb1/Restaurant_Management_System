@@ -12,7 +12,7 @@ return new class extends Migration
         $table->id();
         $table->foreignId('dine_in_order_id')->nullable()->constrained('dine_in_order_restaurants')->onDelete('set null');
         $table->foreignId('take_away_order_id')->nullable()->constrained('take_aways_restaurants')->onDelete('set null');
-        $table->foreignId('item_id')->constrained('items_restaurants')->cascadeOnDelete(); // الحقل الذي كان مفقوداً في الخطأ
+        $table->foreignId('item_id')->constrained('items_restaurants')->cascadeOnDelete(); 
         $table->integer('quantity');
         $table->decimal('price', 10, 2);
         $table->timestamps();

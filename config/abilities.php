@@ -1,6 +1,8 @@
 <?php
 
 return [
+    // Dashboard Permissions
+    'dashboard.view' => 'View Dashboard',
     // Role Permissions
     'role.view'     => 'View Roles',
     'role.create'   => 'Create Role',
@@ -29,6 +31,19 @@ return [
     'items.delete' => 'Delete Item',
     'items.show'   => 'Show Item Details',
 
+    // Tables Restaurant Permissions
+    'tables.view'   => 'View Tables',
+    'tables.create' => 'Create Table',
+    'tables.update' => 'Update Table',
+    'tables.delete' => 'Delete Table',
+    'tables.show'   => 'Show Table Details',
+
+    // Order Items Permissions
+    'order_items.view'   => 'View Order Items',
+    'order_items.create' => 'Create Order Item',
+    'order_items.show'   => 'Show Order Item Details',
+    'order_items.delete' => 'Delete Order Item',
+
     // Inventory Permissions
     'inventory.view'   => 'View Inventory',
     'inventory.create' => 'Create Inventory Entry',
@@ -49,4 +64,14 @@ return [
     'cashier.view'          => 'Access Cashier Screen',
     'cashier.paydinein'     => 'Process Dine-In Payment',
     'cashier.paytakeaway'   => 'Process Takeaway Payment',
+
+    // reports Permissions
+    'reports.view'   => 'View Reports',
+    'reports.create' => 'Create Report',
+    'reports.delete' => 'Delete Report',
+    'reports.show'   => 'Show Report Details',
+
+    // Kitchen Permissions
+    'kitchen.view'   => 'View Kitchens',
+    
 ];

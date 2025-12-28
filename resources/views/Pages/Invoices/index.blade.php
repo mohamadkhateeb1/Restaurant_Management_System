@@ -4,19 +4,19 @@
     <div class="container py-5 px-4" dir="rtl">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="text-white fw-black mb-0">
-                <i class="fas fa-database text-neon-blue me-2"></i>سجل الطلبات للمطعم
+                <i class="fas fa-database text-neon-blue me-2"></i>سجل الفواتير للمطعم
             </h4>
 
             <div class="filter-group d-flex gap-2">
-                <a href="{{ route('Pages.OrderItems.index') }}"
+                <a href="{{ route('Pages.invoices.index') }}"
                     class="btn btn-sm rounded-pill px-4 {{ !request()->has('type') ? 'btn-neon-blue' : 'btn-outline-secondary' }}">
                     الكل
                 </a>
-                <a href="{{ route('Pages.OrderItems.index', ['type' => 'dine_in']) }}"
+                <a href="{{ route('Pages.invoices.index', ['type' => 'dine_in']) }}"
                     class="btn btn-sm rounded-pill px-4 {{ request('type') == 'dine_in' ? 'btn-success-neon' : 'btn-outline-secondary' }}">
                     <i class="fas fa-chair me-1"></i> صالة
                 </a>
-                <a href="{{ route('Pages.OrderItems.index', ['type' => 'takeaway']) }}"
+                <a href="{{ route('Pages.invoices.index', ['type' => 'takeaway']) }}"
                     class="btn btn-sm rounded-pill px-4 {{ request('type') == 'takeaway' ? 'btn-warning-neon' : 'btn-outline-secondary' }}">
                     <i class="fas fa-motorcycle me-1"></i> سفري
                 </a>

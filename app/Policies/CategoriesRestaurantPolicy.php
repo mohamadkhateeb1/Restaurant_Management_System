@@ -5,7 +5,7 @@ namespace App\Policies;
 use App\Models\Employee;
 use App\Models\CategoriesRestaurant;
 
-class CategoryPolicy
+class categoriesrestaurantPolicy
 {
 
     public function before(Employee $employee, $ability)
@@ -15,27 +15,29 @@ class CategoryPolicy
         }
     }
 
+
     public function viewAny(Employee $employee)
     {
         return $employee->hasAbility('categories.view');
     }
 
-    public function view(Employee $employee, CategoriesRestaurant $category)
+    public function view(Employee $employee)
     {
-        return $employee->hasAbility('categories.view');
+        return $employee->hasAbility('categories.show');
     }
+
 
     public function create(Employee $employee)
     {
         return $employee->hasAbility('categories.create');
     }
 
-    public function update(Employee $employee, CategoriesRestaurant $category)
+    public function update(Employee $employee)
     {
         return $employee->hasAbility('categories.update');
     }
 
-    public function delete(Employee $employee, CategoriesRestaurant $category)
+    public function delete(Employee $employee)
     {
         return $employee->hasAbility('categories.delete');
     }

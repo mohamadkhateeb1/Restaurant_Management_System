@@ -6,13 +6,14 @@ use App\Models\Invoice;
 use App\Models\Inventory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
+use App\Models\Report;
 use Carbon\Carbon; // ضروري لضبط التاريخ
 
 class ReportController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Report::class);
         $activeTab = $request->query('tab', 'sales');
 
         $from = $request->sales_from ? Carbon::parse($request->sales_from)->startOfDay() : now()->subDays(30)->startOfDay();

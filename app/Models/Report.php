@@ -9,9 +9,7 @@ class Report extends Model
 {
     use HasFactory;
 
-    /**
-     * الحقول القابلة للتعبئة
-     */
+    
     protected $fillable = [
         'report_type',
         'title',
@@ -22,7 +20,6 @@ class Report extends Model
         'total_summary',
         'file_path'
     ];
-
 
     protected $casts = [
         'data_content' => 'array',

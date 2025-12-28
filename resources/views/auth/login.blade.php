@@ -42,7 +42,6 @@
 
                 <x-input-error :messages="$errors->get('password')" class="mt-2 text-red-400" />
             </div>
-
             <div class="block mt-4" dir="rtl">
                 <label for="remember_me" class="inline-flex items-center">
                     <input id="remember_me" type="checkbox"

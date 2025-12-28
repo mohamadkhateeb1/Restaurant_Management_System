@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\DineInOrderRestaurant;
 use App\Models\TakeAwaysRestaurant;
 use App\Models\OrderItemsRestaurant;
@@ -12,15 +11,13 @@ use App\Models\InventoryTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
-
+use App\Models\Cachier;
 class CashierController extends Controller
 {
-    /**
-     * شاشة التحصيل الأساسية
-     */
+ 
     public function index()
     {
+        $this->authorize('viewAny',Cachier::class);
         $pendingDineIn = DineInOrderRestaurant::where('status', 'ready')
             ->with(['table', 'orderItems.item'])
             ->get();

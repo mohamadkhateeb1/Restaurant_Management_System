@@ -12,6 +12,7 @@ class EmployeesController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', Employee::class);
         $employees = Employee::with('roles')->get();
         return view('Pages.Employees.index', compact('employees'));
     }

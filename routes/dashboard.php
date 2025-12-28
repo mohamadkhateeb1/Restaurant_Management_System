@@ -26,32 +26,29 @@ Route::middleware(['auth:employee'])->group(function () {
 
         // --- لوحة التحكم والإدارة ---
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        // --- إدارة الموظفين ---
         Route::resource('employee', EmployeesController::class);
+        // --- إدارة الصلاحيات والأدوار ---
         Route::resource('roles', RoleController::class);
+        // --- تقارير النظام ---
         Route::resource('reports', ReportController::class);
         Route::get('reports/archive', [ReportController::class, 'archiveIndex'])->name('reports.archive');
         Route::get('reports/export-sales', [ReportController::class, 'exportSales'])->name('reports.exportSales');
         Route::get('reports/export-invoices', [ReportController::class, 'exportInvoices'])->name('reports.exportInvoices');
         Route::get('reports/export-inventory', [ReportController::class, 'exportInventory'])->name('reports.exportInventory'); // يجب أن يكون الرابط بسيطاً ولا يحتوي على {id}
         Route::get('/reports/daily/{date}', [ReportController::class, 'show'])->name('reports.show');
-        // الطريقة الصحيحة لتعريف الرابط لتجنب أخطاء Missing Parameter
+        // --- إدارة المخزون ---
         Route::resource('inventory', InvetoryController::class);
         Route::get('inventory/{id}/create-transaction', [InvetoryTransactionsController::class, 'create'])->name('inventory.transactions.create');
         Route::post('inventory/{id}/store-transaction', [InvetoryTransactionsController::class, 'store'])->name('inventory.transactions.store');
-
+        // --- إدارة قوائم الطعام ---
         Route::delete('categories/bulk-destroy', [CategoriesRestaurantController::class, 'bulkDestroy'])->name('categories.bulkDestroy');
         Route::resource('categories', CategoriesRestaurantController::class);
-
+        // --- إدارة فواتير الطلبات ---
+        Route::resource('invoices', OrderItemsRestaurantController::class);
+        // --- إدارة أصناف الطعام ---
         Route::delete('Items/bulk-destroy', [ItemsRestaurantController::class, 'bulkDestroy'])->name('Items.bulkDestroy');
         Route::resource('Items', ItemsRestaurantController::class);
-
-        Route::resource('order_items', OrderItemsRestaurantController::class)->names([
-            'index' => 'OrderItems.index',
-            'store' => 'OrderItems.store',
-            'destroy' => 'OrderItems.destroy',
-            'update' => 'OrderItems.update',
-            'create' => 'OrderItems.create',
-        ]);
 
         // --- مسارات النادل (Waiter) ---
         Route::group([

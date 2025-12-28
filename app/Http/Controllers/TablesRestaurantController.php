@@ -10,6 +10,7 @@ class TablesRestaurantController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('viewAny', TablesRestaurant::class);
         $query = TablesRestaurant::query();
         $location = $request->query('location');
         $status = $request->query('status');

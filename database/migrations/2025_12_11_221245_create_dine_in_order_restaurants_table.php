@@ -6,25 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+
     public function up(): void
-    {//إنشاء جدول طلبات تناول الطعام داخل المطعم
+    {
         Schema::create('dine_in_order_restaurants', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('table_id')->constrained('tables_restaurants')->cascadeOnDelete();//ربطه بين الطلب والطاوله
-            $table->foreignId('employee_id')->nullable()->constrained('employees')->cascadeOnDelete();//ربطه بين الطلب والموظف الذي قام بأخذ الطلب
-            $table->string('order_number')->unique();//رقم الطلب
-            $table->enum('status', ['pending', 'preparing', 'ready', 'paid'])->default('pending');//حاله الطلب
-            $table->decimal('total_amount', 10, 2);//المبلغ الكلي للطلب
+            $table->foreignId('table_id')->constrained('tables_restaurants')->cascadeOnDelete();
+            $table->foreignId('employee_id')->nullable()->constrained('employees')->cascadeOnDelete();
+            $table->string('order_number')->unique();
+            $table->enum('status', ['pending', 'preparing', 'ready', 'paid'])->default('pending');
+            $table->decimal('total_amount', 10, 2);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('dine_in_order_restaurants');

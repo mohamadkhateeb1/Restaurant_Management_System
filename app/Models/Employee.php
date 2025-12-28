@@ -10,6 +10,7 @@ use App\Concerns\HasRoles;
 
 class Employee extends Authenticatable
 {
+    protected $table = 'employees'; 
     use Notifiable, HasFactory, HasRoles;
     protected $fillable = [
         'name',

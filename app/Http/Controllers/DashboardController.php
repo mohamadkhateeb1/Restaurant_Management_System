@@ -17,6 +17,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', Employee::class);
         $todaySales = Invoice::whereDate('created_at', Carbon::today())->sum('amount_paid');
         $yesterdaySales = Invoice::whereDate('created_at', Carbon::yesterday())->sum('amount_paid');
 

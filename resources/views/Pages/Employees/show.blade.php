@@ -11,10 +11,12 @@
                 <a href="{{ route('Pages.employee.index') }}" class="btn btn-outline-secondary btn-sm px-3">
                     <i class="fas fa-arrow-right me-2"></i>@lang('Back to List')
                 </a>
-                <a href="{{ route('Pages.employee.edit', $employee->id) }}"
-                    class="btn btn-warning btn-sm px-3 shadow-sm text-dark fw-bold">
-                    <i class="fas fa-edit me-2"></i> تعديل البيانات
-                </a>
+                @can('update', App\Models\Employee::class)
+                    <a href="{{ route('Pages.employee.edit', $employee->id) }}"
+                        class="btn btn-warning btn-sm px-3 shadow-sm text-dark fw-bold">
+                        <i class="fas fa-edit me-2"></i> تعديل البيانات
+                    </a>
+                @endcan
             </div>
         </div>
         <div class="row g-4">
@@ -99,7 +101,8 @@
                                 <div>
                                     <small class="text-muted d-block">الراتب الشهري</small>
                                     <h4 class="mb-0 text-success fw-bold">{{ number_format($employee->salary, 2) }}
-                                        <small>SAR</small></h4>
+                                        <small>SAR</small>
+                                    </h4>
                                 </div>
                             </div>
                         </div>

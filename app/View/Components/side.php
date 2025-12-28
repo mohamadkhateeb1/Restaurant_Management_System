@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use Illuminate\Support\Facades\Gate;
-
+use Illuminate\Support\Facades\Auth;
 class side extends Component
 {
     public $sideItems;
@@ -23,14 +23,15 @@ class side extends Component
     }
 
 
-    protected function prepareItems($items)
+   protected function prepareItems($items)
     {
-        return array_filter($items, function ($item) {
-            if (!isset($item['gate']) || is_null($item['gate'])) {
-                return true;
-            }
-
-            return Gate::allows($item['gate']);
-        });
+        
+        $user = Auth::user();
+        foreach ($items as $key => $item) {
+            if(isset($item['ability']) && !$user->can($item['ability'] , isset($item['model']) ? $item['model'] : null)) {
+                unset($items[$key]); 
+            }           
+        }
+        return $items;
     }
 }

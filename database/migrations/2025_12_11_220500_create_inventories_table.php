@@ -10,13 +10,8 @@ return new class extends Migration
     {
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
-            
-            // الربط مع الأقسام (التي ستحدد لاحقاً هل المادة للعرض أم لا)
             $table->foreignId('category_id')->constrained('categories_restaurants')->onDelete('cascade');
-            
-            // تحديد نوع المادة: مادة خام (Raw) أو صنف منيو (Menu Item)
             $table->enum('item_type', ['raw_material', 'menu_item'])->default('raw_material');
-            
             $table->string('name');
             $table->string('sku', 100)->unique();
             $table->decimal('quantity', 10, 2)->default(0);
@@ -28,7 +23,6 @@ return new class extends Migration
             $table->timestamps();
         });
     }
-
     public function down(): void
     {
         Schema::dropIfExists('inventories');

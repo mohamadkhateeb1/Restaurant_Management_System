@@ -11,6 +11,7 @@ class RoleController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', Role::class);
         $roles = Role::with('abilities')->get();
         return view(
             'Pages.Roles.index',

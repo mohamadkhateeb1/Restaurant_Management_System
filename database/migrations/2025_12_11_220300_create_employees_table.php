@@ -11,8 +11,6 @@ return new class extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-
-
             $table->string('email')->unique();
             $table->string('phone')->unique();
             $table->boolean('super_admin')->default(false);
@@ -26,7 +24,6 @@ return new class extends Migration
             $table->timestamps();
         });
     }
-
     public function down(): void
     {
         Schema::dropIfExists('employees');

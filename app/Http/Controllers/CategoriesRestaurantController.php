@@ -12,6 +12,7 @@ class CategoriesRestaurantController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('viewAny', CategoriesRestaurant::class);
 
         $categories = CategoriesRestaurant::query()
             ->when($request->name, function ($q) use ($request) {
@@ -32,14 +33,13 @@ class CategoriesRestaurantController extends Controller
 
     public function create()
     {
-
+        $this->authorize('create', CategoriesRestaurant::class);
         $category = new CategoriesRestaurant();
         return view('Pages.Categories.create', compact('category'));
     }
 
     public function store(Request $request)
     {
-
 
         $request->validate([
             'name'             => 'required|string|max:255|unique:categories_restaurants,name',
@@ -73,7 +73,8 @@ class CategoriesRestaurantController extends Controller
     {
         $category = CategoriesRestaurant::with(['items.inventory'])->findOrFail($id);
 
-
+        // التحقق من صلاحية عرض تفاصيل قسم محدد
+        $this->authorize('view', $category);
 
         return view('Pages.Categories.show', compact('category'));
     }
@@ -82,6 +83,8 @@ class CategoriesRestaurantController extends Controller
     {
         $category = CategoriesRestaurant::findOrFail($id);
 
+        // التحقق من صلاحية الوصول لصفحة التعديل
+        $this->authorize('update', $category);
 
         return view('Pages.Categories.edit', compact('category'));
     }
@@ -89,6 +92,8 @@ class CategoriesRestaurantController extends Controller
     public function update(Request $request, $id)
     {
         $category = CategoriesRestaurant::findOrFail($id);
+
+        $this->authorize('update', $category);
 
         $request->validate([
             'name'             => 'required|string|max:255|unique:categories_restaurants,name,' . $id,
@@ -122,6 +127,8 @@ class CategoriesRestaurantController extends Controller
     {
         $category = CategoriesRestaurant::findOrFail($id);
 
+        // التحقق من صلاحية الحذف
+        $this->authorize('delete', $category);
 
         try {
             return DB::transaction(function () use ($category) {
@@ -136,7 +143,7 @@ class CategoriesRestaurantController extends Controller
 
     public function bulkDestroy(Request $request)
     {
-
+        $this->authorize('delete', CategoriesRestaurant::class);
 
         $ids = $request->ids;
         if (!$ids || !is_array($ids)) return redirect()->back()->with('error', 'يرجى تحديد العناصر.');

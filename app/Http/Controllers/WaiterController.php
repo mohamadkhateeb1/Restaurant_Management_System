@@ -10,12 +10,13 @@ use App\Models\CategoriesRestaurant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
-
+use App\Models\Waiter;
 class WaiterController extends Controller
 {
+    
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Waiter::class);
         $tables = TablesRestaurant::all();
         $categories = CategoriesRestaurant::where('status', 'active')->get();
         $categoryId = $request->get('category_id');

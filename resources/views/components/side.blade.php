@@ -7,7 +7,7 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                 @foreach ($sideItems as $item)
                     {{-- التحقق النهائي داخل الـ Blade --}}
-                    @if (is_null($item['gate']) || Gate::allows($item['gate']))
+                    @if (is_null($item['ability']) || Gate::allows($item['ability'], $item['model'] ?? null))
                         <li class="nav-item">
                             <a href="{{ route($item['route']) }}"
                                 class="nav-link {{ request()->is($item['active_check']) ? 'active' : '' }}">

@@ -15,6 +15,7 @@ class OrderItemsRestaurantController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('viewAny', OrderItemsRestaurant::class);
         $query = Invoice::with(['dineInOrder', 'takeawayOrder', 'employee']);
         if ($request->has('type')) {
             if ($request->type == 'dine_in') {
@@ -24,7 +25,7 @@ class OrderItemsRestaurantController extends Controller
             }
         }
         $records = $query->orderBy('created_at', 'desc')->get();
-        return view('Pages.OrderItems.index', compact('records'));
+        return view('Pages.Invoices.index', compact('records'));
     }
     public function store(Request $request)
     {

@@ -15,6 +15,7 @@ class InvetoryController extends Controller
 
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Inventory::class);
         $categories = CategoriesRestaurant::all();
         $query = Inventory::with(['category', 'item']);
 

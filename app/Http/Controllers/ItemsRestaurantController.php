@@ -13,6 +13,7 @@ class ItemsRestaurantController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('viewAny', ItemsRestaurant::class);
         $categories = CategoriesRestaurant::where('is_menu_category', true)->get();
         $query = ItemsRestaurant::with(['category', 'inventory']);
         if ($request->filled('category_id')) {

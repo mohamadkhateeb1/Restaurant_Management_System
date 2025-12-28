@@ -6,44 +6,35 @@ use App\Models\Employee;
 
 class EmployeePolicy
 {
-    /**
-     * التحقق للسوبر أدمن قبل أي عملية
-     */
-    public function before(Employee $user, $ability)
+    public function before(Employee $employee)
     {
-        if ($user->super_admin) {
+        if ($employee->super_admin) {
             return true;
         }
     }
 
-    public function viewAny(Employee $user)
+    public function viewAny(Employee $employee)
     {
-        return $user->hasAbility('employee.view');
+        return $employee->hasAbility('employee.view');
     }
 
-    public function view(Employee $user, Employee $employee)
+    public function view(Employee $employee)
     {
-        return $user->hasAbility('employee.show');
+        return $employee->hasAbility('employee.show');
     }
 
-    public function create(Employee $user)
+    public function create(Employee $employee)
     {
-        return $user->hasAbility('employee.create');
+        return $employee->hasAbility('employee.create');
     }
 
-    public function update(Employee $user, Employee $employee)
+    public function update(Employee  $employee)
     {
-        if ($employee->super_admin && !$user->super_admin) {
-            return false;
-        }
-        return $user->hasAbility('employee.update');
+        return $employee->hasAbility('employee.update');
     }
 
-    public function delete(Employee $user, Employee $employee)
+    public function delete(Employee  $employee)
     {
-        if ($user->id === $employee->id || $employee->super_admin) {
-            return false;
-        }
-        return $user->hasAbility('employee.delete');
+        return $employee->hasAbility('employee.delete');
     }
 }

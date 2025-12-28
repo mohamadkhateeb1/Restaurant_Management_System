@@ -14,21 +14,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            
-            // الحقول المنقولة من جدول الموظفين بنفس الأسماء تماماً
-            $table->string('phone')->unique()->nullable();
-            $table->boolean('super_admin')->default(false);
-            $table->string('position')->nullable();
-            $table->decimal('salary', 10, 2)->nullable();
-            $table->date('hire_date')->nullable();
-            $table->text('notes')->nullable();
-            $table->enum('status', ['active', 'inactive'])->default('active');
-            
             $table->rememberToken();
             $table->timestamps();
         });
 
-        // جداول النظام (Sessions & Password Resets) تبقى كما هي
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');

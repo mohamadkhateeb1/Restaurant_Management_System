@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\DineInOrderRestaurant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-
+use App\Models\Kitchen;
 class KitchenController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', Kitchen::class);
         $orders = DineInOrderRestaurant::whereIn('status', ['pending', 'preparing'])
             ->with(['table', 'orderItems.item'])
             ->orderBy('updated_at', 'asc')

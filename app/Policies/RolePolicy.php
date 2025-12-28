@@ -22,7 +22,7 @@ class RolePolicy
         return $employee->hasAbility('role.view');
     }
 
-    public function view(Employee $employee, Role $role)
+    public function view(Employee $employee)
     {
         return $employee->hasAbility('role.show');
     }
@@ -32,12 +32,12 @@ class RolePolicy
         return $employee->hasAbility('role.create');
     }
 
-    public function update(Employee $employee, Role $role)
+    public function update(Employee $employee)
     {
         return $employee->hasAbility('role.update');
     }
 
-    public function delete(Employee $employee, Role $role)
+    public function delete(Employee $employee)
     {
         return $employee->hasAbility('role.delete');
     }
