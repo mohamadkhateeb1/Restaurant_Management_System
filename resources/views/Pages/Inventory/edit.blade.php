@@ -8,19 +8,19 @@
                         style="background: linear-gradient(135deg, #16191c 0%, #000000 100%); border-bottom: 1px solid rgba(255,255,255,0.05) !important;">
                         <div>
                             <h4 class="mb-1 fw-bold text-white fs-5">
-                                <i class="fas fa-edit text-warning me-2"></i> تعديل بيانات المادة
+                                <i class="fas fa-edit text-warning me-2"></i> @lang('Edit Inventory Item')
                             </h4>
                             <div class="d-flex align-items-center gap-2 mt-2">
                                 <span class="sku-tag-dark">REF: {{ $item->sku }}</span>
                                 @if ($item->item_type == 'menu_item')
                                     <span
                                         class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3">
-                                        <i class="fas fa-utensils me-1"></i> مربوط بالمنيو
+                                        <i class="fas fa-utensils me-1"></i>@lang('Menu Item')
                                     </span>
                                 @else
                                     <span
                                         class="badge bg-secondary bg-opacity-10 text-muted border border-secondary border-opacity-25 rounded-pill px-3">
-                                        <i class="fas fa-seedling me-1"></i> مادة خام داخلية
+                                        <i class="fas fa-seedling me-1"></i> @lang('Internal Raw Material')
                                     </span>
                                 @endif
                             </div>
@@ -35,9 +35,8 @@
                                 role="alert">
                                 <i class="fas fa-sync-alt fa-spin me-3 fs-4 text-warning"></i>
                                 <div class="small fw-600">
-                                    <strong class="text-warning d-block mb-1">تنبيه المزامنة اللحظية</strong>
-                                    هذه المادة هي "طبق منيو". أي تغيير في الاسم، الكمية، أو القسم سيتم تحديثه <span
-                                        class="text-white">تلقائياً</span> في قائمة الطعام لضمان تطابق البيانات.
+                                    <strong class="text-warning d-block mb-1">@lang('Immediate synchronization notice')</strong>
+                                    @lang('This item is a menu item. Any changes to the name, quantity, or category will be automatically updated in the menu to ensure data consistency.')
                                 </div>
                             </div>
                         @endif
@@ -47,7 +46,7 @@
                             @method('PUT')
                             <div class="form-section-wrapper">
                                 <div class="section-header-tag mb-4">
-                                    <i class="fas fa-sliders-h me-2"></i> تحديث البيانات الفنية
+                                    <i class="fas fa-sliders-h me-2"></i> @lang('Inventory Item Details')
                                 </div>
                                 <div class="section-content-box p-4 rounded-4 shadow-inner">
                                     @include('Pages.Inventory._form')

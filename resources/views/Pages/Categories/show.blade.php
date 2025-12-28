@@ -29,7 +29,7 @@
 
                                 @if ($category->is_menu_category)
                                     <span class="badge rounded-pill bg-primary px-4 py-2 shadow-lg">
-                                        <i class="fas fa-utensils ml-1"></i> قسم تجاري (منيو)
+                                        <i class="fas fa-utensils ml-1"></i> قسم تجاري
                                     </span>
                                 @else
                                     <span class="badge rounded-pill bg-info px-4 py-2 shadow-lg text-dark">
@@ -51,7 +51,7 @@
                                             هذا القسم **مزدوج**؛ ينظم المواد في المخزن ويعرض المنتجات الجاهزة في **قائمة
                                             الطعام**.
                                         @else
-                                            هذا القسم **إداري بحت**؛ مخصص لمتابعة المواد الأولية (خامات) ولا يظهر للزبائن في
+                                            هذا القسم **إداري بحت**؛ مخصص لمتابعة المواد الأولية ولا يظهر للزبائن في
                                             المنيو.
                                         @endif
                                     </p>

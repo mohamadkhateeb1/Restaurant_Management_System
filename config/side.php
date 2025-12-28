@@ -6,7 +6,7 @@ return [
         'route' => 'Pages.dashboard',
         'icon'  => 'fas fa-home',
         'active_check' => 'dashboard*',
-        'ability' => null, 
+        'ability' => null,
     ],
     [
         'title' => 'Roles Management',
@@ -57,10 +57,10 @@ return [
         'model' => App\Models\TablesRestaurant::class,
     ],
     [
-        'title' => 'Invoises',
+        'title' => 'Invoices Restaurant',
         'route' => 'Pages.invoices.index',
         'icon'  => 'fas fa-receipt',
-        'active_check' => 'invoices*',    
+        'active_check' => 'invoices*',
         'ability' => 'viewAny',
         'model' => App\Models\OrderItemsRestaurant::class,
     ],
@@ -80,7 +80,7 @@ return [
         'ability' => 'viewAny',
         'model' => App\Models\Waiter::class,
     ],
-    
+
     [
         'title' => 'Inventory',
         'route' => 'Pages.inventory.index',

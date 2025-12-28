@@ -1,7 +1,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
-    /* واجهة الموقع */
     .glass-card {
         background: rgba(22, 24, 26, 0.7);
         backdrop-filter: blur(10px);
@@ -18,7 +17,6 @@
         padding: 20px;
     }
 
-    /* تنسيقات الطباعة المخفية */
     #printableReportArea {
         display: none;
         background: white;
@@ -55,7 +53,6 @@
     }
 </style>
 
-{{-- 1. نموذج الفلترة (يظهر في الموقع فقط ويختفي في PDF) --}}
 <div class="glass-card mb-4 d-print-none">
     <form action="{{ route('Pages.reports.index') }}" method="GET" class="row g-3 align-items-end">
         <input type="hidden" name="tab" value="invoices">
@@ -83,7 +80,6 @@
     </form>
 </div>
 
-{{-- 2. أزرار التحكم --}}
 <div class="d-flex justify-content-between align-items-center mb-4 px-3 d-print-none">
     <h4 class="text-white fw-black mb-0">| سجل العمليات المالية</h4>
     <button onclick="exportOfficialReport()" class="btn btn-danger rounded-pill px-4 fw-bold shadow-lg">
@@ -91,7 +87,6 @@
     </button>
 </div>
 
-{{-- 3. منطقة العرض في الموقع --}}
 <div class="glass-card overflow-hidden d-print-none">
     <div class="table-responsive" style="max-height: 550px; overflow-y: auto;">
         <table class="table table-dark custom-table align-middle text-center mb-0">

@@ -29,7 +29,6 @@
 
         <x-flash_message />
 
-        {{-- قسم الفلترة --}}
         <div class="card bg-dark border-0 shadow-lg mb-4" style="border-radius: 12px;">
             <div class="card-body p-3">
                 <form id="tableFilterForm" action="{{ route('Pages.Tables.index') }}" method="GET"
@@ -81,7 +80,6 @@
             </div>
         </div>
 
-        {{-- جدول البيانات --}}
         <div class="card bg-dark border-0 shadow-lg" style="border-radius: 12px;">
             <div class="card-body p-0">
                 <div class="table-responsive">

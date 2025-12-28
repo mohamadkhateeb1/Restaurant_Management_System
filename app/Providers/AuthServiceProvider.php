@@ -20,6 +20,7 @@ use App\Models\Waiter;
 use App\Policies\WaiterPolicy;
 use App\Models\Kitchen;
 use App\Policies\KitchenPolicy;
+
 class AuthServiceProvider extends ServiceProvider
 {
     protected $policies = [
@@ -45,16 +46,13 @@ class AuthServiceProvider extends ServiceProvider
             }
         });
 
-        // 2. تعريف الـ Gates برمجياً بناءً على ملف الإعدادات (config/abilities.php)
-        // هذا الجزء ضروري لعمل الـ Sidebar والتحقق اليدوي في الـ Controllers
         $abilities = config('abilities');
         if (is_array($abilities)) {
             foreach ($abilities as $ability => $label) {
                 Gate::define($ability, function ($user) use ($ability) {
-                    // استدعاء دالة hasAbility الموجودة في HasRoles Trait في موديل Employee
                     return method_exists($user, 'hasAbility') ? $user->hasAbility($ability) : false;
                 });
             }
         }
     }
-}   
+}

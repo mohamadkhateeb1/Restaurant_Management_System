@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\User;
 use App\Models\Waiter;
 use App\Models\Employee;
+
 class WaiterPolicy
 {
     /**

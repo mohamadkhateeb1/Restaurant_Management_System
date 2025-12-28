@@ -18,7 +18,7 @@ class InventoryPolicy
     {
         return $employee->hasAbility('inventory.view');
     }
-    
+
     public function view(Employee $employee): bool
     {
         return $employee->hasAbility('inventory.show');

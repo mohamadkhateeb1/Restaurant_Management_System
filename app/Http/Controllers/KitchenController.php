@@ -6,6 +6,7 @@ use App\Models\DineInOrderRestaurant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Kitchen;
+
 class KitchenController extends Controller
 {
     public function index()

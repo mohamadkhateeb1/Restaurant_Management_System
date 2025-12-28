@@ -34,7 +34,6 @@
             height: 100vh;
         }
 
-        /* قسم المنتجات */
         .products-section {
             flex: 1;
             display: flex;
@@ -93,7 +92,6 @@
             transform: translateY(-3px);
         }
 
-        /* قسم السلة */
         .cart-section {
             width: 400px;
             background: #141619;
@@ -155,7 +153,6 @@
             font-size: 1.2rem;
         }
 
-        /* ستايل الفاتورة للطباعة */
         @media print {
             body * {
                 visibility: hidden;

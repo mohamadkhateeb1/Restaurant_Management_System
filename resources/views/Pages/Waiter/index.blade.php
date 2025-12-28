@@ -27,11 +27,9 @@
             color: #fff;
             height: 100vh;
             overflow: hidden;
-            /* لمنع تمرير الصفحة كاملة */
             margin: 0;
         }
 
-        /* تنسيق الـ Scrollbar لكل المتصفحات */
         .custom-scroll::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -51,7 +49,6 @@
             scrollbar-color: var(--royal-gold) rgba(255, 255, 255, 0.05);
         }
 
-        /* الهيدر */
         .royal-header {
             background: rgba(28, 31, 34, 0.9);
             backdrop-filter: blur(10px);
@@ -82,14 +79,11 @@
             height: 100%;
         }
 
-        /* قسم الطاولات العلوي */
         .tables-grid {
             height: 150px;
-            /* طول ثابت للطاولات */
             padding: 20px;
             background: #0e1012;
             overflow-x: auto;
-            /* تمرير أفقي للطاولات */
             overflow-y: hidden;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             white-space: nowrap;
@@ -114,12 +108,10 @@
             box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
         }
 
-        /* المنيو - هنا الـ Scroll الأساسي */
         .menu-side {
             flex-grow: 1;
             padding: 20px;
             overflow-y: auto;
-            /* تمرير عمودي للمنيو */
             background: radial-gradient(circle at top right, #1c1f22, #121416);
         }
 
@@ -138,7 +130,6 @@
             transform: translateY(-3px);
         }
 
-        /* السلة الجانبية */
         .bill-side {
             width: 380px;
             background: #16181a;
@@ -152,7 +143,6 @@
         .bill-items-area {
             flex-grow: 1;
             overflow-y: auto;
-            /* تمرير عمودي للسلة */
             margin-bottom: 15px;
         }
 

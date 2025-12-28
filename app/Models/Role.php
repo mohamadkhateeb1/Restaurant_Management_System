@@ -41,7 +41,6 @@ class Role extends Model
                 'ability' => $ability,
             ], [
                 'type' => $value,
-
             ]);
         }
         return $this;

@@ -5,23 +5,22 @@
             <div class="col-md-7 text-right">
                 <div class="d-flex align-items-center mb-2">
                     <div class="header-indicator me-3"></div>
-                    <h6 class="text-neon-blue fw-bold mb-0 text-uppercase tracking-wider">تفاصيل السجل المخزني</h6>
+                    <h6 class="text-neon-blue fw-bold mb-0 text-uppercase tracking-wider">@lang('Inventory Item Record Details')</h6>
                 </div>
                 <h2 class="fw-black text-white display-5 mb-0">{{ $item->name }}</h2>
             </div>
             <div class="col-md-5 d-flex justify-content-md-end gap-3 mt-4 mt-md-0">
                 <a href="{{ route('Pages.inventory.index') }}" class="btn btn-dark-minimal rounded-pill px-4">
-                    <i class="fas fa-arrow-right me-2"></i> العودة للمخزن
+                    <i class="fas fa-arrow-right me-2"></i>@lang('Back to Inventory List')
                 </a>
                 <a href="{{ route('Pages.inventory.edit', $item->id) }}"
                     class="btn btn-neon-blue rounded-pill px-4 fw-bold">
-                    <i class="fas fa-edit me-2"></i> تعديل البيانات
+                    <i class="fas fa-edit me-2"></i> @lang('Edit Inventory Item')
                 </a>
             </div>
         </div>
 
         <div class="row g-4">
-            {{-- كرت معلومات المادة المطور --}}
             <div class="col-lg-4 animate-slide-up">
                 <div class="card border-0 shadow-2xl rounded-5 overflow-hidden" style="background: #111315;">
                     <div class="card-header border-0 py-3 text-center" style="background: rgba(255,255,255,0.02);">
@@ -51,12 +50,12 @@
                         <div class="info-grid mt-4">
                             <div
                                 class="info-row d-flex justify-content-between py-3 border-bottom border-white border-opacity-5">
-                                <span class="text-muted small fw-bold">القسم التنظيمي</span>
+                                <span class="text-muted small fw-bold">@lang('Category')</span>
                                 <span class="text-white small">{{ $item->category->name }}</span>
                             </div>
                             <div
                                 class="info-row d-flex justify-content-between py-3 border-bottom border-white border-opacity-5">
-                                <span class="text-muted small fw-bold">الرصيد الحالي</span>
+                                <span class="text-muted small fw-bold">@lang('Current Stock')</span>
                                 <span
                                     class="stock-glow {{ $item->quantity <= $item->min_quantity ? 'text-danger' : 'text-success-neon' }} fw-black fs-5">
                                     {{ number_format($item->quantity, 1) }} <small
@@ -65,13 +64,13 @@
                             </div>
                             <div
                                 class="info-row d-flex justify-content-between py-3 border-bottom border-white border-opacity-5">
-                                <span class="text-muted small fw-bold">تكلفة الوحدة</span>
+                                <span class="text-muted small fw-bold">@lang('Unit of Measurement')</span>
                                 <span class="text-white small">{{ number_format($item->cost_per_unit, 0) }} ل.س</span>
                             </div>
                             @if ($item->item)
                                 <div
                                     class="info-row d-flex justify-content-between py-3 border-bottom border-white border-opacity-5">
-                                    <span class="text-success-neon small fw-bold">سعر المنيو</span>
+                                    <span class="text-success-neon small fw-bold">@lang('Item Price')</span>
                                     <span class="text-success-neon fw-bold fs-5">{{ number_format($item->item->price, 0) }}
                                         ل.س</span>
                                 </div>
@@ -88,19 +87,19 @@
                 <div class="card border-0 shadow-2xl rounded-5 overflow-hidden" style="background: #111315;">
                     <div class="card-header border-0 py-4 px-4 d-flex justify-content-between align-items-center"
                         style="background: rgba(255,255,255,0.02);">
-                        <h5 class="mb-0 fw-bold text-white fs-6"><i class="fas fa-history me-2 text-neon-blue"></i> السجل
-                            الحركي اللحظي</h5>
+                        <h5 class="mb-0 fw-bold text-white fs-6"><i class="fas fa-history me-2 text-neon-blue"></i>
+                            @lang('Inventory Item Transaction History')</h5>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-dark-premium mb-0 align-middle text-center">
                                 <thead>
                                     <tr>
-                                        <th class="py-3 text-muted small">التاريخ</th>
-                                        <th class="py-3 text-muted small">نوع الحركة</th>
-                                        <th class="py-3 text-muted small">الكمية</th>
-                                        <th class="py-3 text-muted small">المرجع</th>
-                                        <th class="py-3 text-muted small">المسؤول</th>
+                                        <th class="py-3 text-muted small">@lang('Date')</th>
+                                        <th class="py-3 text-muted small">@lang('Type of Movement')</th>
+                                        <th class="py-3 text-muted small">@lang('Quantity')</th>
+                                        <th class="py-3 text-muted small">@lang('Reference')</th>
+                                        <th class="py-3 text-muted small">@lang('Responsible Person')</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -211,7 +210,6 @@
             border: 3px solid;
         }
 
-        /* الجدول المظلم */
         .table-dark-premium thead {
             background: rgba(255, 255, 255, 0.02);
             text-transform: uppercase;
@@ -262,7 +260,6 @@
             box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
         }
 
-        /* أنيميشن */
         .animate-slide-up {
             animation: slideUp 0.8s cubic-bezier(0.2, 1, 0.3, 1) forwards;
         }

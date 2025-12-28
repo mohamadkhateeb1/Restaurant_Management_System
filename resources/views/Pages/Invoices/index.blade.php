@@ -106,7 +106,6 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* Neon Buttons State */
         .btn-neon-blue {
             background-color: var(--neon-blue);
             color: #000;

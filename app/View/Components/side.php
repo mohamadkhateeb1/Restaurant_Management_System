@@ -7,6 +7,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
+
 class side extends Component
 {
     public $sideItems;
@@ -23,14 +24,14 @@ class side extends Component
     }
 
 
-   protected function prepareItems($items)
+    protected function prepareItems($items)
     {
-        
+
         $user = Auth::user();
         foreach ($items as $key => $item) {
-            if(isset($item['ability']) && !$user->can($item['ability'] , isset($item['model']) ? $item['model'] : null)) {
-                unset($items[$key]); 
-            }           
+            if (isset($item['ability']) && !$user->can($item['ability'], isset($item['model']) ? $item['model'] : null)) {
+                unset($items[$key]);
+            }
         }
         return $items;
     }

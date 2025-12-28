@@ -7,7 +7,7 @@ use App\Models\Employee;
 
 class ReportPolicy
 {
-   
+
     public function viewAny(Employee $employee): bool
     {
         return $employee->hasAbility('reports.view');

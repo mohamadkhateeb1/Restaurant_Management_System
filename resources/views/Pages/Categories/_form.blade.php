@@ -1,13 +1,16 @@
-<x-form-categories.input name="name" label="اسم القسم الإداري" :value="$category->name ?? null" placeholder="مثلاً: اللحوم، المنظفات، المشروبات..." />
+<x-form-categories.input name="name" label="اسم القسم الإداري" :value="$category->name ?? null"
+    placeholder="مثلاً: اللحوم، المنظفات، المشروبات..." />
 
 <div class="form-group mb-4">
-    <label for="is_menu_category" class="form-label text-white fw-bold">نطاق عمل القسم (مكان الظهور)</label>
-    <select name="is_menu_category" id="is_menu_category" class="form-control bg-secondary text-white border-0 shadow-sm @error('is_menu_category') is-invalid @enderror">
-        <option value="1" {{ (old('is_menu_category', $category->is_menu_category ?? '') == '1') ? 'selected' : '' }}>
-            قسم تجاري (يظهر في المنيو والمخزن)
+    <label for="is_menu_category" class="form-label text-white fw-bold">نطاق عمل القسم </label>
+    <select name="is_menu_category" id="is_menu_category"
+        class="form-control bg-secondary text-white border-0 shadow-sm @error('is_menu_category') is-invalid @enderror">
+        <option value="1" {{ old('is_menu_category', $category->is_menu_category ?? '') == '1' ? 'selected' : '' }}>
+            قسم تجاري
         </option>
-        <option value="0" {{ (old('is_menu_category', $category->is_menu_category ?? '') == '0') ? 'selected' : '' }}>
-            قسم إداري/مخزني (لا يظهر في المنيو)
+        <option value="0"
+            {{ old('is_menu_category', $category->is_menu_category ?? '') == '0' ? 'selected' : '' }}>
+            قسم إداري/مخزني
         </option>
     </select>
     <div class="alert alert-info py-2 mt-2 bg-transparent border-info text-info small" style="border-style: dashed;">
@@ -26,8 +29,10 @@
 
 <div class="form-group mb-3">
     <label for="status" class="form-label text-white fw-bold">حالة النشاط</label>
-    <select name="status" id="status" class="form-control bg-secondary text-white border-0 shadow-sm @error('status') is-invalid @enderror">
-        <option value="active" {{ (old('status', $category->status ?? '') == 'active') ? 'selected' : '' }}>نشط (مفعل في النظام)</option>
-        <option value="inactive" {{ (old('status', $category->status ?? '') == 'inactive') ? 'selected' : '' }}>معطل (مخفي مؤقتاً)</option>
+    <select name="status" id="status"
+        class="form-control bg-secondary text-white border-0 shadow-sm @error('status') is-invalid @enderror">
+        <option value="active" {{ old('status', $category->status ?? '') == 'active' ? 'selected' : '' }}>نشط</option>
+        <option value="inactive" {{ old('status', $category->status ?? '') == 'inactive' ? 'selected' : '' }}>معطل
+        </option>
     </select>
 </div>

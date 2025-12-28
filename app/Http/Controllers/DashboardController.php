@@ -37,7 +37,6 @@ class DashboardController extends Controller
         $dineInCount = Invoice::whereNotNull('dine_in_order_id')->count();
         $takeawayCount = Invoice::whereNotNull('takeaway_order_id')->count();
 
-        // 6. إحصائيات عامة والمخزن
         $lowStockCount = Inventory::whereColumn('quantity', '<=', 'min_quantity')->count();
         $activeEmployeesCount = Employee::count();
         $employees = Employee::where('super_admin', true)->latest()->take(5)->get();

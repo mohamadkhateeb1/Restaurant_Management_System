@@ -25,7 +25,7 @@
                         <form method="POST" action="{{ route('Pages.Tables.store') }}">
                             @csrf
 
-                            @include('Pages.Tables._form') 
+                            @include('Pages.Tables._form')
 
                             <div class="d-flex justify-content-end gap-2 mt-5 pt-3 border-top border-secondary">
                                 <button type="reset" class="btn btn-outline-secondary px-4">@lang('Reset')</button>

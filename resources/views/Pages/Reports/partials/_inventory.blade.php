@@ -1,6 +1,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-{{-- 1. أزرار التحكم في الموقع --}}
 <div class="d-flex justify-content-between align-items-center mb-4 px-3 d-print-none">
     <h4 class="text-white fw-black mb-0">| إدارة جرد المخزون</h4>
     <button onclick="exportInventoryOfficialReport()" class="btn btn-danger rounded-pill px-4 fw-bold shadow-lg">
@@ -8,7 +7,6 @@
     </button>
 </div>
 
-{{-- 2. العرض في الموقع (للمتصفح فقط) --}}
 <div class="glass-card mb-5 d-print-none">
     <div class="table-responsive">
         <table class="table table-dark text-center align-middle mb-0">
@@ -36,7 +34,6 @@
 
 <script>
     function exportInventoryOfficialReport() {
-        // بناء التقرير بشكل "خام" ونظيف جداً ليبدأ من أول الصفحة
         const reportTemplate = `
         <div style="direction: rtl; font-family: 'Arial', sans-serif; padding: 10mm; background: white; color: black; min-height: 100%;">
             <div style="text-align: center; border-bottom: 5px double #d4af37; padding-bottom: 15px; margin-bottom: 25px;">
@@ -78,14 +75,14 @@
         `;
 
         const opt = {
-            margin: [0, 0, 0, 0], // تصفير الهوامش تماماً ليبدأ من أعلى الورقة
+            margin: [0, 0, 0, 0], 
             filename: 'Inventory_Official_Report_{{ date('Ymd') }}.pdf',
             image: {
                 type: 'jpeg',
                 quality: 1
             },
             html2canvas: {
-                scale: 3, // دقة عالية جداً لمنع بكسلة النصوص
+                scale: 3,
                 useCORS: true,
                 letterRendering: true,
                 backgroundColor: '#ffffff'
@@ -97,7 +94,6 @@
             }
         };
 
-        // تصدير التقرير من المحتوى المبني برمجياً لضمان النظافة
         html2pdf().set(opt).from(reportTemplate).save();
     }
 </script>

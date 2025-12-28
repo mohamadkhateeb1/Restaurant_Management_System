@@ -12,8 +12,8 @@
                                 <i class="fas fa-plus-circle"></i>
                             </div>
                             <div>
-                                <h4 class="mb-0 fw-bold text-white fs-5">إضافة مادة مخزنية</h4>
-                                <p class="text-muted small mb-0 opacity-75">إدراج صنف جديد في قاعدة بيانات المستودع المركزي
+                                <h4 class="mb-0 fw-bold text-white fs-5">@lang('Add New Item')</h4>
+                                <p class="text-muted small mb-0 opacity-75">@lang('Add New Item Description')
                                 </p>
                             </div>
                         </div>
@@ -41,7 +41,7 @@
                             @csrf
                             <div class="form-section-wrapper mb-5">
                                 <div class="section-header-tag mb-4">
-                                    <i class="fas fa-database me-2"></i> مواصفات الصنف
+                                    <i class="fas fa-database me-2"></i>@lang('Item Specifications')
                                 </div>
 
                                 <div class="section-content-box p-4 rounded-4 shadow-inner">
@@ -51,17 +51,16 @@
                             <div
                                 class="form-footer-actions mt-5 pt-4 d-flex flex-column flex-md-row justify-content-between align-items-center border-top border-white border-opacity-10">
                                 <div class="text-muted small mb-3 mb-md-0 fw-600">
-                                    <i class="fas fa-info-circle me-1 text-primary"></i> تأكد من صحة الكميات والوحدات قبل
-                                    الحفظ.
+                                    <i class="fas fa-info-circle me-1 text-primary"></i> @lang('Make sure the quantities and units are correct before saving.')
                                 </div>
                                 <div class="d-flex gap-3">
                                     <a href="{{ route('Pages.inventory.index') }}"
                                         class="btn btn-dark-minimal rounded-pill px-5 py-3 fw-bold">
-                                        تراجع
+                                        @lang('Cancel')
                                     </a>
                                     <button type="submit"
                                         class="btn btn-neon-save rounded-pill px-5 py-3 fw-bold shadow-glow transition-up">
-                                        <i class="fas fa-check-circle me-2"></i> اعتماد وإضافة المادة
+                                        <i class="fas fa-check-circle me-2"></i> @lang('Save Item')
                                     </button>
                                 </div>
                             </div>
@@ -126,7 +125,6 @@
             box-shadow: 0 0 15px rgba(255, 62, 62, 0.4);
         }
 
-        /* وسوم الأقسام */
         .section-header-tag {
             display: inline-block;
             padding: 6px 16px;
@@ -140,7 +138,6 @@
             border: 1px solid rgba(0, 210, 255, 0.1);
         }
 
-        /* الأزرار المطورة */
         .btn-neon-save {
             background: #00d2ff;
             color: #000;
@@ -168,7 +165,6 @@
             border-color: #fff;
         }
 
-        /* التنبيهات */
         .alert-custom-danger {
             background: rgba(255, 62, 62, 0.08);
             color: #ff3e3e;
@@ -176,7 +172,6 @@
             border-right: 5px solid #ff3e3e;
         }
 
-        /* المزامنة مع الحقول الكربونية */
         .premium-form .form-control-dark,
         .premium-form .form-select-dark {
             background-color: #1a1d21 !important;
@@ -186,7 +181,6 @@
             padding: 14px;
         }
 
-        /* أنيميشن */
         .animate-slide-up {
             animation: slideUp 0.8s cubic-bezier(0.2, 1, 0.3, 1);
         }
@@ -203,7 +197,6 @@
             }
         }
 
-        /* إخفاء الأقسام القديمة */
         .premium-form div[class*="border-primary"][class*="bg-primary"] {
             display: none !important;
         }

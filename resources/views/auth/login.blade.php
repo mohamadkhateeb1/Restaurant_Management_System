@@ -15,7 +15,6 @@
         </div>
     </div>
 
-    {{-- محتوى النموذج --}}
     <div class="p-6 sm:p-8 bg-gray-700">
 
         <x-auth-session-status class="mb-4 text-center text-green-400" :status="session('status')" />
@@ -23,7 +22,6 @@
         <form method="POST" action="{{ route('login') }}">
             @csrf
 
-            {{-- حقل البريد الإلكتروني --}}
             <div dir="rtl" class="mb-5 space-y-1">
                 <x-input-label for="email" value="البريد الإلكتروني" class="text-gray-300" />
                 <x-text-input id="email"
@@ -32,7 +30,6 @@
                 <x-input-error :messages="$errors->get('email')" class="mt-2 text-red-400" />
             </div>
 
-            {{-- حقل كلمة المرور --}}
             <div dir="rtl" class="space-y-1">
                 <x-input-label for="password" value="كلمة المرور" class="text-gray-300" />
 

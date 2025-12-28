@@ -14,7 +14,6 @@
             background-color: var(--carbon-dark);
             color: #e1e1e1;
             font-family: 'Cairo', sans-serif;
-            /* خلفية كربونية احترافية */
             background-image: radial-gradient(circle at 2px 2px, #1d1f21 1px, transparent 0);
             background-size: 40px 40px;
         }
@@ -25,7 +24,6 @@
             margin: 0 auto;
         }
 
-        /* شريط التبويبات المطور بنظام النيون */
         .reports-tabs {
             display: flex;
             gap: 12px;
@@ -62,7 +60,6 @@
             box-shadow: 0 0 20px var(--gold-glow);
         }
 
-        /* حاوية البيانات المطورة */
         .report-content-wrapper {
             background: var(--carbon-light);
             border: 1px solid var(--border-color);
@@ -74,11 +71,12 @@
             animation: slideUp 0.6s ease-out;
         }
 
-        /* خط النيون الذهبي العلوي */
         .report-content-wrapper::before {
             content: "";
             position: absolute;
-            top: 0; left: 0; right: 0;
+            top: 0;
+            left: 0;
+            right: 0;
             height: 4px;
             background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
         }
@@ -103,63 +101,65 @@
         }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 
     <div class="reports-container" dir="rtl">
-        {{-- استخراج التبويب النشط --}}
         @php $activeTab = request('tab', 'sales'); @endphp
 
         <div class="d-flex justify-content-between align-items-center mb-5">
             <div>
-                <h1 class="h2 fw-black mb-1" style="color: var(--gold-primary); text-shadow: 0 0 15px var(--gold-glow);">مركز التحليلات الرقمي</h1>
-                <p class="text-muted small mb-0">نظام SRMS - استعراض مبيعات ومخزون المطعم</p>
+                <h1 class="h2 fw-black mb-1" style="color: var(--gold-primary); text-shadow: 0 0 15px var(--gold-glow);">
+                    @lang('Center of Digital Analytics')</h1>
+                <p class="text-muted small mb-0">@lang('System SRMS - View Sales and Restaurant Inventory')</p>
             </div>
 
             <div class="header-actions">
-                {{-- زر التحديث فقط --}}
-                <a href="{{ route('Pages.reports.index', ['tab' => $activeTab]) }}"
-                    class="btn btn-refresh">
-                    <i class="fas fa-sync-alt"></i> تحديث البيانات
+                <a href="{{ route('Pages.reports.index', ['tab' => $activeTab]) }}" class="btn btn-refresh">
+                    <i class="fas fa-sync-alt"></i> @lang('Refresh Data')
                 </a>
             </div>
         </div>
 
-        {{-- شريط التنقل بين التبويبات --}}
         <nav class="reports-tabs">
             <a href="{{ route('Pages.reports.index', ['tab' => 'sales']) }}"
                 class="report-tab-link {{ $activeTab == 'sales' ? 'active' : '' }}">
-                <i class="fas fa-chart-line"></i> المبيعات اليومية
+                <i class="fas fa-chart-line"></i> @lang('Sales Reports')
             </a>
             <a href="{{ route('Pages.reports.index', ['tab' => 'invoices']) }}"
                 class="report-tab-link {{ $activeTab == 'invoices' ? 'active' : '' }}">
-                <i class="fas fa-receipt"></i> سجل الفواتير
+                <i class="fas fa-receipt"></i> @lang('Invoices Reports')
             </a>
             <a href="{{ route('Pages.reports.index', ['tab' => 'inventory']) }}"
                 class="report-tab-link {{ $activeTab == 'inventory' ? 'active' : '' }}">
-                <i class="fas fa-boxes"></i> حالة المخزن
+                <i class="fas fa-boxes"></i> @lang('Inventory Reports')
             </a>
         </nav>
 
-        {{-- عنوان القسم المختار لزيادة الوضوح --}}
         <div class="mb-4 px-2">
             <h5 class="text-white-50 fw-bold">
                 <i class="fas fa-database me-2"></i>
-                استعراض بيانات {{ $activeTab == 'sales' ? 'المبيعات' : ($activeTab == 'inventory' ? 'المخزن' : 'الفواتير') }}
+                استعراض بيانات
+                {{ $activeTab == 'sales' ? 'المبيعات' : ($activeTab == 'inventory' ? 'المخزن' : 'الفواتير') }}
             </h5>
         </div>
-
-        {{-- عرض المحتوى الديناميكي بناءً على التبويب النشط --}}
         <div class="report-content-wrapper">
             <div class="report-content">
                 @include('Pages.Reports.partials._' . $activeTab)
             </div>
         </div>
-        
+
         <div class="mt-5 text-center text-muted small">
-            نظام إدارة المطاعم المتكامل SRMS &copy; {{ date('Y') }} - واجهة التقارير الرقمية
+            @lang('Restaurant Management System'). &copy; {{ date('Y') }} @lang('All rights reserved').
         </div>
     </div>
 @endsection

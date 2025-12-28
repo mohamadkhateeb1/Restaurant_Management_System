@@ -78,7 +78,7 @@ class InvetoryController extends Controller
         return DB::transaction(function () use ($request) {
             $category = CategoriesRestaurant::findOrFail($request->category_id);
             $itemType = $category->is_menu_category ? 'menu_item' : 'raw_material';
-            $category->image=$request->image;
+            $category->image = $request->image;
 
             $imagePath = null;
             if ($request->hasFile('image')) {

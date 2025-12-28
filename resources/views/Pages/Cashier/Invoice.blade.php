@@ -199,7 +199,6 @@
                                             title="عرض التفاصيل">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        {{-- {{ route('Pages.invoices.pdf', $invoice->id) }} --}}
                                         <a href="#" class="action-btn btn-pdf" title="تحميل PDF">
                                             <i class="fas fa-file-pdf"></i>
                                         </a>
@@ -218,10 +217,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-
-        <div class="mt-4 d-flex justify-content-center pagination-wrapper">
-            {{ $invoices->links() }}
         </div>
     </div>
 

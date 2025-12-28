@@ -23,9 +23,9 @@
                     <div class="card-body p-4 text-white">
                         <form method="POST" action="{{ route('Pages.Tables.update', $table->id) }}">
                             @csrf
-                            @method('PUT') {{-- مهم جداً للتعديل --}}
+                            @method('PUT')
 
-                            @include('Pages.Tables._form') {{-- استدعاء الفورم المشترك --}}
+                            @include('Pages.Tables._form')
 
                             <div class="d-flex justify-content-end gap-2 mt-5 pt-3 border-top border-secondary">
                                 <a href="{{ route('Pages.Tables.index') }}" class="btn btn-outline-secondary px-4">إلغاء</a>
@@ -37,4 +37,4 @@
             </div>
         </div>
     </div>
-@endsection     
+@endsection

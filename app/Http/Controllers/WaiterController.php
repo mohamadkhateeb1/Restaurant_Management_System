@@ -11,9 +11,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Waiter;
+
 class WaiterController extends Controller
 {
-    
+
     public function index(Request $request)
     {
         $this->authorize('viewAny', Waiter::class);

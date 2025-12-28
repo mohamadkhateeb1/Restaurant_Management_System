@@ -10,14 +10,9 @@ use Illuminate\Support\Facades\Gate;
 
 class InvetoryTransactionsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+ 
     public function index() {}
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create($id)
     {
         $item = Inventory::findOrFail($id);
@@ -30,10 +25,10 @@ class InvetoryTransactionsController extends Controller
 
 
         $validated = $request->validate([
-            'type'      => 'required|in:in,out,adjustment', // نوع الحركة (وارد/صادر/تعديل)
-            'quantity'  => 'required|numeric|min:0.01',      // الكمية
-            'reference' => 'nullable|string|max:255',      // رقم الفاتورة أو المرجع
-            'notes'     => 'nullable|string',              // ملاحظات إضافية
+            'type'      => 'required|in:in,out,adjustment', 
+            'quantity'  => 'required|numeric|min:0.01',      
+            'reference' => 'nullable|string|max:255',     
+            'notes'     => 'nullable|string',              
         ]);
 
         $item = Inventory::findOrFail($id);

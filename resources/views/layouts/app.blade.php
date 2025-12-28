@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,15 +13,41 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
 
     <style>
-        * { font-family: 'Cairo', sans-serif; }
-        body { direction: rtl; text-align: right; }
-        .main-sidebar { right: 0 !important; left: auto !important; }
-        .content-wrapper, .main-header, .main-footer { margin-right: 250px !important; margin-left: 0 !important; }
-        .sidebar-collapse .content-wrapper, .sidebar-collapse .main-header { margin-right: 0 !important; }
-        
-        /* تنسيق قائمة اللغات جهة اليسار */
-        .dropdown-menu-left { left: 0 !important; right: auto !important; text-align: right; }
-        .shadow-text { text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            direction: rtl;
+            text-align: right;
+        }
+
+        .main-sidebar {
+            right: 0 !important;
+            left: auto !important;
+        }
+
+        .content-wrapper,
+        .main-header,
+        .main-footer {
+            margin-right: 250px !important;
+            margin-left: 0 !important;
+        }
+
+        .sidebar-collapse .content-wrapper,
+        .sidebar-collapse .main-header {
+            margin-right: 0 !important;
+        }
+
+        .dropdown-menu-left {
+            left: 0 !important;
+            right: auto !important;
+            text-align: right;
+        }
+
+        .shadow-text {
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
     </style>
     @stack('styles')
 </head>
@@ -45,7 +72,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // إخفاء التنبيهات تلقائياً
             const alerts = document.querySelectorAll('.flash-alert, .alert');
             alerts.forEach(function(alert) {
                 setTimeout(function() {
@@ -58,4 +84,5 @@
     </script>
     @yield('scripts')
 </body>
+
 </html>

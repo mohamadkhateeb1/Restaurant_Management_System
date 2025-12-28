@@ -127,7 +127,6 @@ class CategoriesRestaurantController extends Controller
     {
         $category = CategoriesRestaurant::findOrFail($id);
 
-        // التحقق من صلاحية الحذف
         $this->authorize('delete', $category);
 
         try {

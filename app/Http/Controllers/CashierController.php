@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\DineInOrderRestaurant;
 use App\Models\TakeAwaysRestaurant;
 use App\Models\OrderItemsRestaurant;
@@ -12,12 +13,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Cachier;
+
 class CashierController extends Controller
 {
- 
+
     public function index()
     {
-        $this->authorize('viewAny',Cachier::class);
+        $this->authorize('viewAny', Cachier::class);
         $pendingDineIn = DineInOrderRestaurant::where('status', 'ready')
             ->with(['table', 'orderItems.item'])
             ->get();
@@ -158,19 +160,23 @@ class CashierController extends Controller
         });
     }
 
-
     public function invoicesIndex(Request $request)
     {
-
         $query = Invoice::with(['dineInOrder.table', 'takeawayOrder', 'employee']);
 
-        if ($request->filled('date')) {
-            $query->whereDate('created_at', $request->date);
-        } else {
-            $query->whereDate('created_at', now()->toDateString());
+        if ($request->filled('inv_from')) {
+            $query->whereDate('created_at', $request->inv_from);
+        }
+        if ($request->filled('inv_type')) {
+            if ($request->inv_type == 'dine_in') {
+                $query->whereNotNull('dine_in_order_id');
+            } elseif ($request->inv_type == 'takeaway') {
+                $query->whereNotNull('takeaway_order_id');
+            }
         }
 
         $invoices = $query->orderBy('created_at', 'desc')->paginate(12);
+
         return view('Pages.Cashier.invoice', compact('invoices'));
     }
 

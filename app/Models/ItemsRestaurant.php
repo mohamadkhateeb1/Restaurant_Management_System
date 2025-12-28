@@ -12,16 +12,16 @@ class ItemsRestaurant extends Model
 
     protected $fillable = [
         'category_id',
-        'inventory_id', 
-        'item_name',    
+        'inventory_id',
+        'item_name',
         'description',
         'image',
-        'price',        
+        'price',
         'status',
         'prepare_time',
-        'quantity',     
-        'unit',         
-        'min_quantity'  
+        'quantity',
+        'unit',
+        'min_quantity'
     ];
 
 
@@ -30,7 +30,7 @@ class ItemsRestaurant extends Model
         return $this->belongsTo(CategoriesRestaurant::class, 'category_id');
     }
 
-   
+
     public function inventory(): BelongsTo
     {
         return $this->belongsTo(Inventory::class, 'inventory_id');
@@ -45,13 +45,13 @@ class ItemsRestaurant extends Model
     public function isAvailableToOrder(): bool
     {
         return $this->status === 'available' &&
-               optional($this->inventory)->quantity > 0 &&
-               optional($this->category)->status === 'active';
+            optional($this->inventory)->quantity > 0 &&
+            optional($this->category)->status === 'active';
     }
 
 
-public function getCurrentQuantityAttribute()
-{
-    return $this->inventory ? $this->inventory->quantity : 0;
-}
+    public function getCurrentQuantityAttribute()
+    {
+        return $this->inventory ? $this->inventory->quantity : 0;
+    }
 }

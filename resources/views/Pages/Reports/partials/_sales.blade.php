@@ -1,4 +1,3 @@
-{{-- 1. نموذج الفلترة (يظهر في الموقع فقط) --}}
 <div class="glass-card mb-4 d-print-none">
     <form action="{{ route('Pages.reports.index') }}" method="GET" class="row g-3 align-items-end">
         <input type="hidden" name="tab" value="sales">
@@ -23,7 +22,6 @@
     </form>
 </div>
 
-{{-- 2. أزرار التحكم --}}
 <div class="d-flex justify-content-between align-items-center mb-4 px-3 d-print-none">
     <h4 class="text-white fw-bold"><i class="fas fa-chart-line text-gold me-2"></i> مبيعات النظام المفلترة</h4>
     <button onclick="exportMainSalesSummaryPDF()" class="btn btn-danger rounded-pill px-4 fw-bold shadow-lg">
@@ -31,7 +29,6 @@
     </button>
 </div>
 
-{{-- 3. جدول العرض في الموقع --}}
 <div class="glass-card mb-5 d-print-none">
     <div class="table-responsive">
         <table class="table table-dark table-hover text-center align-middle mb-0 border-0">
@@ -62,14 +59,12 @@
     </div>
 </div>
 
-{{-- 4. سكريبت الطباعة المطور --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
     function exportMainSalesSummaryPDF() {
         const reportElement = document.createElement('div');
 
-        // بناء محتوى الجدول برمجياً لتجنب مشاكل Blade داخل JS
         let tableRows = '';
         @foreach ($dailySalesData as $data)
             tableRows += `

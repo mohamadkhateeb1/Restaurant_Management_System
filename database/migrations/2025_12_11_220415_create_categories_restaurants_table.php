@@ -20,9 +20,7 @@ return new class extends Migration
         });
     }
 
-    /**
-     * التراجع عن الميغريشن.
-     */
+ 
     public function down(): void
     {
         Schema::dropIfExists('categories_restaurants');

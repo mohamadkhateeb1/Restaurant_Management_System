@@ -5,14 +5,13 @@
             <div class="col-md-7 text-right">
                 <div class="d-flex align-items-center mb-2 justify-content-start">
                     <div class="header-indicator me-3"></div>
-                    <h6 class="text-neon-blue fw-bold mb-0 text-uppercase tracking-wider">لوحة تحكم المستودعات</h6>
+                    <h6 class="text-neon-blue fw-bold mb-0 text-uppercase tracking-wider">@lang('Inventory Dashboard')</h6>
                 </div>
-                <h2 class="fw-black text-white display-5 mb-0">المخزن <span class="text-glow">المركزي</span></h2>
             </div>
             @can('create', App\Models\Inventory::class)
                 <div class="col-md-5 d-flex justify-content-md-end gap-3 mt-4 mt-md-0">
                     <a href="{{ route('Pages.inventory.create') }}" class="btn btn-neon-glow rounded-pill px-4 fw-bold">
-                        <i class="fas fa-plus-circle me-2"></i> إضافة مادة جديدة
+                        <i class="fas fa-plus-circle me-2"></i> @lang('Add New Item')
                     </a>
                 </div>
             @endcan
@@ -181,7 +180,6 @@
             color: #e1e1e1;
         }
 
-        /* الهيدر */
         .header-indicator {
             width: 6px;
             height: 35px;
@@ -194,7 +192,6 @@
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
-        /* الفلترة */
         .filter-capsule-dark {
             background: var(--item-bg);
             border-radius: 18px;
@@ -226,7 +223,6 @@
             background: transparent;
         }
 
-        /* تنسيق الصور والـ SKU */
         .item-image-wrapper {
             width: 55px;
             height: 55px;
@@ -294,7 +290,6 @@
             padding: 12px 25px;
         }
 
-        /* الألوان والنيون */
         .text-success-neon {
             color: var(--neon-success);
         }
