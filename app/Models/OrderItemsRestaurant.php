@@ -16,7 +16,6 @@ class OrderItemsRestaurant extends Model
         'price'
     ];
 
-    // تابع للتحقق من نوع الطلب
     public function isDineIn()
     {
         return !is_null($this->dine_in_order_id);
@@ -27,10 +26,8 @@ class OrderItemsRestaurant extends Model
         return !is_null($this->take_away_order_id);
     }
 
-    // العلاقات
     public function item()
     {
-        // الربط مع الأصناف للحصول على الاسم والصورة
         return $this->belongsTo(ItemsRestaurant::class, 'item_id');
     }
 
@@ -41,6 +38,6 @@ class OrderItemsRestaurant extends Model
 
     public function takeawayOrder()
     {
-        return $this->belongsTo(TakeAwaysRestaurant::class, 'take_away_order_id'); // تصحيح بسيط لاسم الحقل ليتوافق مع المايجريشن
+        return $this->belongsTo(TakeAwaysRestaurant::class, 'take_away_order_id'); 
     }
 }

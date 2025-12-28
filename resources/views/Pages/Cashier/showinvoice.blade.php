@@ -9,23 +9,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* التنسيق للعرض على الشاشة */
         body { background-color: #0f111a; color: #e6e8ed; font-family: 'Cairo', sans-serif; }
         .invoice-box { background: #1a1d29; border: 1px solid #2d3245; border-radius: 20px; padding: 30px; margin-top: 50px; }
         .item-row { border-bottom: 1px solid #2d3245; padding: 10px 0; }
         .total-box { background: #242938; padding: 20px; border-radius: 15px; border: 1px dashed #00d2ff; }
 
-        /* --- تنسيق الطباعة النظامي --- */
         @media print {
             @page { margin: 0; size: auto; }
             body { background: white !important; color: black !important; margin: 0; padding: 0; }
             .btn, .btn-outline-light, .text-info, .text-warning { color: black !important; }
             .invoice-box { border: none !important; box-shadow: none !important; margin: 0 !important; padding: 10mm !important; width: 100% !important; background: white !important; }
-            .no-print { display: none !important; } /* لإخفاء الأزرار */
+            .no-print { display: none !important; } 
             
-            /* تصميم الفاتورة الحرارية */
             .invoice-box {
-                max-width: 80mm; /* عرض الورق الحراري القياسي */
+                max-width: 80mm; 
                 margin: auto;
             }
             .item-row { border-bottom: 1px dashed #000 !important; }
@@ -90,7 +87,6 @@
                     <button onclick="window.print()" class="btn btn-success flex-grow-1 py-3 fw-bold">
                         <i class="fas fa-print me-2"></i>طباعة الفاتورة
                     </button>
-                    {{-- {{ route('Pages.pdf', $invoice->id) }} --}}
                     <a href="#" class="btn btn-danger flex-grow-1 py-3 fw-bold">
                         <i class="fas fa-file-pdf me-2"></i>تحميل PDF
                     </a>

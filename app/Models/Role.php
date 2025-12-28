@@ -23,7 +23,6 @@ class Role extends Model
         return DB::transaction(function () use ($request) {
             $role = self::create(['name' => $request['name']]);
             foreach (config('abilities') as $ability => $label) {
-                // استخدام اسم الـ ability كمفتاح لجلب القيمة من الفورم
                 $value = $request['abilities'][$ability] ?? 'inherit';
                 RoleAbilities::create([
                     'role_id' => $role->id,

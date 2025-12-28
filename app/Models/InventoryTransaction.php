@@ -20,13 +20,11 @@ class InventoryTransaction extends Model
         'employee_id' 
     ];
 
-    // علاقة الحركة بالمادة الخام
     public function inventory()
     {
         return $this->belongsTo(Inventory::class);
     }
 
-    // علاقة الحركة بالموظف
     public function employee()
     {
         return $this->belongsTo(Employee::class, 'employee_id');

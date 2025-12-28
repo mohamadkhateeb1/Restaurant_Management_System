@@ -9,7 +9,6 @@ class TablesRestaurant extends Model
 {
     use HasFactory;
 
-    // تحديد اسم الجدول يدوياً لضمان الربط الصحيح مع Migration
     protected $table = 'tables_restaurants';
 
     protected $fillable = [
@@ -21,7 +20,6 @@ class TablesRestaurant extends Model
     
     public function dineInOrders()
     {
-        // تم تحديد 'table_id' كمفتاح خارجي لضمان الربط الدقيق
         return $this->hasMany(DineInOrderRestaurant::class, 'table_id');
     }   
 }

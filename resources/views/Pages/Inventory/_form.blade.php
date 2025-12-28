@@ -1,5 +1,4 @@
 <div class="row g-4 text-end" dir="rtl">
-    {{-- 1. القسم والاسم --}}
     <div class="col-md-6">
         <label class="form-label fw-bold text-muted small mb-2">القسم التنظيمي (Category)</label>
         <select name="category_id" class="form-select-dark w-100 shadow-sm">
@@ -15,7 +14,6 @@
             <div class="text-danger-neon small mt-1">{{ $message }}</div>
         @enderror
     </div>
-
     <div class="col-md-6">
         <label class="form-label fw-bold text-muted small mb-2">اسم المادة</label>
         <input type="text" name="name" class="form-control-dark w-100"
@@ -24,8 +22,6 @@
             <div class="text-danger-neon small mt-1">{{ $message }}</div>
         @enderror
     </div>
-
-    {{-- 2. السعر وصورة المادة --}}
     <div class="col-md-6">
         <label class="form-label fw-bold text-success-neon small mb-2">سعر البيع (للأطباق فقط)</label>
         <div class="input-group-dark">
@@ -37,7 +33,6 @@
             <div class="text-danger-neon small mt-1">{{ $message }}</div>
         @enderror
     </div>
-
     <div class="col-md-6">
         <label class="form-label fw-bold text-muted small mb-2">صورة المادة</label>
         <input type="file" name="image" class="form-control-dark w-100" accept="image/*">
@@ -49,20 +44,16 @@
             </div>
         @endif
     </div>
-
-    {{-- 3. الكميات والوحدات --}}
     <div class="col-md-4">
         <label class="form-label fw-bold text-muted small mb-2">الكمية الافتتاحية</label>
         <input type="number" step="0.01" name="quantity" class="form-control-dark w-100"
             value="{{ old('quantity', $item->quantity ?? 0) }}">
     </div>
-
     <div class="col-md-4">
         <label class="form-label fw-bold text-muted small mb-2">حد الأمان (Stock Alert)</label>
         <input type="number" step="0.01" name="min_quantity" class="form-control-dark w-100"
             value="{{ old('min_quantity', $item->min_quantity ?? 0) }}">
     </div>
-
     <div class="col-md-4">
         <label class="form-label fw-bold text-muted small mb-2">وحدة القياس</label>
         <select name="unit" class="form-select-dark w-100 shadow-sm">
@@ -72,20 +63,16 @@
             @endforeach
         </select>
     </div>
-
-    {{-- 4. التكاليف والمورد والـ SKU --}}
     <div class="col-md-4">
         <label class="form-label fw-bold text-muted small mb-2">تكلفة الشراء (للوحدة)</label>
         <input type="number" step="0.01" name="cost_per_unit" class="form-control-dark w-100"
             value="{{ old('cost_per_unit', $item->cost_per_unit ?? '') }}" placeholder="0.00">
     </div>
-
     <div class="col-md-4">
         <label class="form-label fw-bold text-muted small mb-2">المورد المفضل</label>
         <input type="text" name="supplier" class="form-control-dark w-100"
             value="{{ old('supplier', $item->supplier ?? '') }}" placeholder="اسم الشركة أو المورد">
     </div>
-
     <div class="col-md-4">
         <label class="form-label fw-bold text-info-neon small mb-2">كود المادة (SKU)</label>
         <input type="text" name="sku" class="form-control-dark border-info-neon w-100"
@@ -95,9 +82,7 @@
         @enderror
     </div>
 </div>
-
 <style>
-    /* إضافة لون النيون الأزرق للـ SKU */
     .text-info-neon {
         color: #00d2ff;
     }
@@ -106,7 +91,6 @@
         border-color: rgba(0, 210, 255, 0.2) !important;
     }
 
-    /* التنسيقات الأصلية */
     .form-control-dark,
     .form-select-dark {
         background-color: #1a1d21 !important;
@@ -124,7 +108,6 @@
         outline: none;
     }
 
-    /* ... باقي الستايلات الخاصة بك ... */
     .input-group-dark {
         display: flex;
         border-radius: 12px;

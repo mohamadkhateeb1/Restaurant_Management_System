@@ -73,13 +73,14 @@
     "Seats": "كراسي",
     "Basic Table Information": "بيانات الطاولة الأساسية",
     "Save Table": "حفظ الطاولة",
-    "Items Management": "إدارة الأصناف",
+    "Items Menu": "أصناف المطعم",
     "Manage the restaurant items and menu": "عرض، تصفية، وإدارة أصناف النظام والمنيو",
     "Item Name": "اسم الصنف",
     "Item Category": "تصنيف الصنف",
     "All Categories": "كل الفئات",
     "Item Price": "سعر الصنف",
     "Available Stock": "المخزون المتاح",
-    "No items found": "لا توجد أطباق مرتبطة "
+    "No items found": "لا توجد أطباق مرتبطة ",
+    "Back to Categories List": "العودة لقائمة الأقسام"
     
 }

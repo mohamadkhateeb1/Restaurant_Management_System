@@ -77,9 +77,6 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* ======================================================
-            تنسيق الطباعة النهائي - إظهار العناصر باللون الأسود الصريح
-        ========================================================= */
         @media print {
             body * {
                 visibility: hidden !important;
@@ -89,7 +86,6 @@
             .modal.show .modal-body * {
                 visibility: visible !important;
                 color: black !important;
-                /* إجبار اللون الأسود للوضوح */
             }
 
             .modal.show .modal-body {
@@ -125,7 +121,6 @@
             }
         }
 
-        /* ستايل التصدير PDF لضمان بقاء الألوان واضحة */
         .pdf-export-mode {
             background: white !important;
             color: black !important;
@@ -141,7 +136,7 @@
 
     <header class="p-4 border-bottom border-secondary border-opacity-10 mb-5 d-print-none">
         <div class="container d-flex justify-content-between align-items-center">
-            <h2 class="fw-black text-neon-blue mb-0">مركز التحصيل المالي 💰</h2>
+            <h2 class="fw-black text-neon-blue mb-0">مركز التحصيل المالي</h2>
             <div class="d-flex gap-2">
                 <form action="{{ route('Pages.cashier.undoTakeaway') }}" method="POST">
                     @csrf
@@ -194,7 +189,6 @@
                                         {{ $order->table->table_number }}</p>
                                     <small class="text-muted">SRMS - {{ date('Y-m-d H:i') }}</small>
                                 </div>
-
                                 <table class="receipt-table text-end small">
                                     <thead>
                                         <tr style="border-bottom: 1px solid #444;">
@@ -216,7 +210,6 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-
                                 <div class="mt-4 pt-3 border-top border-secondary border-dashed">
                                     <div class="d-flex justify-content-between align-items-center px-2">
                                         <span class="h5 mb-0 fw-bold">المجموع:</span>
@@ -225,7 +218,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="modal-footer border-0 p-4 gap-2 justify-content-center d-print-none">
                                 <button type="button" class="btn btn-secondary rounded-pill px-3"
                                     data-bs-dismiss="modal">تعديل</button>
@@ -234,7 +226,6 @@
                                     onclick="downloadInvoicePDF('printArea{{ $order->id }}', 'فاتورة_طاولة_{{ $order->table->table_number }}')">
                                     <i class="fas fa-file-pdf me-2"></i> تصدير PDF
                                 </button>
-
                                 <button type="button" class="btn btn-info rounded-pill px-4 fw-bold shadow-sm"
                                     onclick="window.print()">
                                     <i class="fas fa-print me-2"></i> طباعة الفاتورة
@@ -245,7 +236,7 @@
                 </div>
             @empty
                 <div class="col-12 text-center py-5">
-                    <h3 class="text-muted">لا توجد فواتير نشطة 👋</h3>
+                    <h3 class="text-muted">لا توجد فواتير نشطة </h3>
                 </div>
             @endforelse
         </div>

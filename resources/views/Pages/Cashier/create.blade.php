@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نقطة البيع الاحترافية - SRMS</title>
+    <title>نقطة البيع - SRMS</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -176,7 +176,6 @@
             }
         }
 
-        /* تحسينات للـ PDF */
         .pdf-export-container {
             background: white !important;
             color: black !important;
@@ -358,7 +357,6 @@
 
     <script>
         function openPosPreview() {
-            // نقل اسم الزبون للمعاينة
             const name = document.getElementById('customer_name_input').value;
             document.getElementById('pdf_customer_name').innerText = name ? "الزبون: " + name : "";
 
@@ -374,12 +372,9 @@
             document.getElementById('posMainForm').submit();
         }
 
-        // دالة تحميل PDF الاحترافية
         function downloadPosPDF() {
             const element = document.getElementById('posPrintSection');
             const customerName = document.getElementById('customer_name_input').value || 'زبون_سفري';
-
-            // إعدادات الـ PDF
             const opt = {
                 margin: 0.5,
                 filename: `فاتورة_سفري_${customerName}.pdf`,
@@ -399,17 +394,13 @@
                     orientation: 'portrait'
                 }
             };
-
-            // تحويل المحتوى للون الأسود مؤقتاً للوضوح في الملف
             const originalClass = element.className;
             element.classList.add('pdf-export-container');
-
             html2pdf().set(opt).from(element).save().then(() => {
                 element.className = originalClass;
             });
         }
     </script>
-
 </body>
 
 </html>

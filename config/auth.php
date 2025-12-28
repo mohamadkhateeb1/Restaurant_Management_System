@@ -68,7 +68,6 @@ return [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
-        // أضف هذا الجزء ليرتبط بموديل Admin
         'employees' => [
             'driver' => 'eloquent',
             'model' => App\Models\Employee::class,

@@ -1,8 +1,6 @@
 @extends('layouts.app')
-
 @section('content')
     <div class="container py-5 px-4" dir="rtl">
-        {{-- هيدر الصفحة --}}
         <div class="row mb-5 align-items-center animate-fade-in">
             <div class="col-md-7 text-right">
                 <div class="d-flex align-items-center mb-2">
@@ -33,7 +31,6 @@
                         </span>
                     </div>
                     <div class="card-body p-4">
-                        {{-- عرض صورة المادة أو الأيقونة --}}
                         <div class="text-center mb-4">
                             <div class="main-orb-wrapper mx-auto mb-3">
                                 @if ($item->item && $item->item->image)
@@ -87,8 +84,6 @@
                     </div>
                 </div>
             </div>
-
-            {{-- سجل الحركات (التايم لاين) المظلم --}}
             <div class="col-lg-8 animate-slide-up" style="animation-delay: 0.1s;">
                 <div class="card border-0 shadow-2xl rounded-5 overflow-hidden" style="background: #111315;">
                     <div class="card-header border-0 py-4 px-4 d-flex justify-content-between align-items-center"

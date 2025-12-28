@@ -2,31 +2,42 @@
 
 namespace App\Providers;
 
-use App\Models\Employee;
-use App\Models\Role;
-use App\Models\CategoriesRestaurant;
-use App\Policies\EmployeePolicy;
-use App\Policies\RolePolicy;
-use App\Policies\CategoriesRestaurantPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use App\Models\Employee;
+use App\Policies\EmployeePolicy;
+use App\Models\CategoriesRestaurant;
+use App\Policies\CategoryPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
+    /**
+     * The model to policy mappings for the application.
+     *
+     * @var array<class-string, class-string>
+     */
     protected $policies = [
-        // ربط يدوي لأن اسم المودل لا يطابق اسم السياسة تلقائياً
         Employee::class => EmployeePolicy::class,
-        Role::class => RolePolicy::class,
-        CategoriesRestaurant::class => CategoriesRestaurantPolicy::class,
+        CategoriesRestaurant::class => CategoryPolicy::class,
     ];
 
     public function boot(): void
     {
         $this->registerPolicies();
 
-        // السوبر أدمن يتخطى كافة الفحوصات (هذا يحل مشكلة السوبر أدمن عندك)
+
         Gate::before(function ($user, $ability) {
-            return $user->super_admin ? true : null;
+            if ($user->super_admin) {
+                return true;
+            }
         });
+        $abilities = config('abilities');
+        if (is_array($abilities)) {
+            foreach ($abilities as $ability => $label) {
+                Gate::define($ability, function ($user) use ($ability) {
+                    return $user->hasAbility($ability);
+                });
+            }
+        }
     }
 }

@@ -4,10 +4,7 @@
     <div class="container py-5" dir="rtl">
         <div class="row justify-content-center">
             <div class="col-lg-10 col-xl-9">
-                {{-- بطاقة الإضافة بتصميم Dark Glassmorphism المطور --}}
                 <div class="card border-0 shadow-2xl rounded-5 overflow-hidden animate-slide-up" style="background: #0d0f11;">
-
-                    {{-- هيدر البطاقة الفاخر بتدرج لوني عميق --}}
                     <div class="card-header border-0 py-4 px-4 d-flex justify-content-between align-items-center"
                         style="background: linear-gradient(135deg, #16191c 0%, #000000 100%); border-bottom: 1px solid rgba(255,255,255,0.05) !important;">
                         <div class="d-flex align-items-center">
@@ -26,7 +23,6 @@
                     </div>
 
                     <div class="card-body p-4 p-md-5">
-                        {{-- رسائل الخطأ بتنسيق Neon --}}
                         @if ($errors->any())
                             <div class="alert alert-custom-danger border-0 rounded-4 shadow-sm mb-5 animate-pulse">
                                 <div class="d-flex align-items-center">
@@ -40,24 +36,18 @@
                             </div>
                         @endif
 
-                        {{-- تفعيل enctype لرفع الصور --}}
                         <form action="{{ route('Pages.inventory.store') }}" method="POST" enctype="multipart/form-data"
                             class="premium-form">
                             @csrf
-
-                            {{-- مجموعة البيانات الأساسية --}}
                             <div class="form-section-wrapper mb-5">
                                 <div class="section-header-tag mb-4">
                                     <i class="fas fa-database me-2"></i> مواصفات الصنف
                                 </div>
 
                                 <div class="section-content-box p-4 rounded-4 shadow-inner">
-                                    {{-- استدعاء ملف الحقول المحدث --}}
                                     @include('Pages.Inventory._form')
                                 </div>
                             </div>
-
-                            {{-- أزرار التحكم بتنسيق عائم --}}
                             <div
                                 class="form-footer-actions mt-5 pt-4 d-flex flex-column flex-md-row justify-content-between align-items-center border-top border-white border-opacity-10">
                                 <div class="text-muted small mb-3 mb-md-0 fw-600">

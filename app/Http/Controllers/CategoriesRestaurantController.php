@@ -7,15 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Exception;
-use Illuminate\Support\Facades\Gate;
 
 class CategoriesRestaurantController extends Controller
 {
-
     public function index(Request $request)
     {
-        // فحص صلاحية عرض القائمة
-        $this->authorize('viewAny', CategoriesRestaurant::class);
 
         $categories = CategoriesRestaurant::query()
             ->when($request->name, function ($q) use ($request) {
@@ -34,21 +30,16 @@ class CategoriesRestaurantController extends Controller
         return view('Pages.Categories.index', compact('categories'));
     }
 
-
     public function create()
     {
-        // فحص صلاحية الدخول لصفحة الإضافة
-        $this->authorize('create', CategoriesRestaurant::class);
 
         $category = new CategoriesRestaurant();
         return view('Pages.Categories.create', compact('category'));
     }
 
-
     public function store(Request $request)
     {
-        // فحص صلاحية الحفظ
-        $this->authorize('create', CategoriesRestaurant::class);
+
 
         $request->validate([
             'name'             => 'required|string|max:255|unique:categories_restaurants,name',
@@ -71,43 +62,33 @@ class CategoriesRestaurantController extends Controller
                 }
 
                 $category->save();
-
-                return redirect()->route('Pages.categories.index')->with('success', 'تم إضافة القسم الجديد بنجاح.');
+                return redirect()->route('Pages.categories.index')->with('success', 'تم إضافة القسم بنجاح.');
             });
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ أثناء الحفظ، يرجى المحاولة لاحقاً.');
+            return redirect()->back()->with('error', 'حدث خطأ أثناء الحفظ.');
         }
     }
-
 
     public function show($id)
     {
         $category = CategoriesRestaurant::with(['items.inventory'])->findOrFail($id);
 
-        // فحص صلاحية عرض تفاصيل قسم معين
-        $this->authorize('view', $category);
+
 
         return view('Pages.Categories.show', compact('category'));
     }
-
 
     public function edit($id)
     {
         $category = CategoriesRestaurant::findOrFail($id);
 
-        // فحص صلاحية الدخول لصفحة التعديل
-        $this->authorize('update', $category);
 
         return view('Pages.Categories.edit', compact('category'));
     }
 
-
     public function update(Request $request, $id)
     {
         $category = CategoriesRestaurant::findOrFail($id);
-
-        // فحص صلاحية التحديث
-        $this->authorize('update', $category);
 
         $request->validate([
             'name'             => 'required|string|max:255|unique:categories_restaurants,name,' . $id,
@@ -125,72 +106,52 @@ class CategoriesRestaurantController extends Controller
                 $category->is_menu_category = $request->is_menu_category;
 
                 if ($request->hasFile('image')) {
-                    if ($category->image) {
-                        Storage::disk('public')->delete($category->image);
-                    }
+                    if ($category->image) Storage::disk('public')->delete($category->image);
                     $category->image = $request->file('image')->store('categories', 'public');
                 }
 
                 $category->save();
-
-                return redirect()->route('Pages.categories.index')->with('success', 'تم تحديث بيانات القسم بنجاح.');
+                return redirect()->route('Pages.categories.index')->with('success', 'تم التحديث بنجاح.');
             });
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'حدث خطأ أثناء التحديث.');
         }
     }
 
-
     public function destroy($id)
     {
         $category = CategoriesRestaurant::findOrFail($id);
 
-        // فحص صلاحية الحذف
-        $this->authorize('delete', $category);
 
         try {
             return DB::transaction(function () use ($category) {
-                if ($category->image) {
-                    Storage::disk('public')->delete($category->image);
-                }
-
+                if ($category->image) Storage::disk('public')->delete($category->image);
                 $category->delete();
-
-                return redirect()->route('Pages.categories.index')->with('success', 'تم حذف القسم وجميع صوره بنجاح.');
+                return redirect()->route('Pages.categories.index')->with('success', 'تم الحذف بنجاح.');
             });
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'لا يمكن حذف القسم، قد يكون مرتبطاً بمنتجات أو طلبات نشطة.');
+            return redirect()->back()->with('error', 'فشل الحذف.');
         }
     }
 
-
     public function bulkDestroy(Request $request)
     {
-        // فحص صلاحية الحذف (استخدمنا صلاحية الـ delete العامة هنا)
-        $this->authorize('delete', CategoriesRestaurant::class);
+
 
         $ids = $request->ids;
-
-        if (!$ids || !is_array($ids)) {
-            return redirect()->back()->with('error', 'يرجى تحديد العناصر المطلوب حذفها أولاً.');
-        }
+        if (!$ids || !is_array($ids)) return redirect()->back()->with('error', 'يرجى تحديد العناصر.');
 
         try {
             return DB::transaction(function () use ($ids) {
                 $categories = CategoriesRestaurant::whereIn('id', $ids)->get();
-
                 foreach ($categories as $category) {
-                    if ($category->image) {
-                        Storage::disk('public')->delete($category->image);
-                    }
+                    if ($category->image) Storage::disk('public')->delete($category->image);
                 }
-
                 CategoriesRestaurant::whereIn('id', $ids)->delete();
-
-                return redirect()->route('Pages.categories.index')->with('success', 'تم مسح كافة الأقسام والصور المحددة بنجاح.');
+                return redirect()->route('Pages.categories.index')->with('success', 'تم الحذف الجماعي بنجاح.');
             });
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'فشل الحذف الجماعي، بعض الأقسام مرتبطة ببيانات أخرى لا يمكن حذفها.');
+            return redirect()->back()->with('error', 'فشل الحذف الجماعي.');
         }
     }
 }

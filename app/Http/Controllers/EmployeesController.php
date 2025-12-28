@@ -12,16 +12,12 @@ class EmployeesController extends Controller
 {
     public function index()
     {
-        $this->authorize('viewAny', Employee::class);
-        
         $employees = Employee::with('roles')->get();
         return view('Pages.Employees.index', compact('employees'));
     }
 
     public function create()
     {
-        $this->authorize('create', Employee::class);
-        
         return view('Pages.Employees.create', [
             'roles' => Role::all(),
             'employee' => new Employee()
@@ -30,9 +26,7 @@ class EmployeesController extends Controller
 
     public function store(EmoloyeeRequest $request)
     {
-        // $this->authorize('create', Employee::class);
-        $employee = new Employee();
-         $request->validate([
+        $request->validate([
             'name'      => 'required|string|max:255',
             'email'     => 'required|email|unique:employees,email',
             'phone'     => 'required|string|max:20',
@@ -44,16 +38,19 @@ class EmployeesController extends Controller
             'password'  => 'required|string|min:8',
             'roles'     => 'required|array',
         ]);
-        $employee->name = $request->name;
-        $employee->email = $request->email;
-        $employee->phone = $request->phone;
-        $employee->position = $request->position;
-        $employee->salary = $request->salary;
-        $employee->hire_date = $request->hire_date;
-        $employee->status = $request->status;
-        $employee->notes = $request->notes;
-        $employee->password = Hash::make($request->password);
-        $employee->save();
+
+        $employee = Employee::create([
+            'name'      => $request->name,
+            'email'     => $request->email,
+            'phone'     => $request->phone,
+            'position'  => $request->position,
+            'salary'    => $request->salary,
+            'hire_date' => $request->hire_date,
+            'status'    => $request->status,
+            'notes'     => $request->notes,
+            'password'  => Hash::make($request->password),
+        ]);
+
         $employee->roles()->attach($request->roles);
 
         return redirect()->route('Pages.employee.index')->with('success', 'Employee created successfully.');
@@ -62,8 +59,6 @@ class EmployeesController extends Controller
     public function edit($id)
     {
         $employee = Employee::findOrFail($id);
-        $this->authorize('update', $employee);
-
 
         return view('Pages.Employees.edit', [
             'employee' => $employee,
@@ -75,11 +70,10 @@ class EmployeesController extends Controller
     public function update(Request $request, $id)
     {
         $employee = Employee::findOrFail($id);
-        
 
-       $request->validate([
+        $request->validate([
             'name'      => 'string|max:255',
-            'email'     => 'email|unique:employees,email,'.$id,
+            'email'     => 'email|unique:employees,email,' . $id,
             'phone'     => 'string|max:20',
             'position'  => 'string|max:100',
             'salary'    => 'numeric|min:0',
@@ -89,28 +83,30 @@ class EmployeesController extends Controller
             'password'  => 'nullable|string|min:8',
             'roles'     => 'array',
         ]);
-        $employee->name = $request->name ?? $employee->name;
-        $employee->email = $request->email ?? $employee->email;
-        $employee->phone = $request->phone ?? $employee->phone;
-        $employee->position = $request->position ?? $employee->position;
-        $employee->salary = $request->salary ?? $employee->salary;
-        $employee->hire_date = $request->hire_date ?? $employee->hire_date;
-        $employee->status = $request->status ?? $employee->status;
-        $employee->notes = $request->notes ?? $employee->notes;
+
+        $employee->update($request->only([
+            'name',
+            'email',
+            'phone',
+            'position',
+            'salary',
+            'hire_date',
+            'status',
+            'notes'
+        ]));
 
         if ($request->filled('password')) {
-            $employee->password = Hash::make($request->password);
+            $employee->update(['password' => Hash::make($request->password)]);
         }
 
-        $employee->save();
         $employee->roles()->sync($request->roles);
 
         return redirect()->route('Pages.employee.index')->with('success', 'Employee updated successfully.');
     }
+
     public function show($id)
     {
         $employee = Employee::with('roles')->findOrFail($id);
-        $this->authorize('view', $employee);
 
         return view('Pages.Employees.show', compact('employee'));
     }
@@ -118,8 +114,7 @@ class EmployeesController extends Controller
     public function destroy($id)
     {
         $employee = Employee::findOrFail($id);
-        // $this->authorize('delete', $employee);
-        
+
         $employee->delete();
         return redirect()->route('Pages.employee.index')->with('success', 'Employee deleted successfully.');
     }

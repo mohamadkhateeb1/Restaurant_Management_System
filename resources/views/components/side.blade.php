@@ -1,18 +1,13 @@
 <aside class="main-sidebar elevation-4">
-
     <a href="{{ route('Pages.dashboard') }}" class="brand-link text-center">
-        <span class="brand-text font-weight-bold">
-            <i class="fas fa-utensils"></i> SRMS
-        </span>
+        <span class="brand-text font-weight-bold"><i class="fas fa-utensils"></i> SRMS</span>
     </a>
-
     <div class="sidebar">
         <nav class="mt-3">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
-
                 @foreach ($sideItems as $item)
-                    {{-- فحص الصلاحية --}}
-                    @if (is_null($item['ability']) || (auth()->check() && auth()->user()->hasAbility($item['ability'])))
+                    {{-- التحقق النهائي داخل الـ Blade --}}
+                    @if (is_null($item['gate']) || Gate::allows($item['gate']))
                         <li class="nav-item">
                             <a href="{{ route($item['route']) }}"
                                 class="nav-link {{ request()->is($item['active_check']) ? 'active' : '' }}">
@@ -33,7 +28,6 @@
                         </button>
                     </form>
                 </li>
-
             </ul>
         </nav>
     </div>

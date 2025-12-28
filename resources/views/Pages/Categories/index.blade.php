@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
     <div class="container mt-5" dir="rtl">
         <div class="row align-items-center mb-5">
@@ -9,7 +8,6 @@
             </div>
             <div class="col-md-6 text-left mt-4 mt-md-0">
                 <div class="d-flex gap-2 justify-content-start justify-content-md-end">
-
                     @if ($categories->count() > 0)
                         <form action="{{ route('Pages.categories.bulkDestroy') }}" method="POST"
                             onsubmit="return confirm('🚨 تنبيه: مسح كافة الأقسام سيؤدي لإزالة جميع سجلات المخزن والمواد الخام المرتبطة بها. هل أنت متأكد؟')">
@@ -19,19 +17,16 @@
                             @foreach ($categories as $cat)
                                 <input type="hidden" name="ids[]" value="{{ $cat->id }}">
                             @endforeach
-
                             <button type="submit"
                                 class="btn btn-outline-danger shadow-sm px-4 rounded-pill transition-all">
                                 <i class="fas fa-trash-sweep me-2"></i> @lang('Delete All Categories')
                             </button>
                         </form>
                     @endif
-                    @can('create', App\Models\CategoriesRestaurant::class)
                     <a href="{{ route('Pages.categories.create') }}"
                         class="btn btn-primary shadow-sm px-4 rounded-pill transition-all hover-lift">
                         <i class="fas fa-plus-circle me-2"></i> @lang('Add New Category')
                     </a>
-                    @endcan
                 </div>
             </div>
         </div>
@@ -94,15 +89,10 @@
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center gap-2">
-                                        @can('view', App\Models\CategoriesRestaurant::class)
                                         <a href="{{ route('Pages.categories.show', $category->id) }}"
                                             class="btn btn-icon btn-soft-primary"><i class="fas fa-eye"></i></a>
-                                        @endcan
-                                        @can('update', App\Models\CategoriesRestaurant::class)
                                         <a href="{{ route('Pages.categories.edit', $category->id) }}"
                                             class="btn btn-icon btn-soft-warning"><i class="fas fa-edit"></i></a>
-                                        @endcan
-                                        @can('delete', App\Models\CategoriesRestaurant::class)
                                         <form action="{{ route('Pages.categories.destroy', $category->id) }}"
                                             method="POST" class="d-inline"
                                             onsubmit="return confirm('هل أنت متأكد من الحذف؟')">
@@ -110,7 +100,6 @@
                                             <button type="submit" class="btn btn-icon btn-soft-danger"><i
                                                     class="fas fa-trash"></i></button>
                                         </form>
-                                        @endcan
                                     </div>
                                 </td>
                             </tr>

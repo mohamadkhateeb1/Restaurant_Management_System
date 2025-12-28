@@ -1,8 +1,6 @@
 @extends('layouts.app')
-
 @section('content')
     <div class="container py-5 px-4" dir="rtl">
-        {{-- هيدر الصفحة المطور --}}
         <div class="row mb-5 align-items-center animate-fade-in">
             <div class="col-md-7 text-right">
                 <div class="d-flex align-items-center mb-2 justify-content-start">
@@ -11,16 +9,12 @@
                 </div>
                 <h2 class="fw-black text-white display-5 mb-0">المخزن <span class="text-glow">المركزي</span></h2>
             </div>
-            @can('create', App\Models\Inventory::class)
             <div class="col-md-5 d-flex justify-content-md-end gap-3 mt-4 mt-md-0">
                 <a href="{{ route('Pages.inventory.create') }}" class="btn btn-neon-glow rounded-pill px-4 fw-bold">
                     <i class="fas fa-plus-circle me-2"></i> إضافة مادة جديدة
                 </a>
             </div>
-            @endcan
         </div>
-
-        {{-- بار الفلترة المظلم --}}
         <div class="row mb-4 animate-slide-down">
             <div class="col-12">
                 <form id="filterForm" action="{{ route('Pages.inventory.index') }}" method="GET"
@@ -59,8 +53,6 @@
         </div>
 
         <x-flash_message />
-
-        {{-- قائمة المخزن (نمط البطاقات مع دعم الصور وعرض SKU) --}}
         <div class="inventory-list-container animate-slide-up">
             <div class="list-header d-none d-lg-grid">
                 <div class="header-item text-right pr-5">تعريف المادة</div>
@@ -138,18 +130,14 @@
                             <div class="btn-group-premium">
                                 <a href="{{ route('Pages.inventory.show', $item->id) }}" class="p-btn view"
                                     title="مشاهدة"><i class="fas fa-eye"></i></a>
-                                    @can('update', App\Models\Inventory::class)
                                 <a href="{{ route('Pages.inventory.edit', $item->id) }}" class="p-btn edit"
                                     title="تعديل"><i class="fas fa-edit"></i></a>
-                                    @endcan
-                                    @can('delete', App\Models\Inventory::class)
                                 <form action="{{ route('Pages.inventory.destroy', $item->id) }}" method="POST"
                                     class="d-inline">
                                     @csrf @method('DELETE')
                                     <button class="p-btn delete" onclick="return confirm('حذف المادة؟')"><i
                                             class="fas fa-trash"></i></button>
                                 </form>
-                                    @endcan
                             </div>
                         </div>
                     </div>

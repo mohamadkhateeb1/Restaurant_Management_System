@@ -28,7 +28,6 @@ class Invoice extends Model
         return $this->belongsTo(TakeAwaysRestaurant::class, 'takeaway_order_id');
     }
 
-    // دالة مساعدة للحصول على الطلب المرتبط بالفاتورة بغض النظر عن نوعه
     public function getRelatedOrderAttribute()
     {
         return $this->dineInOrder ?? $this->takeAwayOrder;

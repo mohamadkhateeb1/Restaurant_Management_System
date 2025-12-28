@@ -11,7 +11,6 @@
             <form method="POST" action="{{ route('Pages.categories.store') }}" enctype="multipart/form-data">
                 @csrf
                 
-                {{-- تضمين ملف الحقول المشترك --}}
                 @include('Pages.Categories._form')
 
                 <div class="mt-4 d-flex gap-2">

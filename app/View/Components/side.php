@@ -2,8 +2,10 @@
 
 namespace App\View\Components;
 
+use Closure;
+use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class side extends Component
 {
@@ -14,27 +16,21 @@ class side extends Component
         $this->sideItems = $this->prepareItems(config('side'));
     }
 
+
+    public function render(): View|Closure|string
+    {
+        return view('components.side');
+    }
+
+
     protected function prepareItems($items)
     {
-        /** @var \App\Models\Employee $user */
-        // جلب الموظف المسجل دخوله حالياً
-        $user = Auth::guard('employee')->user();
-        
-        if (!$user) return [];
-
-        return array_filter($items, function ($item) use ($user) {
-            // إذا لم تكن هناك صلاحية مطلوبة (مثل Dashboard)، يظهر العنصر
-            if (!isset($item['ability']) || $item['ability'] === null) {
+        return array_filter($items, function ($item) {
+            if (!isset($item['gate']) || is_null($item['gate'])) {
                 return true;
             }
 
-            // لارافل سيتوجه تلقائياً للـ Policy الصحيحة بناءً على الـ Model الممرر
-            return $user->can($item['ability'], $item['model'] ?? null);
+            return Gate::allows($item['gate']);
         });
-    }
-
-    public function render()
-    {
-        return view('components.side');
     }
 }

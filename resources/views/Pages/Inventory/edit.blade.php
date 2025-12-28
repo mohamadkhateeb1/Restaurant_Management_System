@@ -1,13 +1,9 @@
 @extends('layouts.app')
-
 @section('content')
     <div class="container py-5" dir="rtl">
         <div class="row justify-content-center">
             <div class="col-lg-10 col-xl-9">
-                {{-- بطاقة التعديل بتصميم Dark Carbon --}}
                 <div class="card border-0 shadow-2xl rounded-5 overflow-hidden animate-slide-up" style="background: #0d0f11;">
-
-                    {{-- هيدر الكارد المطور ليشمل حالة الربط بالمنيو --}}
                     <div class="card-header border-0 py-4 px-4 d-flex justify-content-between align-items-center"
                         style="background: linear-gradient(135deg, #16191c 0%, #000000 100%); border-bottom: 1px solid rgba(255,255,255,0.05) !important;">
                         <div>
@@ -16,8 +12,6 @@
                             </h4>
                             <div class="d-flex align-items-center gap-2 mt-2">
                                 <span class="sku-tag-dark">REF: {{ $item->sku }}</span>
-
-                                {{-- شارة توضح نوع المادة --}}
                                 @if ($item->item_type == 'menu_item')
                                     <span
                                         class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3">
@@ -35,9 +29,7 @@
                             <i class="fas fa-times"></i>
                         </a>
                     </div>
-
                     <div class="card-body p-4 p-md-5">
-                        {{-- عرض تنبيه في حال كانت المادة تؤثر على المنيو --}}
                         @if ($item->item_type == 'menu_item')
                             <div class="alert alert-sync-warning border-0 rounded-4 shadow-sm mb-5 d-flex align-items-center"
                                 role="alert">
@@ -49,20 +41,15 @@
                                 </div>
                             </div>
                         @endif
-
-                        {{-- تفعيل enctype لرفع الصور --}}
                         <form action="{{ route('Pages.inventory.update', $item->id) }}" method="POST"
                             enctype="multipart/form-data" class="premium-form">
                             @csrf
                             @method('PUT')
-
                             <div class="form-section-wrapper">
                                 <div class="section-header-tag mb-4">
                                     <i class="fas fa-sliders-h me-2"></i> تحديث البيانات الفنية
                                 </div>
-
                                 <div class="section-content-box p-4 rounded-4 shadow-inner">
-                                    {{-- استدعاء ملف الحقول المشترك --}}
                                     @include('Pages.Inventory._form')
                                 </div>
                             </div>
@@ -109,7 +96,6 @@
             border: 1px solid rgba(255, 255, 255, 0.03);
         }
 
-        /* الهيدر والعناصر */
         .sku-tag-dark {
             background: #000;
             color: #58a6ff;
@@ -140,7 +126,6 @@
             box-shadow: 0 0 15px rgba(255, 62, 62, 0.4);
         }
 
-        /* التنبيه */
         .alert-sync-warning {
             background: rgba(210, 153, 34, 0.08);
             color: #8b949e;
@@ -160,7 +145,6 @@
             border: 1px solid rgba(210, 153, 34, 0.1);
         }
 
-        /* الأزرار */
         .btn-warning-neon {
             background: #f59e0b;
             border: none;
@@ -187,7 +171,6 @@
             border-color: #fff;
         }
 
-        /* المزامنة مع الحقول */
         .premium-form .form-control-dark,
         .premium-form .form-select-dark {
             background-color: #1a1d21 !important;

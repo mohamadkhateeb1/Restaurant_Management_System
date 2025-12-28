@@ -4,13 +4,23 @@ namespace App\Policies;
 
 use App\Models\Employee;
 use App\Models\CategoriesRestaurant;
-use Illuminate\Auth\Access\HandlesAuthorization;
 
-class CategoriesRestaurantPolicy
+class CategoryPolicy
 {
-    use HandlesAuthorization;
+
+    public function before(Employee $employee, $ability)
+    {
+        if ($employee->super_admin) {
+            return true;
+        }
+    }
 
     public function viewAny(Employee $employee)
+    {
+        return $employee->hasAbility('categories.view');
+    }
+
+    public function view(Employee $employee, CategoriesRestaurant $category)
     {
         return $employee->hasAbility('categories.view');
     }

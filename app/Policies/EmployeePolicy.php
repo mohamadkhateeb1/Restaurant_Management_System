@@ -6,49 +6,44 @@ use App\Models\Employee;
 
 class EmployeePolicy
 {
-      // قبل أي تحقق من القدرة
-    public function before($user)
+    /**
+     * التحقق للسوبر أدمن قبل أي عملية
+     */
+    public function before(Employee $user, $ability)
     {
         if ($user->super_admin) {
             return true;
         }
     }
 
-    public function viewAny(Employee $employee): bool
+    public function viewAny(Employee $user)
     {
-        return $employee->hasAbility('employee.view');
+        return $user->hasAbility('employee.view');
     }
 
-
-    public function view(Employee $employee, Employee $emp): bool
+    public function view(Employee $user, Employee $employee)
     {
-        return $employee->hasAbility('employee.view');
+        return $user->hasAbility('employee.show');
     }
 
-    public function create(Employee $employee): bool
+    public function create(Employee $user)
     {
-        return $employee->hasAbility('employee.create');
+        return $user->hasAbility('employee.create');
     }
 
-
-    public function update(Employee $employee, Employee $emp): bool
+    public function update(Employee $user, Employee $employee)
     {
-        return $employee->hasAbility('employee.edit');
+        if ($employee->super_admin && !$user->super_admin) {
+            return false;
+        }
+        return $user->hasAbility('employee.update');
     }
 
-  
-    public function delete(Employee $employee, Employee $emp): bool
+    public function delete(Employee $user, Employee $employee)
     {
-        return $employee->hasAbility('employee.delete');
-    }
-
-    public function restore(Employee $employee, Employee $emp): bool
-    {
-        return false;
-    }
-
-    public function forceDelete(Employee $employee, Employee $emp): bool
-    {
-        return false;
+        if ($user->id === $employee->id || $employee->super_admin) {
+            return false;
+        }
+        return $user->hasAbility('employee.delete');
     }
 }
