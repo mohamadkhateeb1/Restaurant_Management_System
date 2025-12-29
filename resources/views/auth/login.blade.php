@@ -65,12 +65,6 @@
                     تسجيل الدخول
                 </button>
 
-                @if (Route::has('register'))
-                    <a class="w-full text-center px-6 py-2 border border-yellow-600 rounded-lg text-yellow-400 hover:bg-yellow-900/20 transition duration-150"
-                        href="{{ route('register') }}">
-                        تسجيل حساب جديد
-                    </a>
-                @endif
             </div>
 
         </form>

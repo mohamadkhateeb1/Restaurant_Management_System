@@ -23,15 +23,15 @@ class DashboardController extends Controller
 
         $openTablesCount = DineInOrderRestaurant::where('status', '!=', 'paid')->count();
         $preparingOrders = DineInOrderRestaurant::where('status', 'preparing')->count() +
-            TakeAwaysRestaurant::where('status', 'preparing')->count();
+            TakeAwaysRestaurant::where('status', 'preparing')->count();// هون بجيب عدد الطلبات الجاهزة
 
         $tablesMap = TablesRestaurant::select('table_number', 'status')->get();
 
         $salesData = Invoice::select(
-            DB::raw('DATE(created_at) as date'),
-            DB::raw('SUM(amount_paid) as total')
+            DB::raw('DATE(created_at) as date'), // هون بجيب التاريخ بس بدون الوقت
+            DB::raw('SUM(amount_paid) as total') // هون بقوم بجمع المبيعات
         )
-            ->where('created_at', '>=', now()->subDays(6))
+            ->where('created_at', '>=', now()->subDays(6)) 
             ->groupBy('date')->orderBy('date')->get();
 
         $dineInCount = Invoice::whereNotNull('dine_in_order_id')->count();
@@ -47,6 +47,8 @@ class DashboardController extends Controller
                 $join->on('order_items_restaurants.take_away_order_id', '=', 'invoices.takeaway_order_id')
                     ->orOn('order_items_restaurants.dine_in_order_id', '=', 'invoices.dine_in_order_id');
             })
+            
+
             ->whereNotNull('invoices.id')
             ->select('items_restaurants.item_name', DB::raw('SUM(order_items_restaurants.quantity) as total'))
             ->groupBy('items_restaurants.id', 'items_restaurants.item_name')

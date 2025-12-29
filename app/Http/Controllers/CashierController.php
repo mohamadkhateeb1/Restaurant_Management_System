@@ -21,14 +21,14 @@ class CashierController extends Controller
     {
         $this->authorize('viewAny', Cachier::class);
         $pendingDineIn = DineInOrderRestaurant::where('status', 'ready')
-            ->with(['table', 'orderItems.item'])
+            ->with(['table', 'orderItems.item']) 
             ->get();
         return view('Pages.Cashier.index', compact('pendingDineIn'));
     }
-
+    // هدا عم استعمله لدفع الفاتورة
     public function payDineIn(Request $request)
     {
-
+        // transaction: هي يعني كل العمليات اللي جواها لازم تتم كلها لو واحدة فشلت كله يرجع زي ما كان
         return DB::transaction(function () use ($request) {
             $order = DineInOrderRestaurant::with(['orderItems.item.inventory', 'table'])->findOrFail($request->order_id);
 
@@ -36,9 +36,9 @@ class CashierController extends Controller
                 $item = $orderItem->item;
                 if ($item && $item->inventory) {
                     $item->inventory->decrement('quantity', $orderItem->quantity);
-
+                    // هون بسجل العملية الي قمت فيها
                     InventoryTransaction::create([
-                        'inventory_id' => $item->inventory->id,
+                        'inventory_id' => $item->inventory->id, 
                         'employee_id'  => Auth::id(),
                         'type'         => 'out',
                         'quantity'     => $orderItem->quantity,
@@ -46,7 +46,7 @@ class CashierController extends Controller
                     ]);
                 }
             }
-
+            // هون بعمل الفاتورة
             Invoice::create([
                 'invoice_number'    => 'INV-D-' . time() . rand(10, 99),
                 'dine_in_order_id'  => $order->id,
@@ -64,11 +64,9 @@ class CashierController extends Controller
         });
     }
 
-
+    // عرض صفحة تسجيل طلب سفري
     public function create(Request $request)
     {
-
-
         $categories = CategoriesRestaurant::where('status', 'active')->get();
         $query = ItemsRestaurant::where('status', 'available');
 
@@ -77,8 +75,8 @@ class CashierController extends Controller
         }
 
         $items = $query->get();
-        $cart = session()->get('pos_cart', []);
-
+        $cart = session()->get('pos_cart', []);// جلب سلة المشتريات من الجلسة
+        // هون عم بحسب المجموع الكلي للسلة
         $total = array_reduce($cart, function ($carry, $item) {
             return $carry + ($item['price'] * $item['qty']);
         }, 0);
@@ -86,10 +84,9 @@ class CashierController extends Controller
         return view('Pages.Cashier.create', compact('items', 'categories', 'cart', 'total'));
     }
 
-
+    
     public function addToSessionCart(Request $request)
     {
-
         $id = $request->id;
         $dbItem = ItemsRestaurant::findOrFail($id);
         $cart = session()->get('pos_cart', []);
@@ -104,11 +101,9 @@ class CashierController extends Controller
         return back()->with('success', 'تم إضافة ' . $dbItem->item_name);
     }
 
-
+    // حفظ طلب سفري
     public function storeTakeaway(Request $request)
     {
-
-
         $cart = session()->get('pos_cart', []);
         if (empty($cart)) return back()->with('error', 'السلة فارغة');
 
@@ -122,6 +117,7 @@ class CashierController extends Controller
             ]);
 
             $total = 0;
+            // هان عم بضيف كل صنف من السلة لجدول الفاتورة
             foreach ($cart as $itemInCart) {
                 OrderItemsRestaurant::create([
                     'take_away_order_id' => $order->id,
@@ -155,7 +151,7 @@ class CashierController extends Controller
                 'payment_status'    => 'paid',
             ]);
 
-            session()->forget('pos_cart');
+            session()->forget('pos_cart');// هون عم فرغ السلة بعد حفظ الطلب
             return redirect()->route('Pages.cashier.index')->with('success', 'تم تسجيل طلب السفري بنجاح');
         });
     }
@@ -170,6 +166,7 @@ class CashierController extends Controller
         if ($request->filled('inv_type')) {
             if ($request->inv_type == 'dine_in') {
                 $query->whereNotNull('dine_in_order_id');
+                
             } elseif ($request->inv_type == 'takeaway') {
                 $query->whereNotNull('takeaway_order_id');
             }
@@ -179,7 +176,7 @@ class CashierController extends Controller
 
         return view('Pages.Cashier.invoice', compact('invoices'));
     }
-
+    
     public function showInvoice($id)
     {
 
@@ -205,17 +202,15 @@ class CashierController extends Controller
         session()->forget('pos_cart');
         return back()->with('info', 'تم تفريغ السلة');
     }
-
+    
     public function undoLastTakeaway()
     {
-
-
         return DB::transaction(function () {
             $lastTakeawayInvoice = Invoice::whereNotNull('takeaway_order_id')
                 ->with(['takeawayOrder.orderItems.item.inventory'])
                 ->latest()
                 ->first();
-
+               
             if (!$lastTakeawayInvoice) return back()->with('error', 'لا توجد فواتير!');
 
             $order = $lastTakeawayInvoice->takeawayOrder;

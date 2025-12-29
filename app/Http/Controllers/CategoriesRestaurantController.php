@@ -18,6 +18,7 @@ class CategoriesRestaurantController extends Controller
             ->when($request->name, function ($q) use ($request) {
                 return $q->where('name', 'LIKE', "%{$request->name}%");
             })
+
             ->when($request->status, function ($q) use ($request) {
                 return $q->where('status', $request->status);
             })
@@ -40,7 +41,6 @@ class CategoriesRestaurantController extends Controller
 
     public function store(Request $request)
     {
-
         $request->validate([
             'name'             => 'required|string|max:255|unique:categories_restaurants,name',
             'status'           => 'required|in:active,inactive',
@@ -72,10 +72,7 @@ class CategoriesRestaurantController extends Controller
     public function show($id)
     {
         $category = CategoriesRestaurant::with(['items.inventory'])->findOrFail($id);
-
-        // التحقق من صلاحية عرض تفاصيل قسم محدد
         $this->authorize('view', $category);
-
         return view('Pages.Categories.show', compact('category'));
     }
 
@@ -83,7 +80,6 @@ class CategoriesRestaurantController extends Controller
     {
         $category = CategoriesRestaurant::findOrFail($id);
 
-        // التحقق من صلاحية الوصول لصفحة التعديل
         $this->authorize('update', $category);
 
         return view('Pages.Categories.edit', compact('category'));
