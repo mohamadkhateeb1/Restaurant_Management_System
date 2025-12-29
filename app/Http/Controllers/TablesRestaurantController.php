@@ -10,7 +10,7 @@ class TablesRestaurantController extends Controller
 {
     public function index(Request $request)
     {
-        $this->authorize('viewAny', TablesRestaurant::class);
+        $this->authorize('viewAny', TablesRestaurant::class);// صلاحية المشاهدة عن طريق ال policy
         $query = TablesRestaurant::query();
         $location = $request->query('location');
         $status = $request->query('status');
@@ -37,7 +37,7 @@ class TablesRestaurantController extends Controller
     {
         $request->validate([
             'table_number' => 'required|unique:tables_restaurants,table_number',
-            'seating_capacity' => 'required|integer|min:1',
+            'seating_capacity' => 'required|integer|min:1', 
             'location' => 'nullable|string'
         ]);
         TablesRestaurant::create([

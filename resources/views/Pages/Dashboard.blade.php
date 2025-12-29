@@ -231,11 +231,8 @@
             <div class="col-lg-8 mb-4">
                 <div class="card glass-panel p-4 h-100">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h5 class="text-white fw-bold m-0"><i
-                                class="fas fa-chart-line text-neon-blue me-3"></i>@lang('Sales Growth')</h5>
-                        <span class="badge bg-dark text-neon-blue border border-info border-opacity-25 px-3 py-2 small">
-                            @lang('Last 7 Days')
-                        </span>
+                        <h5 class="text-white fw-bold m-0"><i class="fas fa-chart-line text-neon-blue me-3"></i>@lang('Sales Growth')</h5>
+                        <span class="small text-white-50 fw-bold">@lang('Last 7 Days')</span>
                     </div>
                     <div class="chart-container">
                         <canvas id="salesChart"></canvas>

@@ -16,7 +16,7 @@
     "Top Selling Items": "الأصناف الأكثر مبيعاً",
     "Orders Distribution": "توزيع الطلبات",
     "Restaurant Management": "إدارة المطعم",
-    "Sales Growth":"نمو المبيعات الاسبوعي",
+    "Sales Growth":"نمو المبيعات",
     "Immediate hall occupancy":"إشغال الصالة الفوري",
     "Employee": "موظف",
     "Employees": "الموظفين",
@@ -142,8 +142,14 @@
     "Inventory Reports": "تقارير المخزون",
     "All rights reserved": "جميع الحقوق محفوظة",
     "Restaurant Management System. &copy; {{ date('Y') }}": "نظام إدارة المطاعم المتكامل SRMS &copy; {{ date('Y') }}",
-    "Last 7 Days": "آخر 7 أيام",
+    "Last 7 Days": "نظرة عاملة على المبيعات",
     "Management and Supervisors": "الإدارة والمشرفين",
     "Online": "متصل",
-    "Welcome back": "مرحباً بك"
+    "Welcome back": "مرحباً بك",
+    " Update Role Entity": "تحديث كيان الدور",
+    "Modification of Permissions Matrix": "تعديل مصفوفة الصلاحيات",
+    "Note: Updating this role will immediately affect all employees assigned to it.": "ملاحظة: تحديث هذا الدور سيؤثر فوراً على جميع الموظفين المعينين له.",
+    "Update & Sync Changes": "تحديث ومزامنة التغييرات",
+    "Mode: Edit": "الوضع: تعديل",
+    "Hire Date": "تاريخ التوظيف"
 }

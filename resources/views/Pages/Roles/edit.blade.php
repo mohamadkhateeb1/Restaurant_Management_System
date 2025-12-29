@@ -12,7 +12,7 @@
                 <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded-lg border">
                     <div>
                         <h4 class="mb-0 font-weight-bold text-dark">
-                            <i class="fas fa-user-edit text-warning mr-2"></i> Update Role Entity
+                            <i class="fas fa-user-edit text-warning mr-2"></i>@lang(' Update Role Entity')
                         </h4>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb bg-transparent p-0 m-0 small">
@@ -25,11 +25,11 @@
                     <div class="d-flex gap-2">
                         <a href="{{ route('Pages.roles.index') }}"
                             class="btn btn-light border px-4 py-2 font-weight-bold mr-2 transition-all">
-                            <i class="fas fa-arrow-left mr-1"></i> Back
+                            <i class="fas fa-arrow-left mr-1"></i>@lang('Back to Roles List')
                         </a>
                         <button type="submit"
                             class="btn btn-warning text-dark px-5 py-2 font-weight-bold shadow-sm transition-all btn-glow-warning">
-                            <i class="fas fa-sync-alt mr-1"></i> Update & Sync Changes
+                            <i class="fas fa-sync-alt mr-1"></i>@lang('Update & Sync Changes')
                         </button>
                     </div>
                 </div>
@@ -57,8 +57,8 @@
                     <div class="card shadow-lg border-0 rounded-xl overflow-hidden">
                         <div class="card-header border-0 py-4 bg-white d-flex justify-content-between align-items-center">
                             <h5 class="mb-0 font-weight-bold text-muted text-uppercase small" style="letter-spacing: 2px;">
-                                <span class="badge badge-warning-soft mr-2">Mode: Edit</span>
-                                Modification of Permissions Matrix
+                                <span class="badge badge-warning-soft mr-2">@lang('Mode: Edit')</span>
+                                @lang('Modification of Permissions Matrix')
                             </h5>
                             <div class="small text-muted italic">
                                 System ID: <span class="font-weight-bold text-dark">#{{ $role->id }}</span>
@@ -70,7 +70,7 @@
                         </div>
 
                         <div class="card-footer bg-white py-4 border-0 text-center text-muted small border-top">
-                            Note: Updating this role will immediately affect all employees assigned to it.
+                           @lang('Note: Updating this role will immediately affect all employees assigned to it.')
                         </div>
                     </div>
                 </div>

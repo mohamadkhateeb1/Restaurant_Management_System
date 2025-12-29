@@ -34,12 +34,16 @@ class WaiterController extends Controller
                 ->whereIn('status', ['pending', 'preparing', 'ready'])
                 ->with('orderItems.item')
                 ->first();
-            $draft = session()->get('waiter_draft_' . $request->table_id, []);
+            $draft = session()->get('waiter_draft_' . $request->table_id, []); // جلب السلة من الجلسة بناءً على معرف الطاولة
         }
         return view('Pages.Waiter.index', compact('tables', 'categories', 'items', 'selectedTable', 'currentOrder', 'draft'));
     }
+    // إضافة صنف إلى المسودة
     public function addToDraft(Request $request)
     {
+        if (!$request->filled('table_id')) {
+            return back()->with('danger', 'يجب اختيار طاولة أولاً قبل إضافة الأصناف');
+        }
         $request->validate([
             'table_id' => 'required',
             'item_id' => 'required|exists:items_restaurants,id'
@@ -58,8 +62,9 @@ class WaiterController extends Controller
             ];
         }
         session()->put('waiter_draft_' . $request->table_id, $cart);
-        return back()->with('success', 'تمت الإضافة للمسودة');
+        return back()->with('success', 'تمت الإضافة للطلب بنجاح');
     }
+
     public function storeOrder(Request $request)
     {
         $request->validate([
@@ -67,13 +72,14 @@ class WaiterController extends Controller
         ]);
         $draftItems = session()->get('waiter_draft_' . $request->table_id, []);
         if (empty($draftItems)) {
-            return back()->with('error', 'يجب إضافة أصناف للمسودة أولاً');
+            return back()->with('error', 'يجب إضافة أصناف للطلب أولاً');
         }
+
         return DB::transaction(function () use ($request, $draftItems) {
             $order = DineInOrderRestaurant::where('table_id', $request->table_id)
                 ->whereIn('status', ['pending', 'preparing', 'ready'])
                 ->first();
-            if (!$order) {
+            if (!$order) { // إذا لم يكن هناك طلب قائم للطاولة، نقوم بإنشاء طلب جديد
                 $order = DineInOrderRestaurant::create([
                     'table_id'     => $request->table_id,
                     'employee_id'  => Auth::id(), // يستخدم Guard الموظفين تلقائياً
@@ -83,12 +89,13 @@ class WaiterController extends Controller
                 ]);
                 TablesRestaurant::where('id', $request->table_id)->update(['status' => 'occupied']);
             }
+            // انشاء الطلب
             foreach ($draftItems as $item) {
                 OrderItemsRestaurant::create([
                     'dine_in_order_id' => $order->id,
                     'item_id'          => $item['id'],
                     'quantity'         => $item['quantity'],
-                    'price'            => $item['price'], // السعر الثابت وقت الطلب
+                    'price'            => $item['price'], 
                 ]);
             }
             $order->refreshTotalAmount();
@@ -114,7 +121,7 @@ class WaiterController extends Controller
             }
             session()->put('waiter_draft_' . $tableId, $cart);
         }
-        return back()->with('success', 'تم تحديث المسودة بنجاح');
+        return back()->with('success', 'تم تحديث الطلب بنجاح');
     }
     public function requestBill($id)
     {

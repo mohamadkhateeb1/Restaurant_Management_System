@@ -20,7 +20,6 @@
                         </button>
                     </form>
                 @endif
-
                 <a href="{{ route('Pages.Tables.create') }}" class="btn btn-info px-4 fw-bold shadow-sm">
                     <i class="fas fa-plus me-2"></i> @lang('Add New Table')
                 </a>

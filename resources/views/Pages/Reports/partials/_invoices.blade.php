@@ -53,33 +53,6 @@
     }
 </style>
 
-<div class="glass-card mb-4 d-print-none">
-    <form action="{{ route('Pages.reports.index') }}" method="GET" class="row g-3 align-items-end">
-        <input type="hidden" name="tab" value="invoices">
-
-        <div class="col-md-4">
-            <label class="text-gold small mb-2 fw-bold">نوع الخدمة</label>
-            <select name="inv_type" class="form-select bg-black text-white border-secondary rounded-pill shadow-none">
-                <option value="">جميع الفواتير</option>
-                <option value="dine_in" {{ request('inv_type') == 'dine_in' ? 'selected' : '' }}>خدمة صالة</option>
-                <option value="takeaway" {{ request('inv_type') == 'takeaway' ? 'selected' : '' }}>طلب سفري</option>
-            </select>
-        </div>
-
-        <div class="col-md-4">
-            <label class="text-gold small mb-2 fw-bold">تاريخ محدد</label>
-            <input type="date" name="inv_from" value="{{ request('inv_from') }}"
-                class="form-control bg-black text-white border-secondary rounded-pill shadow-none">
-        </div>
-
-        <div class="col-md-4">
-            <button type="submit" class="btn btn-gold w-100 rounded-pill fw-bold py-2">
-                <i class="fas fa-filter me-2"></i> تطبيق الفلترة
-            </button>
-        </div>
-    </form>
-</div>
-
 <div class="d-flex justify-content-between align-items-center mb-4 px-3 d-print-none">
     <h4 class="text-white fw-black mb-0">| سجل العمليات المالية</h4>
     <button onclick="exportOfficialReport()" class="btn btn-danger rounded-pill px-4 fw-bold shadow-lg">

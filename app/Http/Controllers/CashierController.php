@@ -25,18 +25,14 @@ class CashierController extends Controller
             ->get();
         return view('Pages.Cashier.index', compact('pendingDineIn'));
     }
-    // هدا عم استعمله لدفع الفاتورة
     public function payDineIn(Request $request)
     {
-        // transaction: هي يعني كل العمليات اللي جواها لازم تتم كلها لو واحدة فشلت كله يرجع زي ما كان
         return DB::transaction(function () use ($request) {
             $order = DineInOrderRestaurant::with(['orderItems.item.inventory', 'table'])->findOrFail($request->order_id);
-
             foreach ($order->orderItems as $orderItem) {
                 $item = $orderItem->item;
                 if ($item && $item->inventory) {
                     $item->inventory->decrement('quantity', $orderItem->quantity);
-                    // هون بسجل العملية الي قمت فيها
                     InventoryTransaction::create([
                         'inventory_id' => $item->inventory->id, 
                         'employee_id'  => Auth::id(),
@@ -46,7 +42,6 @@ class CashierController extends Controller
                     ]);
                 }
             }
-            // هون بعمل الفاتورة
             Invoice::create([
                 'invoice_number'    => 'INV-D-' . time() . rand(10, 99),
                 'dine_in_order_id'  => $order->id,
@@ -60,7 +55,7 @@ class CashierController extends Controller
                 $order->Table->update(['status' => 'available']);
             }
 
-            return back()->with('success', 'تم قبض فاتورة الطاولة بنجاح');
+            return redirect()->route('Pages.cashier.index')->with('success', 'تم قبض فاتورةواغلاق الطاولة بنجاح');
         });
     }
 

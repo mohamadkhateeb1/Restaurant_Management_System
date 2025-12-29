@@ -148,7 +148,7 @@
             </div>
         </div>
     </header>
-
+    <x-flash_message />
     <div class="container pb-5 d-print-none">
         <div class="row g-4">
             @forelse($pendingDineIn as $order)

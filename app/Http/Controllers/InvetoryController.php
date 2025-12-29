@@ -17,7 +17,7 @@ class InvetoryController extends Controller
     {
         $this->authorize('viewAny', Inventory::class);
         $categories = CategoriesRestaurant::all();
-        $query = Inventory::with(['category', 'item']);
+        $query = Inventory::with(['category', 'item']); 
 
         if ($request->filled('item_type')) {
             $query->where('item_type', $request->item_type);
@@ -44,8 +44,6 @@ class InvetoryController extends Controller
 
     public function edit($id)
     {
-
-
         $item = Inventory::findOrFail($id);
         $categories = CategoriesRestaurant::where('status', 'active')->get();
         return view('Pages.Inventory.edit', compact('item', 'categories'));
