@@ -202,13 +202,15 @@
             </div>
         </div>
 
-        {{-- CHARTS --}}
-        <div class="row g-3 mb-4">
-            <div class="col-lg-4">
-                <div class="glass-card p-4 h-100">
-                    <h5 class="fw-black text-gold mb-3">@lang('Orders Distribution')</h5>
-                    <div style="height:280px">
-                        <canvas id="ordersPieChart"></canvas>
+        <div class="row">
+            <div class="col-lg-8 mb-4">
+                <div class="card glass-panel p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="text-white fw-bold m-0"><i
+                                class="fas fa-chart-line text-neon-blue me-3"></i>@lang('Sales Growth')</h5>
+                        <span class="badge bg-dark text-neon-blue border border-info border-opacity-25 px-3 py-2 small">
+                            @lang('Last 7 Days')
+                        </span>
                     </div>
                 </div>
             </div>

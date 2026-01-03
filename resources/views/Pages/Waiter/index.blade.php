@@ -19,6 +19,7 @@
             --accent-blue: #00d2ff;
             --success-green: #2ecc71;
             --warning-orange: #f39c12;
+            --danger-red: #e74c3c;
         }
 
         body {
@@ -30,24 +31,49 @@
             margin: 0;
         }
 
-        .custom-scroll::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+        .flash-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            width: 90%;
+            max-width: 400px;
         }
 
-        .custom-scroll::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
+        .flash-container .alert, 
+        .royal-alert {
+            background: var(--card-bg) !important;
+            border: 1px solid var(--royal-gold) !important;
+            color: white !important;
+            border-radius: 12px !important;
+            padding: 12px 20px !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideDown 0.4s ease-out;
+            position: relative;
         }
 
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: var(--royal-gold);
-            border-radius: 10px;
+        .alert-success, .royal-alert-success {
+            border-right: 5px solid var(--success-green) !important;
         }
 
-        .custom-scroll {
-            scrollbar-width: thin;
-            scrollbar-color: var(--royal-gold) rgba(255, 255, 255, 0.05);
+        .alert-danger, .royal-alert-error {
+            border-right: 5px solid var(--danger-red) !important;
         }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
+        .custom-scroll::-webkit-scrollbar-thumb { background: var(--royal-gold); border-radius: 10px; }
+        .custom-scroll { scrollbar-width: thin; scrollbar-color: var(--royal-gold) rgba(255, 255, 255, 0.05); }
 
         .royal-header {
             background: rgba(28, 31, 34, 0.9);
@@ -67,17 +93,8 @@
             border: 1px solid var(--royal-gold);
         }
 
-        .pos-container {
-            display: flex;
-            height: calc(100vh - 70px);
-        }
-
-        .items-side {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
+        .pos-container { display: flex; height: calc(100vh - 70px); }
+        .items-side { flex-grow: 1; display: flex; flex-direction: column; height: 100%; }
 
         .tables-grid {
             height: 150px;
@@ -101,6 +118,7 @@
             width: 100px;
             margin-left: 10px;
             vertical-align: top;
+            color: white;
         }
 
         .table-card-new.active-table {
@@ -123,6 +141,7 @@
             width: 100%;
             text-align: right;
             transition: 0.2s;
+            color: white;
         }
 
         .product-item-btn:hover:not(.disabled) {
@@ -140,11 +159,7 @@
             padding: 20px;
         }
 
-        .bill-items-area {
-            flex-grow: 1;
-            overflow-y: auto;
-            margin-bottom: 15px;
-        }
+        .bill-items-area { flex-grow: 1; overflow-y: auto; margin-bottom: 15px; }
 
         .draft-item {
             background: rgba(212, 175, 55, 0.05);
@@ -171,16 +186,9 @@
             border: none;
         }
 
-        .btn-send {
-            background: var(--royal-gold);
-            color: #000;
-        }
-
-        .btn-bill {
-            background: transparent;
-            border: 1px solid var(--success-green);
-            color: var(--success-green);
-        }
+        .btn-send { background: var(--royal-gold); color: #000; }
+        .btn-bill { background: transparent; border: 1px solid var(--success-green); color: var(--success-green); }
+        .text-gold { color: var(--royal-gold); }
     </style>
 </head>
 
@@ -196,6 +204,18 @@
             <b class="text-white ms-1">{{ $selectedTable->table_number ?? '---' }}</b>
         </div>
     </header>
+
+    <div class="flash-container">
+        <x-flash_message />
+
+        @if (session('error'))
+            <div class="royal-alert royal-alert-error">
+                <span><i class="fas fa-exclamation-circle me-2 text-danger"></i> {{ session('error') }}</span>
+                <button type="button" class="btn-close btn-close-white ms-3" style="font-size: 0.7rem;"
+                    onclick="this.parentElement.remove()"></button>
+            </div>
+        @endif
+    </div>
 
     <div class="pos-container">
         <div class="items-side">
@@ -287,8 +307,7 @@
                         <div class="draft-item">
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="small fw-bold">{{ $details['name'] }}</span>
-                                <span
-                                    class="text-gold small">{{ number_format($details['price'] * $details['quantity']) }}</span>
+                                <span class="text-gold small">{{ number_format($details['price'] * $details['quantity']) }}</span>
                             </div>
                             <div class="d-flex align-items-center gap-2">
                                 <form action="{{ route('Pages.waiter.updateDraft') }}" method="POST"> @csrf
@@ -314,8 +333,7 @@
             <div class="bill-footer pt-3 border-top border-secondary">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <span class="text-muted small">المجموع الإجمالي</span>
-                    <span
-                        class="h5 fw-black text-gold mb-0">{{ number_format(($currentOrder->total_amount ?? 0) + $draftTotal) }}</span>
+                    <span class="h5 fw-black text-gold mb-0">{{ number_format(($currentOrder->total_amount ?? 0) + $draftTotal) }}</span>
                 </div>
 
                 @if (count($draft) > 0)
@@ -337,6 +355,19 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function autoHideAlerts() {
+            const alerts = document.querySelectorAll('.flash-container .alert, .royal-alert');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    alert.style.opacity = '0';
+                    alert.style.transition = '0.8s';
+                    setTimeout(() => alert.remove(), 800);
+                }, 4000);
+            });
+        }
+        
+        window.onload = autoHideAlerts;
+    </script>
 </body>
-
 </html>

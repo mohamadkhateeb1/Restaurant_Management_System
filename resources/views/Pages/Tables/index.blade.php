@@ -3,41 +3,31 @@
 @section('title', __('tables management'))
 
 @section('content')
-<div class="container-fluid py-4 text-white">
+    <div class="container-fluid py-4 text-white">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="h4 mb-0"><i class="fas fa-chair text-info me-2"></i>@lang('Tables Management')</h2>
+                <p class="text-muted small">@lang('Manage the restaurant tables')</p>
+            </div>
+            <div class="d-flex gap-2">
+                @if ($tables->count() > 0)
+                    <form action="{{ route('Pages.Tables.bulkDestroy') }}" method="POST"
+                        onsubmit="return confirm('تحذير: هل أنت متأكد من حذف جميع الطاولات المعروضة؟ لا يمكن التراجع عن هذا الإجراء.')">
+                        @csrf
+                        @method('DELETE')
+                        <input type="hidden" name="location" value="{{ request('location') }}">
+                        <input type="hidden" name="status" value="{{ request('status') }}">
+                        <button type="submit" class="btn btn-outline-danger px-4 fw-bold shadow-sm">
+                            <i class="fas fa-trash-sweep me-2"></i>@lang('Delete All Displayed Tables')
+                        </button>
+                    </form>
+                @endif
 
-    {{-- ===== HEADER ===== --}}
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="h4 mb-0">
-                <i class="fas fa-chair text-info me-2"></i>
-                {{ __('tables management') }}
-            </h2>
-            <p class="text-muted small">
-                {{ __('manage restaurant tables') }}
-            </p>
+                <a href="{{ route('Pages.Tables.create') }}" class="btn btn-info px-4 fw-bold shadow-sm">
+                    <i class="fas fa-plus me-2"></i> @lang('Add New Table')
+                </a>
+            </div>
         </div>
-
-        <div class="d-flex gap-2">
-            @if ($tables->count() > 0)
-                <form action="{{ route('Pages.Tables.bulkDestroy') }}" method="POST"
-                      onsubmit="return confirm('{{ __('confirm delete all tables') }}')">
-                    @csrf
-                    @method('DELETE')
-                    <input type="hidden" name="location" value="{{ request('location') }}">
-                    <input type="hidden" name="status" value="{{ request('status') }}">
-                    <button type="submit" class="btn btn-outline-danger px-4 fw-bold shadow-sm">
-                        <i class="fas fa-trash-sweep me-2"></i>
-                        {{ __('delete all tables') }}
-                    </button>
-                </form>
-            @endif
-
-            <a href="{{ route('Pages.Tables.create') }}" class="btn btn-info px-4 fw-bold shadow-sm">
-                <i class="fas fa-plus me-2"></i>
-                {{ __('add new table') }}
-            </a>
-        </div>
-    </div>
 
     <x-flash_message />
 
