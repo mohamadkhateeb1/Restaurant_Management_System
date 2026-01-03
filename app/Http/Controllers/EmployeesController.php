@@ -53,7 +53,6 @@ class EmployeesController extends Controller
         ]);
 
         $employee->roles()->attach($request->roles);
-
         return redirect()->route('Pages.employee.index')->with('success', 'Employee created successfully.');
     }
 
@@ -101,7 +100,6 @@ class EmployeesController extends Controller
         }
 
         $employee->roles()->sync($request->roles);
-
         return redirect()->route('Pages.employee.index')->with('success', 'Employee updated successfully.');
     }
 

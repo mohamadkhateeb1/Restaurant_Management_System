@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مركز التحصيل - SRMS</title>
+    <title>مركز التحصيل - RMS Premium</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -41,6 +41,18 @@
             padding: 8px 15px;
             border-radius: 10px;
             font-weight: 900;
+        }
+
+        .btn-logout {
+            border: 1px solid rgba(220, 53, 69, 0.5);
+            color: #dc3545;
+            transition: 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: #dc3545;
+            color: #white;
+            box-shadow: 0 0 15px rgba(220, 53, 69, 0.3);
         }
 
         .btn-preview {
@@ -90,33 +102,19 @@
 
             .modal.show .modal-body {
                 position: absolute !important;
-                left: 0 !important;
-                top: 0 !important;
-                width: 100% !important;
+                left: 0;
+                top: 0;
+                width: 100%;
                 background: white !important;
-                padding: 20px !important;
-                display: block !important;
-            }
-
-            .receipt-table {
-                width: 100% !important;
-                border-collapse: collapse !important;
-                border: 1px solid #000 !important;
             }
 
             .receipt-table th,
             .receipt-table td {
                 border: 1px solid #000 !important;
-                padding: 8px !important;
                 color: black !important;
-                background: white !important;
             }
 
-            .modal-footer,
-            .modal-header,
-            .btn,
-            .d-print-none,
-            .btn-close {
+            .d-print-none {
                 display: none !important;
             }
         }
@@ -136,7 +134,17 @@
 
     <header class="p-4 border-bottom border-secondary border-opacity-10 mb-5 d-print-none">
         <div class="container d-flex justify-content-between align-items-center">
-            <h2 class="fw-black text-neon-blue mb-0">مركز التحصيل المالي</h2>
+            <div class="d-flex align-items-center gap-4">
+                <h2 class="fw-black text-neon-blue mb-0">مركز التحصيل المالي</h2>
+
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-logout rounded-pill px-3 fw-bold btn-sm">
+                        <i class="fas fa-sign-out-alt me-1"></i> خروج
+                    </button>
+                </form>
+            </div>
+
             <div class="d-flex gap-2">
                 <form action="{{ route('Pages.cashier.undoTakeaway') }}" method="POST">
                     @csrf
@@ -181,13 +189,11 @@
                                 <button type="button" class="btn-close btn-close-white"
                                     data-bs-dismiss="modal"></button>
                             </div>
-
                             <div class="modal-body p-4 text-center" id="printArea{{ $order->id }}">
                                 <div class="receipt-header mb-3 border-bottom border-secondary border-dashed pb-2">
                                     <h4 class="fw-black text-info mb-1">فاتورة مبيعات</h4>
-                                    <p class="mb-0 fw-bold" style="color: white;">طاولة رقم:
-                                        {{ $order->table->table_number }}</p>
-                                    <small class="text-muted">SRMS - {{ date('Y-m-d H:i') }}</small>
+                                    <p class="mb-0 fw-bold">طاولة رقم: {{ $order->table->table_number }}</p>
+                                    <small class="text-muted">RMS - {{ date('Y-m-d H:i') }}</small>
                                 </div>
                                 <table class="receipt-table text-end small">
                                     <thead>
@@ -200,12 +206,10 @@
                                     <tbody>
                                         @foreach ($order->orderItems as $item)
                                             <tr>
-                                                <td style="color: white;">{{ $item->item->item_name }}</td>
-                                                <td class="text-center" style="color: white;">x{{ $item->quantity }}
-                                                </td>
+                                                <td>{{ $item->item->item_name }}</td>
+                                                <td class="text-center">x{{ $item->quantity }}</td>
                                                 <td class="text-start fw-bold" style="color: var(--neon-blue);">
-                                                    {{ number_format($item->price * $item->quantity) }}
-                                                </td>
+                                                    {{ number_format($item->price * $item->quantity) }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -220,15 +224,14 @@
                             </div>
                             <div class="modal-footer border-0 p-4 gap-2 justify-content-center d-print-none">
                                 <button type="button" class="btn btn-secondary rounded-pill px-3"
-                                    data-bs-dismiss="modal">تعديل</button>
-
+                                    data-bs-dismiss="modal">إلغاء</button>
                                 <button type="button" class="btn btn-danger rounded-pill px-3 fw-bold"
                                     onclick="downloadInvoicePDF('printArea{{ $order->id }}', 'فاتورة_طاولة_{{ $order->table->table_number }}')">
                                     <i class="fas fa-file-pdf me-2"></i> تصدير PDF
                                 </button>
                                 <button type="button" class="btn btn-info rounded-pill px-4 fw-bold shadow-sm"
                                     onclick="window.print()">
-                                    <i class="fas fa-print me-2"></i> طباعة الفاتورة
+                                    <i class="fas fa-print me-2"></i> طباعة
                                 </button>
                             </div>
                         </div>
@@ -236,7 +239,7 @@
                 </div>
             @empty
                 <div class="col-12 text-center py-5">
-                    <h3 class="text-muted">لا توجد فواتير نشطة </h3>
+                    <h3 class="text-muted">لا توجد فواتير نشطة حالياً</h3>
                 </div>
             @endforelse
         </div>
@@ -258,7 +261,6 @@
                 html2canvas: {
                     scale: 3,
                     useCORS: true,
-                    letterRendering: true,
                     backgroundColor: '#ffffff'
                 },
                 jsPDF: {
@@ -267,7 +269,6 @@
                     orientation: 'portrait'
                 }
             };
-            const originalClass = element.className;
             element.classList.add('pdf-export-mode');
             html2pdf().set(opt).from(element).save().then(() => {
                 element.classList.remove('pdf-export-mode');

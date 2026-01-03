@@ -66,9 +66,7 @@
                             <tr class="border-bottom border-secondary transition-all">
                                 <td class="px-4 py-3">
                                     <div class="d-flex align-items-center gap-3">
-                                        <img src="{{ $item->image ? asset('storage/' . $item->image) : asset('images/no-image.png') }}"
-                                            class="rounded shadow-sm border border-secondary"
-                                            style="width: 45px; height: 45px; object-fit: cover;">
+
                                         <span class="fw-bold">{{ $item->item_name }}</span>
                                     </div>
                                 </td>

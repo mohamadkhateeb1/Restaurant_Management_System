@@ -12,8 +12,7 @@
         <div class="row">
             <div class="col-md-4 mb-4">
                 <div class="card bg-dark border-secondary shadow-lg h-100 overflow-hidden" style="border-radius: 20px;">
-                    <img src="{{ $item->image ? asset('storage/' . $item->image) : asset('images/no-image.png') }}"
-                        class="img-fluid" style="height: 350px; object-fit: cover;">
+                   
                 </div>
             </div>
 

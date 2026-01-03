@@ -86,14 +86,7 @@
 
     <div class="col-12 mt-3 text-right">
         <label class="form-label fw-bold">صورة الطبق </label>
-        <input type="file" name="image" class="form-control bg-secondary text-white border-0 shadow-sm">
-        @if (isset($item) && $item->image)
-            <div class="mt-3">
-                <img src="{{ asset('storage/' . $item->image) }}" class="rounded shadow border border-secondary"
-                    style="width: 120px; height: 80px; object-fit: cover;">
-                <small class="d-block text-muted mt-1">المعاينة الحالية</small>
-            </div>
-        @endif
+
     </div>
 
     <div class="col-12 text-right">

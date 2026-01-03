@@ -46,7 +46,6 @@ class CategoriesRestaurantController extends Controller
             'status'           => 'required|in:active,inactive',
             'is_menu_category' => 'required|boolean',
             'description'      => 'nullable|string',
-            'image'            => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         try {
@@ -56,11 +55,6 @@ class CategoriesRestaurantController extends Controller
                 $category->description = $request->description;
                 $category->status = $request->status;
                 $category->is_menu_category = $request->is_menu_category;
-
-                if ($request->hasFile('image')) {
-                    $category->image = $request->file('image')->store('categories', 'public');
-                }
-
                 $category->save();
                 return redirect()->route('Pages.categories.index')->with('success', 'تم إضافة القسم بنجاح.');
             });
@@ -96,7 +90,6 @@ class CategoriesRestaurantController extends Controller
             'status'           => 'required|in:active,inactive',
             'is_menu_category' => 'required|boolean',
             'description'      => 'nullable|string',
-            'image'            => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         try {
@@ -105,12 +98,6 @@ class CategoriesRestaurantController extends Controller
                 $category->description = $request->description;
                 $category->status = $request->status;
                 $category->is_menu_category = $request->is_menu_category;
-
-                if ($request->hasFile('image')) {
-                    if ($category->image) Storage::disk('public')->delete($category->image);
-                    $category->image = $request->file('image')->store('categories', 'public');
-                }
-
                 $category->save();
                 return redirect()->route('Pages.categories.index')->with('success', 'تم التحديث بنجاح.');
             });
@@ -127,7 +114,7 @@ class CategoriesRestaurantController extends Controller
 
         try {
             return DB::transaction(function () use ($category) {
-                if ($category->image) Storage::disk('public')->delete($category->image);
+
                 $category->delete();
                 return redirect()->route('Pages.categories.index')->with('success', 'تم الحذف بنجاح.');
             });
@@ -146,9 +133,7 @@ class CategoriesRestaurantController extends Controller
         try {
             return DB::transaction(function () use ($ids) {
                 $categories = CategoriesRestaurant::whereIn('id', $ids)->get();
-                foreach ($categories as $category) {
-                    if ($category->image) Storage::disk('public')->delete($category->image);
-                }
+
                 CategoriesRestaurant::whereIn('id', $ids)->delete();
                 return redirect()->route('Pages.categories.index')->with('success', 'تم الحذف الجماعي بنجاح.');
             });

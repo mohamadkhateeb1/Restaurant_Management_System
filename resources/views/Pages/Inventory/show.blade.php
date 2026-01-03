@@ -1,279 +1,276 @@
 @extends('layouts.app')
 @section('content')
     <div class="container py-5 px-4" dir="rtl">
-        <div class="row mb-5 align-items-center animate-fade-in">
-            <div class="col-md-7 text-right">
-                <div class="d-flex align-items-center mb-2">
-                    <div class="header-indicator me-3"></div>
-                    <h6 class="text-neon-blue fw-bold mb-0 text-uppercase tracking-wider">@lang('Inventory Item Record Details')</h6>
+
+        {{-- HEADER --}}
+        <div class="row mb-5 align-items-center animate-fade">
+            <div class="col-md-7">
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <div class="header-indicator"></div>
+                    <h6 class="text-gold fw-bold mb-0 text-uppercase">@lang('Inventory Item Record Details')</h6>
                 </div>
-                <h2 class="fw-black text-white display-5 mb-0">{{ $item->name }}</h2>
+                <h2 class="fw-black text-white display-6">{{ $item->name }}</h2>
             </div>
+
             <div class="col-md-5 d-flex justify-content-md-end gap-3 mt-4 mt-md-0">
                 <a href="{{ route('Pages.inventory.index') }}" class="btn btn-dark-minimal rounded-pill px-4">
-                    <i class="fas fa-arrow-right me-2"></i>@lang('Back to Inventory List')
+                    <i class="fas fa-arrow-right me-2"></i> رجوع
                 </a>
-                <a href="{{ route('Pages.inventory.edit', $item->id) }}"
-                    class="btn btn-neon-blue rounded-pill px-4 fw-bold">
-                    <i class="fas fa-edit me-2"></i> @lang('Edit Inventory Item')
+                <a href="{{ route('Pages.inventory.edit', $item->id) }}" class="btn btn-gold rounded-pill px-4 fw-bold">
+                    <i class="fas fa-edit me-2"></i> تعديل
                 </a>
             </div>
         </div>
 
         <div class="row g-4">
-            <div class="col-lg-4 animate-slide-up">
-                <div class="card border-0 shadow-2xl rounded-5 overflow-hidden" style="background: #111315;">
-                    <div class="card-header border-0 py-3 text-center" style="background: rgba(255,255,255,0.02);">
-                        <span
-                            class="badge rounded-pill {{ $item->item_type == 'menu_item' ? 'bg-primary' : 'bg-secondary' }} px-3 py-2 small opacity-75">
+
+            {{-- LEFT CARD --}}
+            <div class="col-lg-4 animate-up">
+                <div class="card glass-card h-100">
+
+                    <div class="card-body text-center p-4">
+                        <span class="badge badge-type mb-3">
                             {{ $item->item_type == 'menu_item' ? 'طبق مبيعات' : 'مادة أساسية' }}
                         </span>
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="text-center mb-4">
-                            <div class="main-orb-wrapper mx-auto mb-3">
-                                @if ($item->item && $item->item->image)
-                                    <img src="{{ asset('storage/' . $item->item->image) }}" class="main-orb-img"
-                                        alt="{{ $item->name }}">
-                                @else
-                                    <div
-                                        class="main-orb-placeholder {{ $item->item_type == 'menu_item' ? 'border-neon-blue' : 'border-neon-gray' }}">
-                                        <i
-                                            class="fas {{ $item->item_type == 'menu_item' ? 'fa-utensils' : 'fa-seedling' }}"></i>
-                                    </div>
-                                @endif
-                            </div>
-                            <h4 class="fw-bold text-white mb-1">{{ $item->name }}</h4>
-                            <code class="text-neon-blue small">SKU: {{ $item->sku }}</code>
+
+                        <div class="orb mx-auto mb-3">
+                            <i class="fas {{ $item->item_type == 'menu_item' ? 'fa-utensils' : 'fa-seedling' }}"></i>
                         </div>
 
-                        <div class="info-grid mt-4">
-                            <div
-                                class="info-row d-flex justify-content-between py-3 border-bottom border-white border-opacity-5">
-                                <span class="text-muted small fw-bold">@lang('Category')</span>
-                                <span class="text-white small">{{ $item->category->name }}</span>
+                        <h4 class="fw-bold">{{ $item->name }}</h4>
+                        <small class="text-gold">SKU: {{ $item->sku }}</small>
+
+                        <div class="info-list mt-4">
+                            <div><span>القسم</span><strong>{{ $item->category->name }}</strong></div>
+                            <div>
+                                <span>الرصيد</span>
+                                <strong class="{{ $item->quantity <= $item->min_quantity ? 'danger' : 'success' }}">
+                                    {{ number_format($item->quantity, 1) }} {{ $item->unit }}
+                                </strong>
                             </div>
-                            <div
-                                class="info-row d-flex justify-content-between py-3 border-bottom border-white border-opacity-5">
-                                <span class="text-muted small fw-bold">@lang('Current Stock')</span>
-                                <span
-                                    class="stock-glow {{ $item->quantity <= $item->min_quantity ? 'text-danger' : 'text-success-neon' }} fw-black fs-5">
-                                    {{ number_format($item->quantity, 1) }} <small
-                                        class="fw-normal opacity-50">{{ $item->unit }}</small>
-                                </span>
-                            </div>
-                            <div
-                                class="info-row d-flex justify-content-between py-3 border-bottom border-white border-opacity-5">
-                                <span class="text-muted small fw-bold">@lang('Unit of Measurement')</span>
-                                <span class="text-white small">{{ number_format($item->cost_per_unit, 0) }} ل.س</span>
+                            <div><span>تكلفة الوحدة</span><strong>{{ number_format($item->cost_per_unit, 0) }} ل.س</strong>
                             </div>
                             @if ($item->item)
-                                <div
-                                    class="info-row d-flex justify-content-between py-3 border-bottom border-white border-opacity-5">
-                                    <span class="text-success-neon small fw-bold">@lang('Item Price')</span>
-                                    <span class="text-success-neon fw-bold fs-5">{{ number_format($item->item->price, 0) }}
-                                        ل.س</span>
-                                </div>
+                                <div><span>سعر البيع</span><strong class="gold">{{ number_format($item->item->price, 0) }}
+                                        ل.س</strong></div>
                             @endif
-                            <div class="info-row d-flex justify-content-between py-3">
-                                <span class="text-muted small fw-bold">المورد</span>
-                                <span class="text-white small">{{ $item->supplier ?? 'شراء مباشر' }}</span>
-                            </div>
+                            <div><span>المورد</span><strong>{{ $item->supplier ?? 'شراء مباشر' }}</strong></div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-8 animate-slide-up" style="animation-delay: 0.1s;">
-                <div class="card border-0 shadow-2xl rounded-5 overflow-hidden" style="background: #111315;">
-                    <div class="card-header border-0 py-4 px-4 d-flex justify-content-between align-items-center"
-                        style="background: rgba(255,255,255,0.02);">
-                        <h5 class="mb-0 fw-bold text-white fs-6"><i class="fas fa-history me-2 text-neon-blue"></i>
-                            @lang('Inventory Item Transaction History')</h5>
+
+            {{-- RIGHT TABLE --}}
+            <div class="col-lg-8 animate-up" style="animation-delay:.1s">
+                <div class="card glass-card h-100">
+
+                    <div class="card-header bg-transparent border-0 px-4 pt-4">
+                        <h6 class="fw-bold mb-0">
+                            <i class="fas fa-history text-gold me-2"></i> سجل الحركات
+                        </h6>
                     </div>
+
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table table-dark-premium mb-0 align-middle text-center">
+                            <table class="table premium-table mb-0 text-center">
                                 <thead>
                                     <tr>
-                                        <th class="py-3 text-muted small">@lang('Date')</th>
-                                        <th class="py-3 text-muted small">@lang('Type of Movement')</th>
-                                        <th class="py-3 text-muted small">@lang('Quantity')</th>
-                                        <th class="py-3 text-muted small">@lang('Reference')</th>
-                                        <th class="py-3 text-muted small">@lang('Responsible Person')</th>
+                                        <th>التاريخ</th>
+                                        <th>النوع</th>
+                                        <th>الكمية</th>
+                                        <th>المرجع</th>
+                                        <th>الموظف</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse($item->transactions as $transaction)
-                                        <tr class="premium-row">
-                                            <td class="small opacity-75">
-                                                {{ $transaction->created_at->format('Y/m/d H:i') }}</td>
+                                        <tr>
+                                            <td>{{ $transaction->created_at->format('Y/m/d H:i') }}</td>
                                             <td>
-                                                @php
-                                                    $styles = [
-                                                        'in' => 'status-ok',
-                                                        'out' => 'status-out',
-                                                        'adjust' => 'bg-warning bg-opacity-10 text-warning',
-                                                    ];
-                                                    $labels = ['in' => 'وارد', 'out' => 'صادر', 'adjust' => 'تعديل'];
-                                                @endphp
-                                                <span class="status-indicator {{ $styles[$transaction->type] }} px-3 py-1">
-                                                    {{ $labels[$transaction->type] }}
+                                                <span class="pill {{ $transaction->type }}">
+                                                    {{ $transaction->type == 'in' ? 'وارد' : ($transaction->type == 'out' ? 'صادر' : 'تعديل') }}
                                                 </span>
                                             </td>
-                                            <td
-                                                class="fw-black {{ $transaction->type == 'in' ? 'text-success-neon' : 'text-danger' }}">
+                                            <td class="{{ $transaction->type == 'in' ? 'success' : 'danger' }}">
                                                 {{ $transaction->type == 'in' ? '+' : '-' }}{{ number_format($transaction->quantity, 1) }}
                                             </td>
-                                            <td class="small text-muted">{{ $transaction->reference ?? 'تعديل يدوي' }}</td>
-                                            <td class="small">
-                                                <div class="d-flex align-items-center justify-content-center">
-                                                    <div class="avatar-sm me-2">
-                                                        <i class="fas fa-user-shield opacity-50"></i>
-                                                    </div>
-                                                    {{ $transaction->employee->name ?? 'النظام' }}
-                                                </div>
-                                            </td>
+                                            <td class="text-muted">{{ $transaction->reference ?? 'يدوي' }}</td>
+                                            <td>{{ $transaction->employee->name ?? 'النظام' }}</td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="5" class="py-5 text-muted opacity-50">لا توجد حركات مسجلة لهذه
-                                                المادة حتى الآن</td>
+                                            <td colspan="5" class="py-5 text-muted">لا يوجد حركات بعد</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
                             </table>
                         </div>
                     </div>
+
                 </div>
             </div>
+
         </div>
     </div>
 
+    {{-- STYLE --}}
     <style>
         :root {
-            --dark-carbon: #0d0f11;
-            --item-bg: #111315;
-            --neon-blue: #00d2ff;
-            --neon-success: #00ff88;
+            --bg: #0b0d10;
+            --card: #11151c;
+            --gold: #d4af37;
+            --danger: #ff4d4d;
+            --success: #2ecc71;
         }
 
         body {
-            background-color: var(--dark-carbon);
-            font-family: 'Cairo', sans-serif;
-            color: #e1e1e1;
+            background: var(--bg);
+            color: #eee;
+            font-family: Cairo
         }
 
-        .shadow-2xl {
-            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8);
-        }
-
-        .header-indicator {
-            width: 6px;
-            height: 35px;
-            background: var(--neon-blue);
-            border-radius: 10px;
-            box-shadow: 0 0 15px var(--neon-blue);
-        }
-
-        .text-neon-blue {
-            color: var(--neon-blue);
-        }
-
-        .text-success-neon {
-            color: var(--neon-success);
-        }
-
-        /* الأورب المركزي للصورة */
-        .main-orb-wrapper {
-            width: 120px;
-            height: 120px;
-            position: relative;
-        }
-
-        .main-orb-img {
-            width: 100%;
-            height: 100%;
-            border-radius: 30px;
-            object-fit: cover;
-            border: 3px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .main-orb-placeholder {
-            width: 100%;
-            height: 100%;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #000;
-            font-size: 2.5rem;
-            border: 3px solid;
-        }
-
-        .table-dark-premium thead {
-            background: rgba(255, 255, 255, 0.02);
-            text-transform: uppercase;
-            font-weight: 800;
-        }
-
-        .premium-row {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-            transition: 0.3s;
-        }
-
-        .premium-row:hover {
-            background: rgba(255, 255, 255, 0.01);
-        }
-
-        .status-indicator {
-            border-radius: 50px;
-            font-size: 0.7rem;
-            font-weight: 800;
-        }
-
-        .status-ok {
-            background: rgba(0, 255, 136, 0.1);
-            color: var(--neon-success);
-        }
-
-        .status-out {
-            background: rgba(255, 62, 62, 0.1);
-            color: #ff3e3e;
-        }
-
-        .btn-dark-minimal {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #888;
-            transition: 0.3s;
-        }
-
-        .btn-dark-minimal:hover {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .btn-neon-blue {
-            background: var(--neon-blue);
-            color: #000;
-            border: none;
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
-        }
-
-        .animate-slide-up {
-            animation: slideUp 0.8s cubic-bezier(0.2, 1, 0.3, 1) forwards;
-        }
-
-        @keyframes slideUp {
+        /* animations */
+        @keyframes up {
             from {
-                transform: translateY(30px);
                 opacity: 0;
+                transform: translateY(30px)
             }
 
             to {
-                transform: translateY(0);
-                opacity: 1;
+                opacity: 1
             }
+        }
+
+        @keyframes fade {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+
+        .animate-up {
+            animation: up .8s ease both
+        }
+
+        .animate-fade {
+            animation: fade .6s ease both
+        }
+
+        /* cards */
+        .glass-card {
+            background: linear-gradient(145deg, #0f131b, #0b0d10);
+            border-radius: 22px;
+            border: 1px solid #222;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, .7);
+        }
+
+        /* header */
+        .header-indicator {
+            width: 6px;
+            height: 36px;
+            background: var(--gold);
+            border-radius: 10px
+        }
+
+        .text-gold {
+            color: var(--gold)
+        }
+
+        /* orb */
+        .orb {
+            width: 110px;
+            height: 110px;
+            border-radius: 30px;
+            background: radial-gradient(circle, var(--gold), #7c6220);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            color: #000;
+            box-shadow: 0 0 30px rgba(212, 175, 55, .4)
+        }
+
+        /* info */
+        .info-list div {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #222
+        }
+
+        .info-list span {
+            color: #888;
+            font-size: .8rem
+        }
+
+        .info-list strong {
+            font-weight: 800
+        }
+
+        .success {
+            color: var(--success)
+        }
+
+        .danger {
+            color: var(--danger)
+        }
+
+        .gold {
+            color: var(--gold)
+        }
+
+        /* table */
+        .premium-table thead {
+            background: #0f131b;
+            color: #888
+        }
+
+        .premium-table tbody tr {
+            transition: .3s
+        }
+
+        .premium-table tbody tr:hover {
+            background: rgba(255, 255, 255, .03)
+        }
+
+        /* pills */
+        .pill {
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: .7rem;
+            font-weight: 800
+        }
+
+        .pill.in {
+            background: rgba(46, 204, 113, .15);
+            color: var(--success)
+        }
+
+        .pill.out {
+            background: rgba(255, 77, 77, .15);
+            color: var(--danger)
+        }
+
+        .pill.adjust {
+            background: rgba(212, 175, 55, .15);
+            color: var(--gold)
+        }
+
+        /* buttons */
+        .btn-gold {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            box-shadow: 0 0 20px rgba(212, 175, 55, .4)
+        }
+
+        .btn-dark-minimal {
+            background: #111;
+            border: 1px solid #333;
+            color: #aaa
         }
     </style>
 @endsection

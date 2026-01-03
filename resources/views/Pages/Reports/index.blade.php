@@ -145,13 +145,14 @@
             </a>
         </nav>
 
-        <div class="mb-4 px-2">
-            <h5 class="text-white-50 fw-bold">
-                <i class="fas fa-database me-2"></i>
-                استعراض بيانات
-                {{ $activeTab == 'sales' ? 'المبيعات' : ($activeTab == 'inventory' ? 'المخزن' : 'الفواتير') }}
-            </h5>
-        </div>
+     <div class="mb-4 px-2">
+    <h5 class="text-white-50 fw-bold">
+        <i class="fas fa-database me-2"></i>
+        @lang('view data')
+        @lang($activeTab)
+    </h5>
+</div>
+
         <div class="report-content-wrapper">
             <div class="report-content">
                 @include('Pages.Reports.partials._' . $activeTab)

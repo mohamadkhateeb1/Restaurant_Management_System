@@ -28,16 +28,17 @@ class WaiterController extends Controller
         $selectedTable = null;
         $currentOrder = null;
         $draft = [];
-        if ($request->has('table_id')) {
+        if ($request->has('table_id')) { 
             $selectedTable = TablesRestaurant::find($request->table_id);
             $currentOrder = DineInOrderRestaurant::where('table_id', $request->table_id)
                 ->whereIn('status', ['pending', 'preparing', 'ready'])
                 ->with('orderItems.item')
                 ->first();
-            $draft = session()->get('waiter_draft_' . $request->table_id, []);
+            $draft = session()->get('waiter_draft_' . $request->table_id, []);// جلب المسودة من الجلسة بناءً على معرف الطاولة
         }
         return view('Pages.Waiter.index', compact('tables', 'categories', 'items', 'selectedTable', 'currentOrder', 'draft'));
     }
+    // إضافة صنف إلى المسودة
     public function addToDraft(Request $request)
     {
         $request->validate([
@@ -69,11 +70,12 @@ class WaiterController extends Controller
         if (empty($draftItems)) {
             return back()->with('error', 'يجب إضافة أصناف للمسودة أولاً');
         }
+
         return DB::transaction(function () use ($request, $draftItems) {
             $order = DineInOrderRestaurant::where('table_id', $request->table_id)
                 ->whereIn('status', ['pending', 'preparing', 'ready'])
                 ->first();
-            if (!$order) {
+            if (!$order) {// إذا لم يكن هناك طلب قائم للطاولة، نقوم بإنشاء طلب جديد
                 $order = DineInOrderRestaurant::create([
                     'table_id'     => $request->table_id,
                     'employee_id'  => Auth::id(), // يستخدم Guard الموظفين تلقائياً
@@ -83,6 +85,7 @@ class WaiterController extends Controller
                 ]);
                 TablesRestaurant::where('id', $request->table_id)->update(['status' => 'occupied']);
             }
+            // انشاء الطلب
             foreach ($draftItems as $item) {
                 OrderItemsRestaurant::create([
                     'dine_in_order_id' => $order->id,
@@ -91,7 +94,7 @@ class WaiterController extends Controller
                     'price'            => $item['price'], // السعر الثابت وقت الطلب
                 ]);
             }
-            $order->refreshTotalAmount();
+            $order->refreshTotalAmount(); 
             $order->update(['status' => 'preparing']);
             session()->forget('waiter_draft_' . $request->table_id);
             return back()->with('success', 'تم إرسال الطلب للمطبخ بنجاح');

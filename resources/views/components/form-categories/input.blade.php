@@ -18,6 +18,7 @@
         class="form-control bg-secondary text-white border-secondary {{ $class }} @error($name) is-invalid @enderror"
         placeholder="{{ $placeholder }}" value="{{ old($name, $value) }}"
         @if ($required) required @endif
+        
         {{ $attributes->except(['label', 'value', 'type', 'name', 'placeholder', 'class', 'required']) }}>
 
     @error($name)

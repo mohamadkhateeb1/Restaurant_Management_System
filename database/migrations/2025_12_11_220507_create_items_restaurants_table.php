@@ -11,8 +11,6 @@ return new class extends Migration
     {
         Schema::create('items_restaurants', function (Blueprint $table) {
             $table->id();
-
-
             $table->foreignId('inventory_id')->unique()->constrained('inventories')->cascadeOnDelete();
             $table->foreignId('category_id')->constrained('categories_restaurants')->cascadeOnDelete();
             $table->string('item_name');

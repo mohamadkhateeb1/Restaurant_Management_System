@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -19,52 +20,61 @@ class AuthenticatedSessionController extends Controller
         return view('auth.login');
     }
 
-public function store(LoginRequest $request): RedirectResponse
-{
-    if (!Auth::guard('employee')->attempt(
-        $request->only('email', 'password'),
-        $request->boolean('remember')
-    )) {
-        return back()->withErrors([
-            'email' => 'البيانات المدخلة غير صحيحة أو غير موجودة',
-        ]);
+    /**
+     * Handle an incoming authentication request.
+     */
+    public function store(LoginRequest $request): RedirectResponse
+    {
+     
+        if (!Auth::guard('employee')->attempt(
+            $request->only('email', 'password'),
+            $request->boolean('remember')
+        )) {
+            return back()->withErrors([
+                'email' => 'البيانات المدخلة غير صحيحة أو غير موجودة',
+            ]);
+        }
+
+        $request->session()->regenerate();
+
+        $user = Auth::guard('employee')->user();
+        if($user->super_admin){
+            return redirect()->intended(LaravelLocalization::localizeUrl(route('dashboard')));
+        }
+
+        // التوجيه بناءً على hasRole حصراً
+        if ($user->hasRole('Admin')) {
+            return redirect()->intended(LaravelLocalization::localizeUrl(route('dashboard')));
+        }
+
+        if ($user->hasRole('Waiter')) {
+            return redirect()->intended(LaravelLocalization::localizeUrl(route('Pages.waiter.index')));
+        }
+
+        if ($user->hasRole('Cashier')) {
+            return redirect()->intended(LaravelLocalization::localizeUrl(route('Pages.cashier.index')));
+        }
+
+        if ($user->hasRole('Kitchen')) {
+            return redirect()->intended(LaravelLocalization::localizeUrl(route('Pages.kitchen.index')));
+        }
+
+        Auth::guard('employee')->logout();
+        return redirect(LaravelLocalization::localizeUrl('/login'))
+            ->withErrors(['email' => 'لا تملك صلاحية الوصول لأي واجهة عمل.']);
     }
 
-    $request->session()->regenerate();
-
-    $user = Auth::guard('employee')->user();
-
-    if ($user->super_admin) {
-        return redirect()->route('Pages.dashboard');
-    }
-
-    if ($user->hasRole('Waiter')) {
-        return redirect()->route('Pages.waiter.index');
-    }
-
-    if ($user->hasRole('Cashier')) {
-        return redirect()->route('Pages.cashier.index');
-    }
-
-    if ($user->hasRole('Kitchen')) {
-        return redirect()->route('Pages.kitchen.index');
-    }
-
-    if ($user->hasRole('Admin')) {
-        return redirect()->route('Pages.dashboard');
-    }
-
-    Auth::guard('employee')->logout();
-    abort(403, 'لا تملك صلاحية الدخول');
-}
+    /**
+     * Destroy an authenticated session.
+     */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
+        Auth::guard('employee')->logout();
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
 
-        return redirect('login');
+        return redirect(LaravelLocalization::localizeUrl('/login'));
     }
 }

@@ -17,7 +17,7 @@ class InvetoryController extends Controller
     {
         $this->authorize('viewAny', Inventory::class);
         $categories = CategoriesRestaurant::all();
-        $query = Inventory::with(['category', 'item']);
+        $query = Inventory::with(['category', 'item']); 
 
         if ($request->filled('item_type')) {
             $query->where('item_type', $request->item_type);
@@ -44,8 +44,6 @@ class InvetoryController extends Controller
 
     public function edit($id)
     {
-
-
         $item = Inventory::findOrFail($id);
         $categories = CategoriesRestaurant::where('status', 'active')->get();
         return view('Pages.Inventory.edit', compact('item', 'categories'));
@@ -72,18 +70,11 @@ class InvetoryController extends Controller
             'cost_per_unit' => 'nullable|numeric|min:0',
             'sales_price'  => 'nullable|numeric|min:0',
             'supplier'     => 'nullable|string',
-            'image'        => 'nullable|image|max:2048',
         ]);
 
         return DB::transaction(function () use ($request) {
             $category = CategoriesRestaurant::findOrFail($request->category_id);
             $itemType = $category->is_menu_category ? 'menu_item' : 'raw_material';
-            $category->image = $request->image;
-
-            $imagePath = null;
-            if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('items_images', 'public');
-            }
 
             $inventory = Inventory::create([
                 'item_type'     => $itemType,
@@ -107,11 +98,10 @@ class InvetoryController extends Controller
                     'quantity'     => $request->quantity,
                     'unit'         => $request->unit,
                     'min_quantity' => $request->min_quantity,
-                    'image'        => $imagePath,
                 ]);
             }
 
-            return redirect()->route('Pages.inventory.index')->with('success', 'تم حفظ المادة ورفع الصورة بنجاح.');
+            return redirect()->route('Pages.inventory.index')->with('success', 'تم حفظ المادة  .');
         });
     }
 
@@ -127,11 +117,9 @@ class InvetoryController extends Controller
             'quantity'     => 'required|numeric|min:0',
             'unit'         => 'required|string',
             'min_quantity' => 'required|numeric|min:0',
-            'image'        => 'nullable|image|max:2048',
         ]);
 
         return DB::transaction(function () use ($request, $inventory) {
-            $inventory->update($request->except('image'));
             if ($inventory->item) {
                 $itemData = [
                     'item_name'    => $request->name,
@@ -141,18 +129,10 @@ class InvetoryController extends Controller
                     'min_quantity' => $request->min_quantity,
                     'category_id'  => $request->category_id,
                 ];
-
-                if ($request->hasFile('image')) {
-                    if ($inventory->item->image) {
-                        Storage::disk('public')->delete($inventory->item->image);
-                    }
-                    $itemData['image'] = $request->file('image')->store('items_images', 'public');
-                }
-
                 $inventory->item->update($itemData);
             }
 
-            return redirect()->route('Pages.inventory.index')->with('success', 'تم التحديث ومزامنة الصورة بنجاح.');
+            return redirect()->route('Pages.inventory.index')->with('success', 'تم التحديث والمزامنة  .');
         });
     }
 
@@ -160,9 +140,6 @@ class InvetoryController extends Controller
     {
         $inventory = Inventory::findOrFail($id);
         if ($inventory->item) {
-            if ($inventory->item->image) {
-                Storage::disk('public')->delete($inventory->item->image);
-            }
             $inventory->item->delete();
         }
         $inventory->delete();

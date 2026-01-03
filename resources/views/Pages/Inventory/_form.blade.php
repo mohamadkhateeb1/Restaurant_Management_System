@@ -34,15 +34,6 @@
         @enderror
     </div>
     <div class="col-md-6">
-        <label class="form-label fw-bold text-muted small mb-2">@lang('Item Image')</label>
-        <input type="file" name="image" class="form-control-dark w-100" accept="image/*">
-        @if (isset($item) && $item->image)
-            <div class="mt-2">
-                <img src="{{ asset('storage/' . $item->image) }}" class="rounded-3 shadow-sm border border-secondary"
-                    style="height: 50px; width: 50px; object-fit: cover;">
-                <small class="text-muted ms-2">@lang('Current Image')</small>
-            </div>
-        @endif
     </div>
     <div class="col-md-4">
         <label class="form-label fw-bold text-muted small mb-2">@lang('Initial Quantity')</label>

@@ -25,7 +25,6 @@
 
 <x-form-categories.input name="description" label="وصف القسم (اختياري)" :value="$category->description ?? null" />
 
-<x-form-categories.input type="file" name="image" label="أيقونة القسم بصرية" />
 
 <div class="form-group mb-3">
     <label for="status" class="form-label text-white fw-bold">حالة النشاط</label>

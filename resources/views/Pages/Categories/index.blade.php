@@ -57,16 +57,7 @@
                                 </td>
                                 <td class="text-right pr-5">
                                     <div class="d-flex align-items-center">
-                                        @if ($category->image)
-                                            <img src="{{ asset('storage/' . $category->image) }}"
-                                                class="rounded-3 shadow-sm"
-                                                style="width: 50px; height: 50px; object-fit: cover;">
-                                        @else
-                                            <div class="bg-secondary bg-opacity-25 rounded-3 d-flex align-items-center justify-content-center"
-                                                style="width: 50px; height: 50px;">
-                                                <i class="fas fa-folder text-muted"></i>
-                                            </div>
-                                        @endif
+                                        
                                         <div class="mr-3 ms-3">
                                             <h6 class="text-white fw-bold mb-0">{{ $category->name }}</h6>
                                             <small

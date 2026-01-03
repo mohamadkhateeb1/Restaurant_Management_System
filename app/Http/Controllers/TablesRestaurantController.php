@@ -10,12 +10,12 @@ class TablesRestaurantController extends Controller
 {
     public function index(Request $request)
     {
-        $this->authorize('viewAny', TablesRestaurant::class);
+        $this->authorize('viewAny', TablesRestaurant::class);// صلاحية المشاهدة عن طريق ال policy
         $query = TablesRestaurant::query();
-        $location = $request->query('location');
+        $locations = $request->query('location');
         $status = $request->query('status');
-        if ($location) {
-            $query->where('location', $location);
+        if ($locations) {
+            $query->whereIn('location', $locations);
         }
         if ($status) {
             $query->where('status', $status);
@@ -27,7 +27,7 @@ class TablesRestaurantController extends Controller
             'occupied'  => TablesRestaurant::where('status', 'occupied')->count(),
             'reserved'  => TablesRestaurant::where('status', 'reserved')->count(),
         ];
-        return view('Pages.Tables.index', compact('tables', 'stats'));
+        return view('Pages.Tables.index', compact('tables', 'stats', 'locations', 'status'));
     }
     public function create()
     {
@@ -37,7 +37,7 @@ class TablesRestaurantController extends Controller
     {
         $request->validate([
             'table_number' => 'required|unique:tables_restaurants,table_number',
-            'seating_capacity' => 'required|integer|min:1',
+            'seating_capacity' => 'required|integer|min:1', 
             'location' => 'nullable|string'
         ]);
         TablesRestaurant::create([

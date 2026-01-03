@@ -53,7 +53,6 @@ class ItemsRestaurantController extends Controller
             $item->description  = $request->description;
             $item->status       = $inventory->quantity > 0 ? $request->status : 'unavailable';
             $item->prepare_time = $request->prepare_time;
-            $item->image        = $inventory->image;
             $item->save();
             return redirect()->route('Pages.Items.index')->with('success', 'تم ربط الصنف بالمخزن بنجاح.');
         });
@@ -72,7 +71,6 @@ class ItemsRestaurantController extends Controller
             $item->status       = ($item->inventory->quantity > 0) ? $request->status : 'unavailable';
             $item->prepare_time = $request->prepare_time;
             $item->item_name    = $item->inventory->name;
-            $item->image = $item->inventory->image;
             $item->save();
             return redirect()->route('Pages.Items.index')->with('success', 'تم تحديث البيانات والمزامنة.');
         });

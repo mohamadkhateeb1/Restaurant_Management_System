@@ -8,141 +8,105 @@
         @method('PUT')
 
         <div class="container-fluid py-4">
-            <div class="sticky-action-bar shadow-sm mb-4 animate__animated animate__fadeInDown">
-                <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded-lg border">
+
+            {{-- HEADER --}}
+            <div class="sticky-action-bar mb-4">
+                <div class="edit-header-dark d-flex justify-content-between align-items-center flex-wrap gap-3">
                     <div>
-                        <h4 class="mb-0 font-weight-bold text-dark">
-                            <i class="fas fa-user-edit text-warning mr-2"></i> Update Role Entity
+                        <h4 class="mb-1 fw-bold text-light">
+                            <i class="fas fa-user-edit text-warning me-2"></i>
+                            @lang('Edit Role')
                         </h4>
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb bg-transparent p-0 m-0 small">
-                                <li class="breadcrumb-item"><a href="{{ route('Pages.roles.index') }}">Roles Management</a>
-                                </li>
-                                <li class="breadcrumb-item active text-muted">Editing: {{ $role->name }}</li>
-                            </ol>
-                        </nav>
+                        <small class="text-muted">
+                            Editing permissions for: <b class="text-light">{{ $role->name }}</b>
+                        </small>
                     </div>
+
                     <div class="d-flex gap-2">
-                        <a href="{{ route('Pages.roles.index') }}"
-                            class="btn btn-light border px-4 py-2 font-weight-bold mr-2 transition-all">
-                            <i class="fas fa-arrow-left mr-1"></i> Back
+                        <a href="{{ route('Pages.roles.index') }}" class="btn btn-back-dark">
+                            <i class="fas fa-arrow-left me-1"></i> Back
                         </a>
-                        <button type="submit"
-                            class="btn btn-warning text-dark px-5 py-2 font-weight-bold shadow-sm transition-all btn-glow-warning">
-                            <i class="fas fa-sync-alt mr-1"></i> Update & Sync Changes
+                        <button type="submit" class="btn btn-save-dark">
+                            <i class="fas fa-sync-alt me-1"></i> Update Role
                         </button>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-11 mx-auto">
+            {{-- ERRORS --}}
+            @if ($errors->any())
+                <div class="alert alert-danger shadow-sm border-0 rounded-3">
+                    <ul class="mb-0 small">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-                    @if ($errors->any())
-                        <div class="alert alert-custom-danger shadow-sm border-0 mb-4 animate__animated animate__shakeX">
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-exclamation-triangle mr-3 fa-lg"></i>
-                                <div>
-                                    <h5 class="mb-1 font-weight-bold">Update Failed!</h5>
-                                    <ul class="mb-0 small">
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-
-                    <div class="card shadow-lg border-0 rounded-xl overflow-hidden">
-                        <div class="card-header border-0 py-4 bg-white d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0 font-weight-bold text-muted text-uppercase small" style="letter-spacing: 2px;">
-                                <span class="badge badge-warning-soft mr-2">Mode: Edit</span>
-                                Modification of Permissions Matrix
-                            </h5>
-                            <div class="small text-muted italic">
-                                System ID: <span class="font-weight-bold text-dark">#{{ $role->id }}</span>
-                            </div>
-                        </div>
-
-                        <div class="card-body p-0">
-                            @include('Pages.Roles._form')
-                        </div>
-
-                        <div class="card-footer bg-white py-4 border-0 text-center text-muted small border-top">
-                            Note: Updating this role will immediately affect all employees assigned to it.
-                        </div>
-                    </div>
+            {{-- CARD --}}
+            <div class="card edit-card-dark border-0 rounded-4 overflow-hidden">
+                <div class="card-body p-0">
+                    @include('Pages.Roles._form')
+                </div>
+                <div class="card-footer text-center text-muted small">
+                    Updating this role affects all assigned users immediately
                 </div>
             </div>
+
         </div>
     </form>
 @endsection
 
 @push('styles')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
+        /* ===== Header ===== */
+        .edit-header-dark {
+            background: linear-gradient(145deg, #020617, #020617dd);
+            padding: 20px;
+            border-radius: 18px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, .9);
+        }
+
+        /* ===== Buttons ===== */
+        .btn-back-dark {
+            background: #020617;
+            color: #94a3b8;
+            border: 1px solid #1e293b;
+            border-radius: 10px;
+            padding: 10px 18px;
+            transition: .3s;
+        }
+
+        .btn-back-dark:hover {
+            color: #fff;
+            box-shadow: 0 0 20px rgba(148, 163, 184, .3);
+        }
+
+        .btn-save-dark {
+            background: linear-gradient(135deg, #facc15, #f59e0b);
+            color: #000;
+            border-radius: 10px;
+            padding: 10px 26px;
+            font-weight: 700;
+            box-shadow: 0 0 25px rgba(250, 204, 21, .6);
+        }
+
+        .btn-save-dark:hover {
+            box-shadow: 0 0 40px rgba(250, 204, 21, .9);
+        }
+
+        /* ===== Card ===== */
+        .edit-card-dark {
+            background: #020617;
+            box-shadow: 0 40px 90px rgba(0, 0, 0, .9);
+        }
+
+        /* Sticky */
         .sticky-action-bar {
             position: sticky;
             top: 70px;
             z-index: 1020;
-            margin-top: -10px;
-        }
-
-        .rounded-xl {
-            border-radius: 1.25rem !important;
-        }
-
-        .badge-warning-soft {
-            background-color: #fff9e6;
-            color: #d39e00;
-        }
-
-        .transition-all {
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .transition-all:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-glow-warning:hover {
-            box-shadow: 0 0 20px rgba(255, 193, 7, 0.4) !important;
-        }
-
-        .alert-custom-danger {
-            background-color: #fff5f5;
-            color: #c53030;
-            border-left: 5px solid #fc8181;
-            border-radius: 12px;
-        }
-
-        .gap-2 {
-            gap: 0.75rem;
-        }
-
-        .btn-warning {
-            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
-            border: none;
-            border-radius: 8px;
-        }
-
-        .btn-light {
-            background: #fff;
-            border-radius: 8px;
-        }
-
-        .card {
-            border-radius: 1.25rem !important;
-        }
-
-        body {
-            background-color: #f8f9fc;
-        }
-
-        .italic {
-            font-style: italic;
         }
     </style>
 @endpush

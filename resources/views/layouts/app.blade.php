@@ -1,88 +1,99 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="{{ app()->getLocale() }}" dir="rtl">
 
 <head>
     <meta charset="utf-8">
+    <title>@yield('title') - SRMS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title') - SRMS</title>
 
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('assets/dashboard/dist/css/adminlte.min.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Bootstrap RTL -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
 
     <style>
+        :root {
+            --gold: #d4af37;
+            --gold-soft: #f5e6b8;
+            --gold-glow: rgba(212, 175, 55, .25);
+
+            --dark-1: #0b0d10;
+            --dark-2: #141821;
+
+            --sidebar-width: 280px;
+            --header-height: 72px;
+        }
+
         * {
             font-family: 'Cairo', sans-serif;
         }
 
         body {
-            direction: rtl;
-            text-align: right;
+            background: linear-gradient(180deg, var(--dark-1), var(--dark-2));
+            color: #eee;
+            overflow-x: hidden;
+        }
+
+        /* ===== Layout ===== */
+        .main-header {
+            position: fixed;
+            top: 0;
+            right: var(--sidebar-width);
+            height: var(--header-height);
+            width: calc(100% - var(--sidebar-width));
+            background: linear-gradient(135deg, #141821, #0b0d10);
+            border-bottom: 1px solid var(--gold-glow);
+            z-index: 1000;
         }
 
         .main-sidebar {
-            right: 0 !important;
-            left: auto !important;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: linear-gradient(180deg, #0b0d10, #141821);
+            border-left: 1px solid var(--gold-glow);
         }
 
-        .content-wrapper,
-        .main-header,
-        .main-footer {
-            margin-right: 250px !important;
-            margin-left: 0 !important;
+        .content-wrapper {
+            margin-top: var(--header-height);
+            margin-right: var(--sidebar-width);
+            padding: 24px;
+            min-height: calc(100vh - var(--header-height));
         }
 
-        .sidebar-collapse .content-wrapper,
-        .sidebar-collapse .main-header {
-            margin-right: 0 !important;
+        .text-gold {
+            color: var(--gold);
         }
 
-        .dropdown-menu-left {
-            left: 0 !important;
-            right: auto !important;
-            text-align: right;
-        }
-
-        .shadow-text {
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        .glass {
+            background: linear-gradient(180deg, #0b0d10, #141821);
+            border: 1px solid var(--gold-glow);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, .55);
         }
     </style>
+
     @stack('styles')
 </head>
 
-<body class="hold-transition layout-fixed text-sm sidebar-right dark-mode">
-    <div class="wrapper">
-        @include('layouts.sections.header')
-        @include('layouts.sections.sidebar')
+<body>
 
-        <div class="content-wrapper">
-            <section class="content pt-3">
-                <div class="container-fluid">
-                    @yield('content')
-                </div>
-            </section>
-        </div>
+    @include('layouts.sections.header')
+    @include('layouts.sections.sidebar')
+
+    <div class="content-wrapper">
+        @yield('content')
     </div>
 
-    <script src="{{ asset('assets/dashboard/plugins/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('assets/dashboard/dist/js/adminlte.js') }}"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const alerts = document.querySelectorAll('.flash-alert, .alert');
-            alerts.forEach(function(alert) {
-                setTimeout(function() {
-                    alert.style.transition = "opacity 0.8s ease";
-                    alert.style.opacity = "0";
-                    setTimeout(() => alert.remove(), 800);
-                }, 2000);
-            });
-        });
-    </script>
-    @yield('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    @stack('scripts')
 </body>
 
 </html>
