@@ -2,12 +2,12 @@
 
 @section('content')
     <div class="container py-5 px-4" dir="rtl">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4 header-section">
             <h4 class="text-white fw-black mb-0">
                 <i class="fas fa-database text-neon-blue me-2"></i>سجل الفواتير للمطعم
             </h4>
 
-            <div class="filter-group d-flex gap-2">
+            <div class="filter-group d-flex gap-2 flex-wrap">
                 <a href="{{ route('Pages.invoices.index') }}"
                     class="btn btn-sm rounded-pill px-4 {{ !request()->has('type') ? 'btn-neon-blue' : 'btn-outline-secondary' }}">
                     الكل
@@ -25,7 +25,7 @@
 
         <div class="card border-0 shadow-2xl rounded-5 overflow-hidden" style="background: #111315;">
             <div class="table-responsive">
-                <table class="table table-dark mb-0 align-middle text-center custom-table">
+                <table class="table table-dark mb-0 align-middle text-center custom-table text-nowrap">
                     <thead>
                         <tr style="background: rgba(255,255,255,0.03);">
                             <th class="py-4 text-muted small fw-bold">رقم السجل (الفاتورة)</th>
@@ -104,6 +104,7 @@
             background: rgba(255, 255, 255, 0.03);
             display: inline-block;
             border: 1px solid rgba(255, 255, 255, 0.05);
+            white-space: nowrap;
         }
 
         .btn-neon-blue {
@@ -165,6 +166,30 @@
 
         .premium-row:hover {
             background: rgba(255, 255, 255, 0.02);
+        }
+
+        .text-nowrap {
+            white-space: nowrap !important;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px !important;
+            }
+
+            .header-section {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 20px;
+            }
+
+            .filter-group {
+                width: 100%;
+            }
+
+            .filter-group .btn {
+                flex-grow: 1;
+            }
         }
     </style>
 @endsection

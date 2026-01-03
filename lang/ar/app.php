@@ -6,4 +6,6 @@ return[
     'logout'=>'تسجيل الخروج',
     'dashboard'=>'لوحة التحكم',
     //sidebar
+    'orders.dine_in'=>'طلب صالة',
+    'orders.takeaway'=>'طلب سفري'
 ];

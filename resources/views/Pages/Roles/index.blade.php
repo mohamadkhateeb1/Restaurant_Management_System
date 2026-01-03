@@ -207,6 +207,84 @@
 .custom-admin-table-dark tbody tr:hover {
     background: #020617 !important;
 }
+/* ===== Responsive Media Queries ===== */
+
+/* للأجهزة المتوسطة (التابلت) والأصغر */
+@media (max-width: 991.98px) {
+    .container-fluid {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+    
+    .header-dark {
+        padding: 15px;
+    }
+
+    .custom-admin-table-dark th, 
+    .custom-admin-table-dark td {
+        padding: 12px 10px;
+    }
+}
+
+/* للهواتف الذكية (الموبايل) */
+@media (max-width: 575.98px) {
+    .sticky-action-bar {
+        position: static; /* إلغاء التثبيت في الشاشات الصغيرة لتوفير مساحة */
+    }
+
+    .header-dark {
+        text-align: center;
+        flex-direction: column !important;
+    }
+
+    .btn-add-role {
+        width: 100%; /* الزر يأخذ العرض كامل في الموبايل */
+        justify-content: center;
+    }
+
+    /* تحسين عرض الجدول في الموبايل */
+    .custom-admin-table-dark thead {
+        display: none; /* إخفاء الهيدر التقليدي */
+    }
+
+    .custom-admin-table-dark tbody tr {
+        display: block;
+        margin-bottom: 15px;
+        border: 1px solid var(--dark-border);
+        border-radius: 12px;
+        padding: 10px;
+    }
+
+    .custom-admin-table-dark td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: none !important;
+        padding: 8px 5px;
+        text-align: right;
+    }
+
+    /* إضافة عناوين قبل البيانات في الموبايل باستخدام Attribute */
+    .custom-admin-table-dark td::before {
+        content: attr(data-label);
+        font-size: 0.7rem;
+        color: #64748b;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .btn-action {
+        width: 32px; /* تصغير الأزرار قليلاً للموبايل */
+        height: 32px;
+    }
+}
+
+/* لضمان عدم تداخل المحتوى مع الهيدر في اللابتوب */
+@media (min-width: 1200px) {
+    .reports-container {
+        padding: 40px;
+    }
+}
 
 </style>
 @endpush

@@ -4,7 +4,6 @@
 @section('content')
 
     <style>
-        /* ===== DASHBOARD THEME ===== */
         :root {
             --gold: #d4af37;
             --gold-soft: rgba(212, 175, 55, .25);
@@ -16,7 +15,7 @@
         .page-wrapper {
             padding: 24px;
             background: linear-gradient(180deg, var(--dark-1), var(--dark-2));
-            min-height: 100%;
+            min-height: 100vh;
             animation: fadeIn .6s ease;
         }
 
@@ -27,7 +26,8 @@
             }
 
             to {
-                opacity: 1
+                opacity: 1;
+                transform: none
             }
         }
 
@@ -36,6 +36,7 @@
             border: 1px solid var(--gold-soft);
             border-radius: 20px;
             box-shadow: 0 15px 40px rgba(0, 0, 0, .55);
+            overflow: hidden;
         }
 
         .text-gold {
@@ -46,7 +47,6 @@
             font-weight: 900
         }
 
-        /* ===== TABLE ===== */
         .table-dark {
             --bs-table-bg: transparent;
             --bs-table-striped-bg: rgba(255, 255, 255, .03);
@@ -59,6 +59,7 @@
             font-size: .75rem;
             letter-spacing: .08em;
             border-bottom: 1px solid var(--border-soft);
+            white-space: nowrap;
         }
 
         .table tbody tr {
@@ -81,7 +82,6 @@
             border: 1px solid #ef4444;
         }
 
-        /* ===== ACTIONS ===== */
         .action-btn {
             width: 36px;
             height: 36px;
@@ -90,25 +90,47 @@
             justify-content: center;
             border-radius: 12px;
             transition: .25s ease;
+            flex-shrink: 0;
         }
 
         .action-btn:hover {
             background: rgba(212, 175, 55, .15);
             transform: translateY(-2px);
         }
+
+        @media (max-width: 768px) {
+            .page-wrapper {
+                padding: 12px;
+            }
+
+            .header-section {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start !important;
+            }
+
+            .header-section a {
+                width: 100%;
+                text-align: center;
+            }
+
+            .action-btn {
+                width: 32px;
+                height: 32px;
+            }
+        }
     </style>
 
-    <div class="page-wrapper">
+    <div class="page-wrapper" dir="rtl">
 
-        {{-- HEADER --}}
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4 header-section">
             <h2 class="fw-black text-gold mb-0">
                 <i class="fas fa-users-cog me-2"></i>
                 @lang('Employees List')
             </h2>
 
             @can('create', App\Models\Employee::class)
-                <a href="{{ route('Pages.employee.create') }}" class="btn btn-outline-warning px-4">
+                <a href="{{ route('Pages.employee.create') }}" class="btn btn-outline-warning px-4 rounded-pill">
                     <i class="fas fa-user-plus me-2"></i>
                     @lang('Add New Employee')
                 </a>
@@ -117,10 +139,9 @@
 
         <x-flash_message />
 
-        {{-- TABLE CARD --}}
         <div class="glass-card">
             <div class="table-responsive">
-                <table class="table table-dark table-striped table-hover align-middle mb-0">
+                <table class="table table-dark table-striped table-hover align-middle mb-0 text-nowrap">
                     <thead>
                         <tr>
                             <th class="ps-4">@lang('Name')</th>
@@ -128,7 +149,7 @@
                             <th>@lang('Phone')</th>
                             <th>@lang('Salary')</th>
                             <th>@lang('Hire Date')</th>
-                            {{-- <th>@lang('Status')</th> --}}
+                            <th>@lang('Status')</th>
                             <th class="text-center pe-4">@lang('Actions')</th>
                         </tr>
                     </thead>
@@ -140,35 +161,24 @@
                             @endif
 
                             <tr>
-                                <td class="ps-4 fw-bold text-white">
-                                    {{ $employee->name }}
-                                </td>
-
+                                <td class="ps-4 fw-bold text-white">{{ $employee->name }}</td>
                                 <td>
-                                    <span class="badge bg-secondary bg-opacity-25 text-light px-3">
+                                    <span class="badge bg-secondary bg-opacity-25 text-light px-3 rounded-pill">
                                         {{ $positions[$employee->position] ?? $employee->position }}
                                     </span>
                                 </td>
-
                                 <td class="text-white-50">{{ $employee->phone }}</td>
-
-                                <td class="fw-bold text-gold">
-                                    {{ number_format($employee->salary, 2) }}
-                                </td>
-
+                                <td class="fw-bold text-gold">{{ number_format($employee->salary, 2) }}</td>
                                 <td class="text-white-50">{{ $employee->hire_date }}</td>
-
-                                {{-- <td>
+                                <td>
                                     @if ($employee->status === 'active')
-                                        <span class="badge-soft-success px-3 py-1 rounded-pill">نشط</span>
+                                        <span class="badge-soft-success px-3 py-1 rounded-pill small">نشط</span>
                                     @else
-                                        <span class="badge-soft-danger px-3 py-1 rounded-pill">غير نشط</span>
+                                        <span class="badge-soft-danger px-3 py-1 rounded-pill small">غير نشط</span>
                                     @endif
-                                </td> --}}
-
+                                </td>
                                 <td class="pe-4">
-                                    <div class="d-flex justify-content-center gap-2">
-
+                                    <div class="d-flex justify-content-center gap-2 flex-nowrap">
                                         @can('view', App\Models\Employee::class)
                                             <a href="{{ route('Pages.employee.show', $employee->id) }}"
                                                 class="action-btn text-info" title="عرض">
@@ -185,18 +195,17 @@
 
                                         @can('delete', App\Models\Employee::class)
                                             <form method="POST" action="{{ route('Pages.employee.destroy', $employee->id) }}"
+                                                class="m-0"
                                                 onsubmit="return confirm('هل أنت متأكد من حذف {{ $employee->name }}؟')">
                                                 @csrf @method('DELETE')
-                                                <button class="action-btn text-danger border-0 bg-transparent">
+                                                <button class="action-btn text-danger border-0 bg-transparent p-0">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </form>
                                         @endcan
-
                                     </div>
                                 </td>
                             </tr>
-
                         @empty
                             <tr>
                                 <td colspan="7" class="text-center py-5 text-muted">

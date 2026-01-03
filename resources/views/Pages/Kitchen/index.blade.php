@@ -7,139 +7,198 @@
     <title>مطبخ المطعم - إدارة الطلبات الاحترافية</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --dark-bg: #0a0a0a;
+            --card-bg: #141414;
+            --gold-primary: #c5a059;
+            --gold-secondary: #8e6d3d;
+            --glass-border: rgba(255, 255, 255, 0.03);
+            --text-muted: #7a7a7a;
+        }
+
         body {
-            background-color: #121212;
-            color: #e0e0e0;
+            background-color: var(--dark-bg);
+            color: #d1d1d1;
             font-family: 'Cairo', sans-serif;
         }
 
         .kitchen-title {
-            background: #1a1a1a;
-            padding: 20px;
-            border-bottom: 2px solid #333;
-            margin-bottom: 30px;
+            background: var(--card-bg);
+            padding: 25px;
+            border-bottom: 1px solid var(--glass-border);
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
         .order-card {
-            background: #1e1e1e;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            border: 1px solid #333;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s;
+            background: var(--card-bg);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 15px 15px 35px rgba(0, 0, 0, 0.6);
+            transition: transform 0.3s ease, border-color 0.3s ease;
             overflow: hidden;
+            position: relative;
         }
 
         .order-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            border-color: var(--gold-secondary);
+        }
+
+        .status-indicator {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            height: 4px;
+        }
+
+        .status-pending-line {
+            background: var(--gold-secondary);
+        }
+
+        .status-preparing-line {
+            background: #0dcaf0;
+            opacity: 0.6;
         }
 
         .card-header-status {
-            padding: 15px;
+            padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #333;
-        }
-
-        .status-pending {
-            border-top: 6px solid #ffc107;
-        }
-
-        .status-preparing {
-            border-top: 6px solid #0dcaf0;
+            background: rgba(255, 255, 255, 0.01);
+            border-bottom: 1px solid var(--glass-border);
         }
 
         .time-badge {
-            font-size: 0.8rem;
-            color: #bbb;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 4px;
         }
 
         .item-list-container {
-            background: #252525;
+            background: rgba(0, 0, 0, 0.2);
             padding: 15px;
-            margin: 15px;
-            border-radius: 10px;
+            margin: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
         }
 
         .item-row {
-            padding: 8px 0;
-            border-bottom: 1px solid #383838;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         }
 
         .item-row:last-child {
             border-bottom: none;
         }
 
-        .btn-action {
-            border-radius: 0 0 15px 15px;
-            padding: 12px;
-            font-weight: bold;
+        .item-name {
+            font-weight: 300;
             font-size: 1.1rem;
+            color: #efefef;
+        }
+
+        .qty-badge {
+            background: #1a1a1a;
+            color: var(--gold-primary);
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        .btn-action {
+            border-radius: 0 0 20px 20px;
+            padding: 15px;
+            font-weight: bold;
+            font-size: 1rem;
             border: none;
             transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .btn-start {
-            background-color: #0dcaf0;
-            color: #000;
+            background: transparent;
+            color: var(--gold-primary);
+            border-top: 1px solid var(--glass-border);
         }
 
         .btn-start:hover {
-            background-color: #0bb5d9;
+            background: rgba(197, 160, 89, 0.05);
+            color: #fff;
         }
 
         .btn-done {
-            background-color: #198754;
-            color: white;
+            background: linear-gradient(145deg, var(--gold-primary), var(--gold-secondary));
+            color: #000;
         }
 
         .btn-done:hover {
-            background-color: #157347;
+            filter: brightness(1.1);
+            box-shadow: 0 5px 15px rgba(197, 160, 89, 0.3);
         }
 
         .empty-state {
             text-align: center;
-            padding: 100px;
-            color: #555;
+            padding: 150px 20px;
+            color: var(--text-muted);
+        }
+
+        .text-gold {
+            color: var(--gold-primary) !important;
+        }
+
+        .fw-light {
+            font-weight: 300 !important;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="kitchen-title text-center shadow">
-        <h2 class="mb-0">
-            <i class="fas fa-utensils text-danger me-2"></i>
-            شاشة تحضير الطلبات النشطة
+    <div class="kitchen-title text-center">
+        <h2 class="fw-light mb-1">
+            <i class="fas fa-fire-alt text-gold me-2"></i>
+            شاشة التحكم في الإنتاج
         </h2>
-        <small class="text-muted">نظام إدارة المطبخ الموحد</small>
+        <small class="text-muted text-uppercase" style="letter-spacing: 2px;">نظام إدارة المطبخ الملكي</small>
     </div>
 
-    <div class="container-fluid px-4">
+    <div class="container-fluid px-5">
         <div class="row">
             @forelse($orders as $order)
                 <div class="col-md-6 col-lg-4 col-xl-3">
-                    <div class="order-card {{ $order->status == 'pending' ? 'status-pending' : 'status-preparing' }}">
+                    <div class="order-card">
+                        <div
+                            class="status-indicator {{ $order->status == 'pending' ? 'status-pending-line' : 'status-preparing-line' }}">
+                        </div>
 
                         <div class="card-header-status">
                             <div>
                                 <h5 class="mb-0 fw-bold">
                                     @if ($order->table_id)
-                                        <i class="fas fa-chair text-muted me-1"></i> طاولة
+                                        <i class="fas fa-chair text-gold me-1 small"></i> <span
+                                            class="fw-light">طاولة</span>
                                         {{ $order->table->table_number }}
                                     @else
-                                        <i class="fas fa-shopping-bag text-warning me-1"></i> سفري
+                                        <i class="fas fa-shopping-bag text-gold me-1 small"></i> <span
+                                            class="fw-light">سفري</span>
                                     @endif
                                 </h5>
                                 <span class="time-badge">
-                                    <i class="far fa-clock"></i> منذ {{ $order->created_at->diffForHumans() }}
+                                    <i class="far fa-clock me-1"></i> منذ {{ $order->created_at->diffForHumans() }}
                                 </span>
                             </div>
                             <span
-                                class="badge {{ $order->status == 'pending' ? 'bg-warning text-dark' : 'bg-info text-dark' }} px-3 py-2">
+                                class="badge rounded-pill border {{ $order->status == 'pending' ? 'border-warning text-warning' : 'border-info text-info' }} px-3 py-2 bg-transparent small fw-light">
                                 {{ $order->status == 'pending' ? 'بانتظار البدء' : 'جاري التحضير' }}
                             </span>
                         </div>
@@ -147,11 +206,10 @@
                         <div class="item-list-container">
                             @foreach ($order->orderItems as $item)
                                 <div class="item-row d-flex justify-content-between align-items-center">
-                                    <span class="fs-5">
-                                        <i class="fas fa-caret-left text-secondary me-1"></i>
+                                    <span class="item-name">
                                         {{ $item->item->item_name }}
                                     </span>
-                                    <span class="badge bg-dark border border-secondary text-info fs-6">
+                                    <span class="qty-badge">
                                         x{{ $item->quantity }}
                                     </span>
                                 </div>
@@ -165,28 +223,31 @@
                             @if ($order->status == 'pending')
                                 <input type="hidden" name="status" value="preparing">
                                 <button type="submit" class="btn-action btn-start w-100">
-                                    <i class="fas fa-fire-alt me-2"></i> بدء الطهي الآن
+                                    <i class="fas fa-play me-2 small"></i> بدء التجهيز
                                 </button>
                             @else
                                 <input type="hidden" name="status" value="ready">
                                 <button type="submit" class="btn-action btn-done w-100">
-                                    <i class="fas fa-concierge-bell me-2"></i> الطلب جاهز للتسليم
+                                    <i class="fas fa-check-circle me-2"></i> اكتمل الطلب
                                 </button>
                             @endif
                         </form>
                     </div>
                 </div>
             @empty
-                <div class="empty-state">
-                    <i class="fas fa-check-circle fa-5x mb-3 text-secondary"></i>
-                    <h3>لا توجد طلبات جديدة حالياً</h3>
-                    <p>المطبخ نظيف وجاهز للطلبات القادمة</p>
+                <div class="col-12">
+                    <div class="empty-state">
+                        <i class="fas fa-concierge-bell fa-4x mb-4 opacity-25"></i>
+                        <h3 class="fw-light text-white-50">لا توجد طلبات قيد الانتظار</h3>
+                        <p class="small text-muted">المطبخ يعمل بكفاءة تامة حالياً</p>
+                    </div>
                 </div>
             @endforelse
         </div>
     </div>
 
     <script>
+        // تحديث تلقائي كل دقيقة
         setTimeout(function() {
             location.reload();
         }, 60000);

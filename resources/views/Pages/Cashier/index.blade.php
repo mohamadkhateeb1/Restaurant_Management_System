@@ -21,6 +21,7 @@
             background-color: var(--main-bg);
             color: #e6e8ed;
             font-family: 'Cairo', sans-serif;
+            overflow-x: hidden;
         }
 
         .bill-card {
@@ -28,6 +29,7 @@
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.05);
             transition: 0.3s;
+            height: 100%;
         }
 
         .bill-card:hover {
@@ -51,7 +53,7 @@
 
         .btn-logout:hover {
             background: #dc3545;
-            color: #white;
+            color: white;
             box-shadow: 0 0 15px rgba(220, 53, 69, 0.3);
         }
 
@@ -75,6 +77,8 @@
             background: var(--card-bg);
             border-radius: 25px;
             border: 1px solid var(--neon-blue);
+            max-width: 95vw;
+            margin: auto;
         }
 
         .receipt-table {
@@ -87,6 +91,41 @@
         .receipt-table td {
             padding: 10px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            header .d-flex {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .bill-card h2 {
+                font-size: 1.5rem;
+            }
+
+            .btn-preview,
+            .btn-pay-direct {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+
+            .table-badge {
+                font-size: 0.8rem;
+                padding: 5px 10px;
+            }
         }
 
         @media print {
@@ -132,10 +171,10 @@
 
 <body>
 
-    <header class="p-4 border-bottom border-secondary border-opacity-10 mb-5 d-print-none">
+    <header class="p-4 border-bottom border-secondary border-opacity-10 mb-4 mb-md-5 d-print-none">
         <div class="container d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center gap-4">
-                <h2 class="fw-black text-neon-blue mb-0">مركز التحصيل المالي</h2>
+            <div class="d-flex align-items-center gap-3 gap-md-4">
+                <h2 class="fw-black text-neon-blue mb-0 fs-4 fs-md-2">مركز التحصيل المالي</h2>
 
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
@@ -148,34 +187,38 @@
             <div class="d-flex gap-2">
                 <form action="{{ route('Pages.cashier.undoTakeaway') }}" method="POST">
                     @csrf
-                    <button type="submit" class="btn btn-outline-danger rounded-pill px-4 fw-bold">مرتجع آخر
+                    <button type="submit"
+                        class="btn btn-outline-danger rounded-pill px-3 px-md-4 fw-bold btn-sm btn-md-base">مرتجع
                         سفري</button>
                 </form>
-                <a href="{{ route('Pages.cashier.create') }}" class="btn btn-outline-info rounded-pill px-4 fw-bold">طلب
-                    سفري جديد</a>
+                <a href="{{ route('Pages.cashier.create') }}"
+                    class="btn btn-outline-info rounded-pill px-3 px-md-4 fw-bold btn-sm btn-md-base">طلب سفري جديد</a>
             </div>
         </div>
     </header>
+
     <x-flash_message />
+
     <div class="container pb-5 d-print-none">
-        <div class="row g-4">
+        <div class="row g-3 g-md-4">
             @forelse($pendingDineIn as $order)
-                <div class="col-md-6 col-lg-4">
-                    <div class="bill-card p-4 shadow-lg text-center">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="col-sm-6 col-lg-4">
+                    <div class="bill-card p-3 p-md-4 shadow-lg text-center">
+                        <div class="d-flex justify-content-between align-items-center mb-3 mb-md-4">
                             <span class="table-badge">طاولة {{ $order->table->table_number }}</span>
                             <small class="text-muted">#{{ substr($order->order_number, -4) }}</small>
                         </div>
-                        <div class="py-3 mb-4 rounded-4 bg-black bg-opacity-25">
-                            <h2 class="fw-black text-white mb-0">{{ number_format($order->total_amount) }} ل.س</h2>
+                        <div class="py-3 mb-3 mb-md-4 rounded-4 bg-black bg-opacity-25">
+                            <h2 class="fw-black text-white mb-0 fs-3 fs-md-2">{{ number_format($order->total_amount) }}
+                                ل.س</h2>
                         </div>
                         <div class="d-grid gap-2">
-                            <button class="btn btn-preview py-3 fw-bold" data-bs-toggle="modal"
+                            <button class="btn btn-preview py-2 py-md-3 fw-bold" data-bs-toggle="modal"
                                 data-bs-target="#invoiceModal{{ $order->id }}">معاينة وطباعة</button>
                             <form action="{{ route('Pages.cashier.payDineIn') }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="order_id" value="{{ $order->id }}">
-                                <button type="submit" class="btn btn-pay-direct w-100 py-3 fw-black"
+                                <button type="submit" class="btn btn-pay-direct w-100 py-2 py-md-3 fw-black"
                                     onclick="return confirm('تأكيد القبض؟')">قبض وإغلاق</button>
                             </form>
                         </div>
@@ -183,37 +226,39 @@
                 </div>
 
                 <div class="modal fade" id="invoiceModal{{ $order->id }}" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
                         <div class="modal-content shadow-lg">
                             <div class="modal-header border-0 pb-0 d-print-none">
                                 <button type="button" class="btn-close btn-close-white"
                                     data-bs-dismiss="modal"></button>
                             </div>
-                            <div class="modal-body p-4 text-center" id="printArea{{ $order->id }}">
+                            <div class="modal-body p-3 p-md-4 text-center" id="printArea{{ $order->id }}">
                                 <div class="receipt-header mb-3 border-bottom border-secondary border-dashed pb-2">
                                     <h4 class="fw-black text-info mb-1">فاتورة مبيعات</h4>
                                     <p class="mb-0 fw-bold">طاولة رقم: {{ $order->table->table_number }}</p>
                                     <small class="text-muted">RMS - {{ date('Y-m-d H:i') }}</small>
                                 </div>
-                                <table class="receipt-table text-end small">
-                                    <thead>
-                                        <tr style="border-bottom: 1px solid #444;">
-                                            <th>الصنف</th>
-                                            <th class="text-center">الكمية</th>
-                                            <th class="text-start">الإجمالي</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($order->orderItems as $item)
-                                            <tr>
-                                                <td>{{ $item->item->item_name }}</td>
-                                                <td class="text-center">x{{ $item->quantity }}</td>
-                                                <td class="text-start fw-bold" style="color: var(--neon-blue);">
-                                                    {{ number_format($item->price * $item->quantity) }}</td>
+                                <div class="table-responsive">
+                                    <table class="receipt-table text-end small">
+                                        <thead>
+                                            <tr style="border-bottom: 1px solid #444;">
+                                                <th>الصنف</th>
+                                                <th class="text-center">الكمية</th>
+                                                <th class="text-start">الإجمالي</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($order->orderItems as $item)
+                                                <tr>
+                                                    <td>{{ $item->item->item_name }}</td>
+                                                    <td class="text-center">x{{ $item->quantity }}</td>
+                                                    <td class="text-start fw-bold" style="color: var(--neon-blue);">
+                                                        {{ number_format($item->price * $item->quantity) }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <div class="mt-4 pt-3 border-top border-secondary border-dashed">
                                     <div class="d-flex justify-content-between align-items-center px-2">
                                         <span class="h5 mb-0 fw-bold">المجموع:</span>
@@ -222,12 +267,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-footer border-0 p-4 gap-2 justify-content-center d-print-none">
+                            <div class="modal-footer border-0 p-3 p-md-4 gap-2 justify-content-center d-print-none">
                                 <button type="button" class="btn btn-secondary rounded-pill px-3"
                                     data-bs-dismiss="modal">إلغاء</button>
                                 <button type="button" class="btn btn-danger rounded-pill px-3 fw-bold"
                                     onclick="downloadInvoicePDF('printArea{{ $order->id }}', 'فاتورة_طاولة_{{ $order->table->table_number }}')">
-                                    <i class="fas fa-file-pdf me-2"></i> تصدير PDF
+                                    <i class="fas fa-file-pdf me-2"></i> PDF
                                 </button>
                                 <button type="button" class="btn btn-info rounded-pill px-4 fw-bold shadow-sm"
                                     onclick="window.print()">

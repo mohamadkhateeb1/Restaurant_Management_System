@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container py-4 text-end" dir="rtl">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4 header-section">
             <div>
                 <h2 class="h4 text-white mb-1"><i class="fas fa-utensils text-primary me-2"></i>@lang('Items Management')</h2>
                 <p class="text-muted small">@lang('Monitor the items and their quantities in the inventory')</p>
@@ -12,7 +12,7 @@
         <div class="card bg-dark border-0 mb-4 shadow-sm" style="border-radius: 15px; background-color: #1e1e1e !important;">
             <div class="card-body p-4">
                 <form action="{{ route('Pages.Items.index') }}" method="GET" class="row g-3 align-items-end">
-                    <div class="col-md-4">
+                    <div class="col-md-4 col-sm-6">
                         <label class="form-label text-light small fw-bold">@lang('Category')</label>
                         <select name="category_id" class="form-select bg-dark text-white border-secondary rounded-3">
                             <option value="">@lang('All Categories')</option>
@@ -23,7 +23,7 @@
                         </select>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-4 col-sm-6">
                         <label class="form-label text-light small fw-bold">@lang('Availability Status')</label>
                         <select name="status" class="form-select bg-dark text-white border-secondary rounded-3">
                             <option value="">@lang('All Statuses')</option>
@@ -46,7 +46,7 @@
         <div class="card bg-dark border-0 shadow-lg overflow-hidden" style="border-radius: 20px;">
             <div class="table-responsive">
                 <x-flash_message />
-                <table class="table table-dark table-hover mb-0 align-middle text-end">
+                <table class="table table-dark table-hover mb-0 align-middle text-end text-nowrap">
                     <thead class="bg-secondary text-white">
                         <tr>
                             <th class="px-4 py-3">@lang('Item Name')</th>
@@ -66,7 +66,6 @@
                             <tr class="border-bottom border-secondary transition-all">
                                 <td class="px-4 py-3">
                                     <div class="d-flex align-items-center gap-3">
-
                                         <span class="fw-bold">{{ $item->item_name }}</span>
                                     </div>
                                 </td>
@@ -127,6 +126,10 @@
             animation: pulse 2s infinite;
         }
 
+        .text-nowrap {
+            white-space: nowrap;
+        }
+
         @keyframes pulse {
 
             0%,
@@ -136,6 +139,27 @@
 
             50% {
                 opacity: .4;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-section {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 15px;
+            }
+
+            .container {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+
+            .card-body {
+                padding: 1.5rem !important;
+            }
+
+            .h4 {
+                font-size: 1.1rem;
             }
         }
     </style>
