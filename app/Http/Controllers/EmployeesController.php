@@ -16,7 +16,7 @@ class EmployeesController extends Controller
         $employees = Employee::with('roles')->get();
         return view('Pages.Employees.index', compact('employees'));
     }
-
+   
     public function create()
     {
         return view('Pages.Employees.create', [
@@ -52,7 +52,7 @@ class EmployeesController extends Controller
             'password'  => Hash::make($request->password),
         ]);
 
-        $employee->roles()->attach($request->roles);
+        $employee->roles()->attach($request->roles);//attach: يعني إضافة علاقة جديدة بين الموظف والأدوار المحددة
         return redirect()->route('Pages.employee.index')->with('success', 'Employee created successfully.');
     }
 
@@ -70,7 +70,6 @@ class EmployeesController extends Controller
     public function update(Request $request, $id)
     {
         $employee = Employee::findOrFail($id);
-
         $request->validate([
             'name'      => 'string|max:255',
             'email'     => 'email|unique:employees,email,' . $id,
@@ -95,11 +94,11 @@ class EmployeesController extends Controller
             'notes'
         ]));
 
-        if ($request->filled('password')) {
+        if ($request->filled('password')) {//filled: يعني التحقق مما إذا كانت القيمة غير فارغة
             $employee->update(['password' => Hash::make($request->password)]);
         }
 
-        $employee->roles()->sync($request->roles);
+        $employee->roles()->sync($request->roles);//sync: يعني مزامنة العلاقة بين الموظف والأدوار المحددة، أي تحديثها لتتطابق مع القائمة الجديدة
         return redirect()->route('Pages.employee.index')->with('success', 'Employee updated successfully.');
     }
 

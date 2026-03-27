@@ -28,7 +28,7 @@ class WaiterController extends Controller
         $selectedTable = null;
         $currentOrder = null;
         $draft = [];
-        if ($request->has('table_id')) { 
+        if ($request->has('table_id')) { // تحقق من وجود table_id في الطلب
             $selectedTable = TablesRestaurant::find($request->table_id);
             $currentOrder = DineInOrderRestaurant::where('table_id', $request->table_id)
                 ->whereIn('status', ['pending', 'preparing', 'ready'])
@@ -38,7 +38,7 @@ class WaiterController extends Controller
         }
         return view('Pages.Waiter.index', compact('tables', 'categories', 'items', 'selectedTable', 'currentOrder', 'draft'));
     }
-    // إضافة صنف إلى المسودة
+    // إضافة صنف إلى السلة المؤقتة
     public function addToDraft(Request $request)
     {
         if (!$request->filled('table_id')) {

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>RMS Premium | Welcome</title>
+    <title>RMS | Welcome</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -115,8 +115,7 @@
             </div>
         </div>
 
-        <div
-            class="absolute bottom-4 md:bottom-8 w-full text-center text-gray-700 text-[8px] md:text-[10px] font-bold tracking-[0.2em] md:tracking-[0.4em] uppercase px-4">
+        <div class="absolute bottom-4 md:bottom-8 w-full text-center text-gray-700 text-[8px] md:text-[10px] font-bold tracking-[0.2em] md:tracking-[0.4em] uppercase px-4">
             @lang('RMS').&copy; {{ date('Y') }}
         </div>
     </div>
